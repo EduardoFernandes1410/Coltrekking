@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Testando MySQL</title>
+	</head>
+	<body>
+		Nome: <input type="text" name="nome" id="buscarNome">
+		<input type="button" name="buscar" value="Buscar" onclick="buscarUser();">
+		<br><br>
+
+		<h2 id="showInfoH2" hidden="true">Info do Usuário</h2><br>
+		<ul id="lista" hidden="true">
+			<li id="id"></li>
+			<li id="nome"></li>
+			<li id="senha"></li>
+			<li id="fatork"></li>
+		</ul>
+
+		<script type="text/javascript">
+			function buscarUser(){
+				var nomeUsuario = document.getElementById('buscarNome').value;
+				var xmlhttp = new XMLHttpRequest();
+				var url = '/getUser'; //URL da solicitacao
+				var dadosUser;
+
+				//Pega o JSON enviado pelo Node e o transforma em objeto JS
+				xmlhttp.onreadystatechange = function(){
+					if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+						dadosUser = JSON.parse(xmlhttp.responseText);
+						console.log("LI JSON");
+						console.log(dadosUser);
+						showDados(dadosUser);
+					}
+				};
+
+				xmlhttp.open("POST", url, true);
+				xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+				xmlhttp.send(JSON.stringify({nome: nomeUsuario}));
+			}
+
+			function showDados(dadosUser) {
+				document.getElementById('showInfoH2').style.display = 'initial';
+				document.getElementById('lista').style.display = 'initial';
+
+				document.getElementById('id').innerHTML = "<b>ID: </b>" + dadosUser[0].id;
+				document.getElementById('nome').innerHTML = "<b>Nome: </b>" + dadosUser[0].nome;
+				document.getElementById('senha').innerHTML = "<b>Senha: </b>" + dadosUser[0].senha;
+				document.getElementById('fatork').innerHTML = "<b>Fator K: </b>" + dadosUser[0].fatorK;
+			}
+		</script>
+	</body>
+</html>
