@@ -4,20 +4,81 @@
 		<title>FireBase Auth</title>
 
 		<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
+		<script src="https://apis.google.com/js/platform.js" async defer></script>
 		<script>
 			// Initialize Firebase
 			var config = {
-			apiKey: "AIzaSyDWuZXZioUNujSBLLOtH1tRF8IWCIqMH4g",
-			authDomain: "coltrekking-b81da.firebaseapp.com",
-			databaseURL: "https://coltrekking-b81da.firebaseio.com",
-			storageBucket: "coltrekking-b81da.appspot.com",
-			messagingSenderId: "1020694218506"
+				apiKey: "AIzaSyDWuZXZioUNujSBLLOtH1tRF8IWCIqMH4g",
+				authDomain: "coltrekking-b81da.firebaseapp.com",
+				databaseURL: "https://coltrekking-b81da.firebaseio.com",
+				storageBucket: "coltrekking-b81da.appspot.com",
+				messagingSenderId: "1020694218506"
 			};
 			firebase.initializeApp(config);
+
+			var provider = new firebase.auth.GoogleAuthProvider();
+			var user;
+			var userInfo = new Object();
+
+			//Sign In
+			function signIn(){
+				firebase.auth().signInWithRedirect(provider);
+			}
+
+			//Pegar info
+			function pegarInfo() { 
+				user = firebase.auth().currentUser;
+
+				if(user) {
+					userInfo.name = user.displayName;
+					userInfo.email = user.email;
+					userInfo.photoUrl = user.photoUrl;
+					userInfo.uid = user.uid;
+				}
+				
+				console.log(userInfo);
+			}
+
+			//Sign Out
+			function signOut() {
+				firebase.auth().signOut().then(function() {
+					//SignOut bem-sucedido
+					userInfo = null;
+					user = null;
+					console.log("Volte sempre!");
+				}, function(error) {
+					//Deu ruim
+				});
+			}
+
+			//Firebase sign in stuff
+			firebase.auth().getRedirectResult().then(function(result) {
+				console.log("ENTREI");
+
+				if(result.credential) {
+					var token = result.credential.accessToken;
+				}
+
+				//Info do usuario logado
+				user = result.user;
+			}).catch(function(error) {
+				//Aqui cuida dos erros
+				var errorCode = error.code;
+				var errorMessage = error.message;
+
+				//O email do usuario logado
+				var email = error.email;
+				//Tipo de credencial do FireBase usada
+				var credential = error.credential;
+			});
+
 		</script>
 	</head>
 
 	<body>
 		<h1>FIREBASE</h1>
+		<input type="button" value="SignIn" name="info" onclick="signIn();">
+		<input type="button" value="Info" name="info" onclick="pegarInfo();">
+		<input type="button" value="SignOut" name="info" onclick="signOut();">
 	</body>
 </html>
