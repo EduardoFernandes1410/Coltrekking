@@ -13,8 +13,10 @@ app.get("/", function(req, res) {
 });
 
 app.get("/signout", function(req, res) {
-	console.log("PRETA");
-	res.sendFile(path.join(__dirname, signout));
+	if(req.url !== "/signout") {
+		console.log("SIGNOUT");
+		return res.redirect('/signout');
+	}
 });
 
 app.listen(3000);
