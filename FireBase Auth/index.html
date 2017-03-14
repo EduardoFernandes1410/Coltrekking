@@ -6,6 +6,9 @@
 		<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
 		<script src="https://apis.google.com/js/platform.js" async defer></script>
 		<script>
+			var provider = new firebase.auth.GoogleAuthProvider();
+			var user;
+			var userInfo = new Object();
 			// Initialize Firebase
 			var config = {
 				apiKey: "AIzaSyDWuZXZioUNujSBLLOtH1tRF8IWCIqMH4g",
@@ -16,28 +19,38 @@
 			};
 			firebase.initializeApp(config);
 
-			var provider = new firebase.auth.GoogleAuthProvider();
-			var user;
-			var userInfo = new Object();
+			//Quando a pagina carrega
+			window.onload = function(){
+				initApp();
+			}
 
 			//Sign In
 			function signIn(){
 				firebase.auth().signInWithRedirect(provider);
 			}
 
-			//Pegar info
-			function pegarInfo() { 
-				user = firebase.auth().currentUser;
-
+			//Ao mudar de estado (logado/deslogado)
+			firebase.auth().onAuthStateChanged(function(user) {
 				if(user) {
 					userInfo.name = user.displayName;
 					userInfo.email = user.email;
-					userInfo.photoUrl = user.photoUrl;
+					userInfo.photoURL = user.photoURL;
 					userInfo.uid = user.uid;
+
+					/*Mostra dados do usuario*/
+					//Mostra imagem
+					document.getElementById('userImage').src = userInfo.photoURL;
+					document.getElementById('userImage').style.width = "50px";
+					document.getElementById('userImage').style.height = "50px";
+					//Mostra mensagem de boas vindas
+					document.getElementById('welcomeMessage').innerHTML = "Bem Vindo " + userInfo.name;
+				}
+				else {
+
 				}
 				
 				console.log(userInfo);
-			}
+			});
 
 			//Sign Out
 			function signOut() {
@@ -46,31 +59,44 @@
 					userInfo = null;
 					user = null;
 					console.log("Volte sempre!");
+
+					/*Muda a pagina*/
+					xmlhttp = new XMLHttpRequest();
+					xmlhttp.open("GET","/signout", true);
+					xmlhttp.onreadystatechange=function(){
+						if (xmlhttp.readyState==4 && xmlhttp.status==200){
+							console.log("TO PRONTO");
+						}
+					}
+					xmlhttp.send();
+
 				}, function(error) {
 					//Deu ruim
 				});
 			}
 
-			//Firebase sign in stuff
-			firebase.auth().getRedirectResult().then(function(result) {
-				console.log("ENTREI");
+			function initApp(){
+				//Firebase sign in stuff
+				firebase.auth().getRedirectResult().then(function(result) {
+					console.log("ENTREI");
 
-				if(result.credential) {
-					var token = result.credential.accessToken;
-				}
+					if(result.credential) {
+						var token = result.credential.accessToken;
+					}
 
-				//Info do usuario logado
-				user = result.user;
-			}).catch(function(error) {
-				//Aqui cuida dos erros
-				var errorCode = error.code;
-				var errorMessage = error.message;
+					//Info do usuario logado
+					user = result.user;
+				}).catch(function(error) {
+					//Aqui cuida dos erros
+					var errorCode = error.code;
+					var errorMessage = error.message;
 
-				//O email do usuario logado
-				var email = error.email;
-				//Tipo de credencial do FireBase usada
-				var credential = error.credential;
-			});
+					//O email do usuario logado
+					var email = error.email;
+					//Tipo de credencial do FireBase usada
+					var credential = error.credential;
+				});
+			}
 
 		</script>
 	</head>
@@ -78,7 +104,11 @@
 	<body>
 		<h1>FIREBASE</h1>
 		<input type="button" value="SignIn" name="info" onclick="signIn();">
-		<input type="button" value="Info" name="info" onclick="pegarInfo();">
 		<input type="button" value="SignOut" name="info" onclick="signOut();">
+
+		<div style="margin-top: 50px;">
+			<img id="userImage" height="0px" width="0px" style="display: inline-block;" hidden="true">
+			<h2 id="welcomeMessage" style="display: inline-block;" hidden="true"></h4>
+		</div>
 	</body>
 </html>

@@ -1,8 +1,20 @@
 var http	= require('http');
 var fs		= require('fs');
-var index	= fs.readFileSync('index.html');
+var url		= require('url');
+var path	= require('path');
+var express = require('express');
+var app 	= express();
 
-http.createServer(function(req, res) {
-	res.writeHead(200, { 'Content-Type': 'text/html'});
-	res.end(index, "utf-8");
-}).listen(3000);
+var index	= 'index.html';
+var signout	= 'signout.html';
+
+app.get("/", function(req, res) {
+	res.sendFile(path.join(__dirname, index));
+});
+
+app.get("/signout", function(req, res) {
+	console.log("PRETA");
+	res.sendFile(path.join(__dirname, signout));
+});
+
+app.listen(3000);
