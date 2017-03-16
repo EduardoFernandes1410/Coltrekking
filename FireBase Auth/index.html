@@ -8,6 +8,8 @@
 		<script>
 			var provider = new firebase.auth.GoogleAuthProvider();
 			var user;
+			var url;
+			var xmlhttp = new XMLHttpRequest();
 			var userInfo = new Object();
 			// Initialize Firebase
 			var config = {
@@ -37,6 +39,20 @@
 					userInfo.photoURL = user.photoURL;
 					userInfo.uid = user.uid;
 
+					/*Manda userInfo para server*/
+					url = "/postUser";
+					xmlhttp.onreadystatechange = function(){
+						if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+						}
+					};
+
+					xmlhttp.open("POST", url, true);
+					xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+					xmlhttp.send(JSON.stringify(userInfo));
+
+					/*Redireciona para logged.html*/
+
+
 					/*Mostra dados do usuario*/
 					//Mostra imagem
 					document.getElementById('userImage').src = userInfo.photoURL;
@@ -59,17 +75,6 @@
 					userInfo = null;
 					user = null;
 					console.log("Volte sempre!");
-
-					/*Muda a pagina*/
-					xmlhttp = new XMLHttpRequest();
-					xmlhttp.open("GET","/signout", true);
-					xmlhttp.onreadystatechange=function(){
-						if (xmlhttp.readyState==4 && xmlhttp.status==200){
-							console.log("TO PRONTO");
-						}
-					}
-					xmlhttp.send();
-
 				}, function(error) {
 					//Deu ruim
 				});
@@ -103,11 +108,15 @@
 
 	<body>
 		<h1>FIREBASE</h1>
-		<input type="button" value="SignIn" name="info" onclick="signIn();">
-		<input type="button" value="SignOut" name="info" onclick="signOut();">
+		<form action="/redirectLogin" method="get">
+			<input type="submit" value="SignIn" name="signin" onclick="signIn();" >
+		</form>
+		<form action="/signout" method="get">
+			<input type="submit" value="SignOut" name="signout" onclick="signOut();" type="submit">
+		</form>
 
 		<div style="margin-top: 50px;">
-			<img id="userImage" height="0px" width="0px" style="display: inline-block;" hidden="true">
+			<img id="userImage" height="0px" width="0px" style="display: inline-block; border-radius: 100%;" hidden="true">
 			<h2 id="welcomeMessage" style="display: inline-block;" hidden="true"></h4>
 		</div>
 	</body>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>LoggedIn</title>
+
+		<script type="text/javascript">
+			var userLogado;
+
+			window.onload = function(){
+				var xmlhttp = new XMLHttpRequest();
+				var url = '/login'; //URL da solicitacao
+
+				//Pega o JSON enviado pelo Node e o transforma em objeto JS
+				xmlhttp.onreadystatechange = function(){
+					if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+						userLogado = JSON.parse(xmlhttp.responseText);
+						console.log("LI JSON");
+						console.log(userLogado);
+					}
+				};
+
+				xmlhttp.open("POST", url, true);
+				console.log("macaca");
+			}
+		</script>
+	</head>
+	
+	<body>
+		<img id="userImage" height="0px" width="0px" style="display: inline-block; border-radius: 100%;" hidden="true">
+		<h2 id="welcomeMessage" style="display: inline-block;" hidden="true"></h4>
+	</body>
+</html>

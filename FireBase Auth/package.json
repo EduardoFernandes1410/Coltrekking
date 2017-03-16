@@ -2,6 +2,7 @@
   	"name": "firebaseauth",
   	"version": "1.0.0",
   	"dependencies": {
-		"express": "^4.10.6"
+		"express": "^4.10.6",
+		"body-parser": "*"
 	}
 }
