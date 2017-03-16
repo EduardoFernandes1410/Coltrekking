@@ -21,17 +21,17 @@
 			};
 			firebase.initializeApp(config);
 
-			//Quando a pagina carrega
+			/***Quando a pagina carrega***/
 			window.onload = function(){
 				initApp();
 			}
 
-			//Sign In
+			/***Sign In***/
 			function signIn(){
 				firebase.auth().signInWithRedirect(provider);
 			}
 
-			//Ao mudar de estado (logado/deslogado)
+			/***Ao mudar de estado (logado/deslogado)***/
 			firebase.auth().onAuthStateChanged(function(user) {
 				if(user) {
 					userInfo.name = user.displayName;
@@ -43,52 +43,28 @@
 					url = "/postUser";
 					xmlhttp.onreadystatechange = function(){
 						if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+							/*Redireciona para logged.html*/
+							window.location = "/redirectLogin";
 						}
 					};
-
 					xmlhttp.open("POST", url, true);
 					xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-					xmlhttp.send(JSON.stringify(userInfo));
-
-					/*Redireciona para logged.html*/
-
-
-					/*Mostra dados do usuario*/
-					//Mostra imagem
-					document.getElementById('userImage').src = userInfo.photoURL;
-					document.getElementById('userImage').style.width = "50px";
-					document.getElementById('userImage').style.height = "50px";
-					//Mostra mensagem de boas vindas
-					document.getElementById('welcomeMessage').innerHTML = "Bem Vindo " + userInfo.name;
+					xmlhttp.send(JSON.stringify(userInfo));					
 				}
 				else {
-
+					console.log("Nao tem user");
 				}
 				
 				console.log(userInfo);
 			});
 
-			//Sign Out
-			function signOut() {
-				firebase.auth().signOut().then(function() {
-					//SignOut bem-sucedido
-					userInfo = null;
-					user = null;
-					console.log("Volte sempre!");
-				}, function(error) {
-					//Deu ruim
-				});
-			}
-
+			/***Inicializar App***/
 			function initApp(){
 				//Firebase sign in stuff
 				firebase.auth().getRedirectResult().then(function(result) {
-					console.log("ENTREI");
-
 					if(result.credential) {
 						var token = result.credential.accessToken;
 					}
-
 					//Info do usuario logado
 					user = result.user;
 				}).catch(function(error) {
@@ -108,16 +84,6 @@
 
 	<body>
 		<h1>FIREBASE</h1>
-		<form action="/redirectLogin" method="get">
-			<input type="submit" value="SignIn" name="signin" onclick="signIn();" >
-		</form>
-		<form action="/signout" method="get">
-			<input type="submit" value="SignOut" name="signout" onclick="signOut();" type="submit">
-		</form>
-
-		<div style="margin-top: 50px;">
-			<img id="userImage" height="0px" width="0px" style="display: inline-block; border-radius: 100%;" hidden="true">
-			<h2 id="welcomeMessage" style="display: inline-block;" hidden="true"></h4>
-		</div>
+		<input type="button" value="SignIn" name="signin" onclick="signIn();">
 	</body>
 </html>

@@ -11,34 +11,48 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 var userLogado;
+var loginSucesso = false;
 var index	= 'index.html';
 var signout	= 'signout.html';
 var logged = 'logged.html';
 
-var logado = true;
-
+/***Carrega pagina inicial***/
 app.get("/", function(req, res) {
 	res.sendFile(path.join(__dirname, index));
 });
 
+/***Posta usuario logado***/
 app.post("/postUser", function(req, res) {
 	console.log(req.body.name);
 	userLogado = req.body;
-	res.send("");
+
+	//Usuario logado com sucesso
+	loginSucesso = true;
+	//Depois de fazer login, manda pagina a ser redirecionado
+	res.send("/redirectLogin");
 });
 
+/***Redireciona para pagina do usuario***/
 app.get("/redirectLogin", function(req, res) {
-	res.sendFile(path.join(__dirname, logged));
+	if(loginSucesso) {
+		res.sendFile(path.join(__dirname, logged));
+	}
+	else {
+		res.sendFile(path.join(__dirname, index));
+	}
 });
 
+/***Acessa info do usuario logado***/
 app.post("/login", function(req, res) {
-	console.log("LOGGIN");
 	res.setHeader('Content-Type', 'application/json');
-	res.json(logado);
+	res.json(userLogado);
 });
 
+/***Sign Out***/
 app.get("/signout", function(req, res) {
-	console.log("SAIR");
+	//Usuario deslogado
+	loginSucesso = false;
+	//Manda para pagina de logout
 	res.sendFile(path.join(__dirname, signout));
 });
 
