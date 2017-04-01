@@ -44,6 +44,8 @@
 				document.getElementById('userImage').style.height = "50px";
 				//Mostra mensagem de boas vindas
 				document.getElementById('welcomeMessage').innerHTML = "Bem Vindo " + userLogado.name;
+				//Mostra fator k
+				document.getElementById('fatork').innerHTML = "Fator K: " + userLogado.fatork;
 			}
 			
 			/***Sign Out***/
@@ -66,8 +68,9 @@
 
 		<!--Info do usuario-->
 		<div>
-			<img id="userImage" height="0px" width="0px" style="display: inline-block; border-radius: 100%;" hidden="true">
+			<img id="userImage" height="0px" width="0px" style="display: inline-block; border-radius: 100%; vertical-align: middle;" hidden="true">
 			<h2 id="welcomeMessage" style="display: inline-block;" hidden="true"></h2>
+			<h3 id="fatork"></h3>
 		</div>
 
 		<!--Sign out button-->
