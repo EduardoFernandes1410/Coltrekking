@@ -50,7 +50,7 @@ app.post("/postUser", function(req, res) {
 	addDB();
 	
 	//Pega info do DB
-	connection.query('SELECT fatork FROM Pessoa WHERE id = ?', userLogado.uid, function(err, rows, fields) {
+	connection.query('SELECT fatork FROM Pessoa WHERE ID = ?', userLogado.uid, function(err, rows, fields) {
 		if(!err) {
 			console.log(rows[0].fatork);
 			//Retrieve fatork do DB
