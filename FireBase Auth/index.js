@@ -50,7 +50,7 @@ app.post("/postUser", function(req, res) {
 	addDB();
 	
 	//Pega info do DB
-	connection.query('SELECT fatork FROM Usuarios WHERE id = ?', userLogado.uid, function(err, rows, fields) {
+	connection.query('SELECT fatork FROM Pessoa WHERE id = ?', userLogado.uid, function(err, rows, fields) {
 		if(!err) {
 			console.log(rows[0].fatork);
 			//Retrieve fatork do DB
@@ -104,7 +104,7 @@ function addDB() {
 	var post = {nome: nome, email: email, foto: foto, id: id, fatorK: fatorK};
 
 	//Adiciona ao DB
-	connection.query('INSERT IGNORE INTO Usuarios SET ?', post, function(err, rows, fields) {
+	connection.query('INSERT IGNORE INTO Pessoa SET ?', post, function(err, rows, fields) {
 		if(!err) {
 			console.log(rows);
 		}
@@ -115,7 +115,7 @@ function addDB() {
 	});
 
 	//Printa DB
-	connection.query('SELECT * FROM Usuarios', function(err, rows, fields) {
+	connection.query('SELECT * FROM Pessoa', function(err, rows, fields) {
 		if(!err) {
 			console.log(rows);
 		}
