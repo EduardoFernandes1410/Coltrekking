@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>LoggedIn</title>
+		<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
+		<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+		<script type="text/javascript">
+			var provider = new firebase.auth.GoogleAuthProvider();
+			var userLogado;
+			var url;
+			var xmlhttp = new XMLHttpRequest();
+			// Initialize Firebase
+			var config = {
+				apiKey: "AIzaSyDWuZXZioUNujSBLLOtH1tRF8IWCIqMH4g",
+				authDomain: "coltrekking-b81da.firebaseapp.com",
+				databaseURL: "https://coltrekking-b81da.firebaseio.com",
+				storageBucket: "coltrekking-b81da.appspot.com",
+				messagingSenderId: "1020694218506"
+			};
+			firebase.initializeApp(config);
+
+			/***Pega info do user logado***/
+			window.onload = function(){
+				xmlhttp = new XMLHttpRequest();
+				url = '/login'; //URL da solicitacao
+
+				//Pega o usuario logado
+				xmlhttp.onreadystatechange = function(){
+					if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+						userLogado = JSON.parse(xmlhttp.responseText);
+						mostraInfo();
+					}
+				};
+				xmlhttp.open("POST", url, true);
+				xmlhttp.send();
+			}
+			
+			/***Mostra dados do usuario***/
+			function mostraInfo() {
+				//Mostra imagem
+				document.getElementById('userImage').src = userLogado.photoURL;
+				document.getElementById('userImage').style.width = "50px";
+				document.getElementById('userImage').style.height = "50px";
+				//Mostra mensagem de boas vindas
+				document.getElementById('welcomeMessage').innerHTML = "Bem Vindo " + userLogado.name;
+				//Mostra fator k
+				document.getElementById('fatork').innerHTML = "Fator K: " + userLogado.fatork;
+			}
+			
+			/***Sign Out***/
+			function signOut() {
+				firebase.auth().signOut().then(function() {
+					//SignOut bem-sucedido
+					userInfo = null;
+					user = null;
+					console.log("Volte sempre!");
+				}, function(error) {
+					//Deu ruim
+				});
+			}
+
+		</script>
+	</head>
+	
+	<body>
+		<h1>Usuario logado com sucesso</h1>
+
+		<!--Info do usuario-->
+		<div>
+			<img id="userImage" height="0px" width="0px" style="display: inline-block; border-radius: 100%; vertical-align: middle;" hidden="true">
+			<h2 id="welcomeMessage" style="display: inline-block;" hidden="true"></h2>
+			<h3 id="fatork"></h3>
+		</div>
+
+		<!--Sign out button-->
+		<form action="/signout" method="get">
+			<input type="submit" value="SignOut" name="signout" onclick="signOut();" type="submit">
+		</form>
+	</body>
+</html>

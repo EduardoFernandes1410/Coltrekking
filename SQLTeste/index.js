@@ -10,7 +10,7 @@ var connection	= mysql.createConnection({
 	database: 'teste'
 });
 var app = express();
-var paginaInicial = 'getUser.html';
+var paginaInicial = 'index.html';
 
 //Utilizar o BodyParser
 app.use(bodyParser.urlencoded({ extended: true }));
