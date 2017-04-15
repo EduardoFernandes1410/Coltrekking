@@ -22,9 +22,13 @@
 
 			/***Pega info do user logado***/
 			window.onload = function(){
+				//Monta Ranking
+				ranking();
+			}
+			
+			//Pega info do usuario logado
+			function login() {
 				url = '/login'; //URL da solicitacao
-
-				//Pega o usuario logado
 				xmlhttp.onreadystatechange = function(){
 					if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
 						userLogado = JSON.parse(xmlhttp.responseText);
@@ -35,7 +39,7 @@
 				xmlhttp.open("POST", url, true);
 				xmlhttp.send();
 			}
-			
+
 			/***Mostra dados do usuario***/
 			function mostraInfo() {
 				console.log(userLogado);
@@ -55,12 +59,13 @@
 
 			/***Ranking***/
 			function ranking() {
+				console.log("VOU MONTAR RANKING");
+				//Monta o ranking
 				url = '/ranking'; //URL da solicitacao
-
-				//Pega o usuario logado
 				xmlhttp.onreadystatechange = function(){
 					if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
 						console.log("Ranking bem-sucedido");
+						login();
 					}
 				};
 				xmlhttp.open("GET", url, true);

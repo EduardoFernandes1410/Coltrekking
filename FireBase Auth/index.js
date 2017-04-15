@@ -60,26 +60,13 @@ app.post("/postUser", function(req, res) {
 	addDB(req);
 	
 	//Pega info do DB
-	connection.query('SELECT * FROM Pessoa WHERE ID = ?', req.session.userLogado.ID, function(err, rows, fields) {
-		if(!err) {
-			//Retrieve info do DB
-			console.log("PEGUEI INFO DO DB");
-			req.session.userLogado.FatorK = rows[0].FatorK;
-			console.log(req.session.userLogado.FatorK);
-			req.session.userLogado.Posicao = rows[0].Posicao;
-			req.session.userLogado.ListaNegra = rows[0].ListaNegra;
-			req.session.userLogado.Admin = rows[0].Admin;
-			
-			//Usuario logado com sucesso
-			loginSucesso = true;
+	//pegaInfoUsuarioLogado(function callback() {
+		//Usuario logado com sucesso
+		loginSucesso = true;
 
-			//Depois de fazer login, manda pagina a ser redirecionado
-			res.send("/redirectLogin");
-		}
-		else {
-			console.log('Error while performing Query (PEGA INFO DB)');
-		}
-	});
+		//Depois de fazer login, manda pagina a ser redirecionado
+		res.send("/redirectLogin");
+	//});
 
 });
 
@@ -101,8 +88,12 @@ app.post("/login", function(req, res) {
 
 //*****Ranking*****//
 app.get("/ranking", function(req, res) {
-	montaRanking();
-	res.send();
+	montaRanking(function callback() {
+		//Atualiza info do usuario
+		pegaInfoUsuarioLogado(req, function callback() {
+			res.send();
+		}); 
+	});
 });
 
 //*****Sign Out*****//
@@ -144,6 +135,25 @@ function addDB(req) {
 	//printTabela('Pessoa');
 }
 
+//*****Pega Info do Usuario Logado*****//
+function pegaInfoUsuarioLogado(req, callback) {
+	connection.query('SELECT * FROM Pessoa WHERE ID = ?', req.session.userLogado.ID, function(err, rows, fields) {
+		if(!err) {
+			//Retrieve info do DB
+			req.session.userLogado.FatorK = rows[0].FatorK;
+			req.session.userLogado.Posicao = rows[0].Posicao;
+			req.session.userLogado.ListaNegra = rows[0].ListaNegra;
+			req.session.userLogado.Admin = rows[0].Admin;
+			
+			//Realiza o callback
+			callback();
+		}
+		else {
+			console.log('Error while performing Query (PEGA INFO DB)');
+		}
+	});
+}
+
 //*****Printa Tabela*****//
 function printTabela(tabela) {
 	connection.query('SELECT * FROM ??', [tabela], function(err, rows, fields) {
@@ -157,7 +167,7 @@ function printTabela(tabela) {
 }
 
 //*****Monta Ranking*****//
-function montaRanking() {
+function montaRanking(callback) {
 	connection.query('SELECT ID, Nome, FatorK FROM Pessoa ORDER BY FatorK DESC', function(err, rows, fields) {
 		if(!err) {
 			//Atualiza a posicao no ranking
@@ -179,6 +189,7 @@ function montaRanking() {
 			}
 
 			console.log(rows);
+			callback();
 		}
 		else {
 			console.log('Error while performing Query (MONTA RANKING)');
