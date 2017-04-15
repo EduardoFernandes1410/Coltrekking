@@ -1,10 +1,12 @@
-var http	= require('http');
-var fs		= require('fs');
-var url		= require('url');
-var path	= require('path');
-var express = require('express');
-var bodyParser	= require('body-parser');
-var app 	= express();
+/********************************SETUP**********************************/
+var http			= require('http');
+var fs				= require('fs');
+var url				= require('url');
+var path			= require('path');
+var express 		= require('express');
+var bodyParser		= require('body-parser');
+var session			= require('express-session');
+var app 			= express();
 
 //MySQL
 var mysql		= require('mysql');
@@ -19,6 +21,9 @@ var connection	= mysql.createConnection({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+//Utilizar o express-session
+app.use(session({secret: 'S3NH4'}));
+
 //Conecta ao Banco de Dados
 connection.connect(function(err) {
 	if(!err){
@@ -29,46 +34,51 @@ connection.connect(function(err) {
 	}
 });
 
-//Variaveis de execucao
-var userLogado;
+/*************************VARIAVEIS DE EXECUCAO**************************/
+//var userLogado;
 var loginSucesso = false;
 var index	= 'index.html';
 var signout	= 'signout.html';
 var logged = 'logged.html';
 
-/***Carrega pagina inicial***/
+/******************************REQUISICOES*******************************/
+//*****Carrega pagina inicial*****//
 app.get("/", function(req, res) {
 	res.sendFile(path.join(__dirname, index));
 });
 
-/***Posta usuario logado***/
+//*****Posta usuario logado*****//
 app.post("/postUser", function(req, res) {
-	console.log(req.body.name);
-	userLogado = req.body;
+	req.session.userLogado = req.body;
 
 	//Adiciona usuario ao DB
-	addDB();
+	addDB(req);
 	
 	//Pega info do DB
-	connection.query('SELECT fatork FROM Pessoa WHERE ID = ?', userLogado.uid, function(err, rows, fields) {
+	connection.query('SELECT * FROM Pessoa WHERE ID = ?', req.session.userLogado.ID, function(err, rows, fields) {
 		if(!err) {
-			console.log(rows[0].fatork);
-			//Retrieve fatork do DB
-			userLogado.fatork = rows[0].fatork;
+			//Retrieve info do DB
+			console.log("PEGUEI INFO DO DB");
+			req.session.userLogado.FatorK = rows[0].FatorK;
+			console.log(req.session.userLogado.FatorK);
+			req.session.userLogado.Posicao = rows[0].Posicao;
+			req.session.userLogado.ListaNegra = rows[0].ListaNegra;
+			req.session.userLogado.Admin = rows[0].Admin;
+			
+			//Usuario logado com sucesso
+			loginSucesso = true;
+
+			//Depois de fazer login, manda pagina a ser redirecionado
+			res.send("/redirectLogin");
 		}
 		else {
-			console.log('Error while performing Query!');
+			console.log('Error while performing Query (PEGA INFO DB)');
 		}
 	});
 
-	//Usuario logado com sucesso
-	loginSucesso = true;
-
-	//Depois de fazer login, manda pagina a ser redirecionado
-	res.send("/redirectLogin");
 });
 
-/***Redireciona para pagina do usuario***/
+//*****Redireciona para pagina do usuario*****//
 app.get("/redirectLogin", function(req, res) {
 	if(loginSucesso) {
 		res.sendFile(path.join(__dirname, logged));
@@ -78,13 +88,19 @@ app.get("/redirectLogin", function(req, res) {
 	}
 });
 
-/***Acessa info do usuario logado***/
+//*****Acessa info do usuario logado*****//
 app.post("/login", function(req, res) {
 	res.setHeader('Content-Type', 'application/json');
-	res.json(userLogado);
+	res.json(req.session.userLogado);
 });
 
-/***Sign Out***/
+//*****Ranking*****//
+app.get("/ranking", function(req, res) {
+	montaRanking();
+	res.send();
+});
+
+//*****Sign Out*****//
 app.get("/signout", function(req, res) {
 	//Usuario deslogado
 	loginSucesso = false;
@@ -94,35 +110,57 @@ app.get("/signout", function(req, res) {
 
 /***************************BANCO DE DADOS*****************************/
 //*****Adicionar usuario ao DB*****//
-function addDB() {
-	//Pega propiedades do userLogado
-	var nome = userLogado.name;
-	var email = userLogado.email;
-	var foto = userLogado.photoURL;
-	var id = userLogado.uid;
+function addDB(req) {
+	//Pega propiedades do req.session.userLogado
+	var nome = req.session.userLogado.Nome;
+	var email = req.session.userLogado.Email;
+	var foto = req.session.userLogado.Foto;
+	var id = req.session.userLogado.ID;
 	var fatorK = 0;
-	var post = {nome: nome, email: email, foto: foto, id: id, fatorK: fatorK};
+	var posicao = 1;
+	var listaNegra = 0;
+	var admin = 0;
+	var post = {Nome: nome, Email: email, Foto: foto, ID: id, FatorK: fatorK, Posicao: posicao, ListaNegra: listaNegra, Admin: admin};
 
-	//Adiciona ao DB
+	//Adiciona ao DB de Pessoas
 	connection.query('INSERT IGNORE INTO Pessoa SET ?', post, function(err, rows, fields) {
 		if(!err) {
 			console.log(rows);
 		}
 		else {
 			console.log(err);
-			console.log('Error while performing Query!');
+			console.log('Error while performing Query (ADICIONA AO DB PESSOAS)');
 		}
 	});
 
-	//Printa DB
-	connection.query('SELECT * FROM Pessoa', function(err, rows, fields) {
+	//Printa Tabela
+	printTabela('Pessoa');
+}
+
+//*****Printa Tabela*****//
+function printTabela(tabela) {
+	connection.query('SELECT * FROM ??', [tabela], function(err, rows, fields) {
 		if(!err) {
 			console.log(rows);
 		}
 		else {
-			console.log('Error while performing Query!');
+			console.log('Error while performing Query (PRINTA TABELA)');
 		}
 	});
 }
 
+//*****Monta Ranking*****//
+function montaRanking() {
+	connection.query('SELECT ID, Nome, FatorK FROM Pessoa ORDER BY FatorK DESC', function(err, rows, fields) {
+		if(!err) {
+			console.log(rows);
+		}
+		else {
+			console.log('Error while performing Query (MONTA RANKING)');
+			console.log(err);
+		}
+	});
+}
+
+/*************************INICIA SERVIDOR*****************************/
 app.listen(3000);

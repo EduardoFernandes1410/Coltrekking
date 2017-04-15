@@ -49,11 +49,11 @@
 				firebase.auth().onAuthStateChanged(function(user) {
 					/*Se logou*/
 					if(user) {
-						//Seta info dos usuario logado
-						userInfo.name = user.displayName;
-						userInfo.email = user.email;
-						userInfo.photoURL = user.photoURL;
-						userInfo.uid = user.uid;
+						//Seta info do usuario logado
+						userInfo.Nome = user.displayName;
+						userInfo.Email = user.email;
+						userInfo.Foto = user.photoURL;
+						userInfo.ID = user.uid;
 
 						/*Manda userInfo para server*/
 						url = "/postUser";
@@ -69,9 +69,7 @@
 					}
 					else {					
 						console.log("Nao tem user");
-					}
-					
-					console.log(userInfo);
+					}					
 				});
 
 				/*Pega resultado de redirecionamento*/
@@ -81,7 +79,6 @@
 					}
 					//Info do usuario logado
 					user = result.user;
-					console.log(user);
 
 				}).catch(function(error) {
 					//Aqui cuida dos erros
