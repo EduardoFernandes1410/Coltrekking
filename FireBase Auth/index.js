@@ -44,7 +44,12 @@ var logged = 'logged.html';
 /******************************REQUISICOES*******************************/
 //*****Carrega pagina inicial*****//
 app.get("/", function(req, res) {
-	res.sendFile(path.join(__dirname, index));
+	if(req.session.userLogado) {
+		res.sendFile(path.join(__dirname, logged));
+	}
+	else {
+		res.sendFile(path.join(__dirname, index));
+	}
 });
 
 //*****Posta usuario logado*****//
@@ -102,6 +107,8 @@ app.get("/ranking", function(req, res) {
 
 //*****Sign Out*****//
 app.get("/signout", function(req, res) {
+	//Deleta session
+	delete req.session.userLogado;
 	//Usuario deslogado
 	loginSucesso = false;
 	//Manda para pagina de logout
@@ -134,7 +141,7 @@ function addDB(req) {
 	});
 
 	//Printa Tabela
-	printTabela('Pessoa');
+	//printTabela('Pessoa');
 }
 
 //*****Printa Tabela*****//
@@ -153,6 +160,24 @@ function printTabela(tabela) {
 function montaRanking() {
 	connection.query('SELECT ID, Nome, FatorK FROM Pessoa ORDER BY FatorK DESC', function(err, rows, fields) {
 		if(!err) {
+			//Atualiza a posicao no ranking
+			for(var i = 0; i < rows.length; i++) {
+				if(i == 0) {
+					connection.query('UPDATE Pessoa SET Posicao = 1 WHERE ID = ?', rows[0].ID);
+					rows[0].Posicao = 1;
+				}
+				else {
+					if(rows[i].FatorK == rows[i - 1].FatorK) {
+						connection.query('UPDATE Pessoa SET Posicao = ? WHERE ID = ?', [rows[i - 1].Posicao, rows[i].ID]);
+						rows[i].Posicao = rows[i - 1].Posicao;
+					}
+					else {
+						connection.query('UPDATE Pessoa SET Posicao = ? WHERE ID = ?', [(i + 1), rows[i].ID]);
+						rows[i].Posicao = i + 1;
+					}
+				}
+			}
+
 			console.log(rows);
 		}
 		else {

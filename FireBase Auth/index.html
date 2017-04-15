@@ -40,6 +40,7 @@
 
 			/***Facebook Sign In***/
 			function facebookSignIn() {
+				facebookProvider.addScope('email');
 				firebase.auth().signInWithRedirect(facebookProvider);
 			}
 
