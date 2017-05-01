@@ -1,25 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="main">
 	<head>
-		<title>FireBase Auth</title>
+		<meta charset="utf-8">
+		<title>Página Inicial - Coltrekking</title>
 
+		<!--Adiciona Angular-->
+		<script src="node_modules/angular/angular.min.js"></script>
+		<script src="node_modules/angular-route/angular-route.min.js"></script>
+
+		<!--Adiciona o Firebase-->
 		<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
 		<script src="https://apis.google.com/js/platform.js" async defer></script>
-		<meta name="google-signin-client_id" content="436699561525-24tmevumrhqj4dct2rlcukesubat6ugl.apps.googleusercontent.com">
-		
+
 		<!--Adiciona firebase.js-->
 		<script src="js/firebase.js"></script>
 		<!--Adiciona index.js-->
 		<script src="js/index/index.js"></script>
+		<!--Adiciona app.js-->
+		<script src="js/app.js"></script>
 	</head>
-
+	
 	<body>
-		<h1>COLTREKKING</h1>
+		<h1>Página Inicial</h1>
 
-		<input id="loginGoogle" type="button" value="Entrar com o Google" name="login" onclick="googleSignIn();">
+		<!--Info do usuario-->
+		<div ng-controller="MainController as main">
+			<img id="userImage" ng-src="{{ main.usuarioLogado.Foto }}" height="50px" width="50px" style="display: inline-block; border-radius: 100%; vertical-align: middle;">
+			<h2 id="welcomeMessage" style="display: inline-block;">{{ "Bem Vindo " + main.usuarioLogado.Nome }}</h2>
+			
+			<h3 id="fatork">{{ "Fator K: " + main.usuarioLogado.FatorK }}</h3>
+			<h3 id="posicao">{{ "Posição no Ranking: " + main.usuarioLogado.Posicao }}</h3>
+			<h3 id="listaNegra">{{ "Estado na Lista Negra: " + main.usuarioLogado.ListaNegra }}</h3>
 
-		<input id="loginFacebook" type="button" value="Entrar com o Facebook" name="login" onclick="facebookSignIn();">
+			<!--Criar Evento-->
+			<input type="button" name="criarEvento" ng-show="main.usuarioLogado.Admin == 1" value="Criar Evento">			
+		</div>
 
-		<fb:login-button data-auto-logout-link="true" scope="public_profile,email" size="large"></fb:login-button>
+		<!--Mostrar ranking button-->
+		<input type="button" name="ranking" value="Ranking" onclick="ranking();">
+		<br>
+		<br>
+
+		<!--Sign out button-->
+		<form action="/logout" method="get">
+			<input type="submit" value="Logout" name="logout" onclick="signOut();">
+		</form>
 	</body>
 </html>

@@ -1,68 +1,81 @@
-var userLogado;
+var googleProvider = new firebase.auth.GoogleAuthProvider();
+var facebookProvider = new firebase.auth.FacebookAuthProvider();
+
+var user;
 var url;
 var xmlhttp = new XMLHttpRequest();
+var usuarioInfo = new Object();
 
-/***Pega info do user logado***/
-window.onload = function(){
-	//Monta ranking
-	ranking();
+/***Quando a pagina carrega***/
+window.onload = function() {
+	initApp();
 }
 
-//Pega info do usuario logado
-function login() {
-	url = '/login'; //URL da solicitacao
-	xmlhttp.onreadystatechange = function(){
-		if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
-			userLogado = JSON.parse(xmlhttp.responseText);
-			console.log(userLogado);
-			//Atualiza a pagina
-			mostraInfo();
+/***Google Sign In***/
+function googleSignIn() {
+	firebase.auth().signInWithRedirect(googleProvider);
+	
+	//Altera botao de login
+	document.getElementById('loginGoogle').disabled = true;
+	document.getElementById('loginGoogle').value = "Redirecting...";
+}
+
+/***Facebook Sign In***/
+function facebookSignIn() {
+	facebookProvider.addScope('email');
+	firebase.auth().signInWithRedirect(facebookProvider);
+}
+
+/***Inicializar App***/
+function initApp() {
+	/*Ao mudar de estado (logado/deslogado)*/
+	firebase.auth().onAuthStateChanged(function(user) {
+		/*Se logou*/
+		if(user) {
+			//Seta info do usuario logado
+			usuarioInfo.Nome = user.displayName;
+			usuarioInfo.Email = user.email;
+			usuarioInfo.Foto = user.photoURL;
+			usuarioInfo.ID = user.uid;
+
+			/*Manda usuarioInfo para server*/
+			url = "/postUser";
+			xmlhttp.onreadystatechange = function() {
+				if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					/*Redireciona para logged.html*/
+					window.location = xmlhttp.responseText;
+				}
+			};
+			xmlhttp.open("POST", url, true);
+			xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+			xmlhttp.send(JSON.stringify(usuarioInfo));				
 		}
-	};
-	xmlhttp.open("POST", url, true);
-	xmlhttp.send();
-}
+		else {					
+			console.log("Nao tem user");
+		}					
+	});
 
-/***Mostra dados do usuario***/
-function mostraInfo() {
-	console.log(userLogado);
-	//Mostra imagem
-	document.getElementById('userImage').src = userLogado.Foto;
-	document.getElementById('userImage').style.width = "50px";
-	document.getElementById('userImage').style.height = "50px";
-	//Mostra mensagem de boas vindas
-	document.getElementById('welcomeMessage').innerHTML = "Bem Vindo " + userLogado.Nome;
-	//Mostra fator k
-	document.getElementById('fatork').innerHTML = "Fator K: " + userLogado.FatorK;
-	//Mostra posicao
-	document.getElementById('posicao').innerHTML = "Posição no Ranking: " + userLogado.Posicao;
-	//Mostra estado lista negra
-	document.getElementById('listaNegra').innerHTML = "Estado na Lista Negra: " + userLogado.ListaNegra;
-}
-
-/***Ranking***/
-function ranking() {
-	console.log("VOU MONTAR RANKING");
-	//Monta o ranking
-	url = '/ranking'; //URL da solicitacao
-	xmlhttp.onreadystatechange = function(){
-		if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
-			console.log("Ranking bem-sucedido");
-			login();
+	/*Pega resultado de redirecionamento*/
+	firebase.auth().getRedirectResult().then(function(result) {
+		if(result.credential) {
+			var token = result.credential.accessToken;
 		}
-	};
-	xmlhttp.open("GET", url, true);
-	xmlhttp.send();
-}
+		//Info do usuario logado
+		user = result.user;
 
-/***Sign Out***/
-function signOut() {
-	firebase.auth().signOut().then(function() {
-		//SignOut bem-sucedido
-		userInfo = null;
-		user = null;
-		console.log("Volte sempre!");
-	}, function(error) {
-		//Deu ruim
+	}).catch(function(error) {
+		//Aqui cuida dos erros
+		var errorCode = error.code;
+		//Erro de ja ter cadastrado com outro provider
+		if(errorCode == 'auth/account-exists-with-different-credential') {
+			alert("Ja tem cadastro");
+		}
+
+		var errorMessage = error.message;
+
+		//O email do usuario logado
+		var email = error.email;
+		//Tipo de credencial do FireBase usada
+		var credential = error.credential;
 	});
 }

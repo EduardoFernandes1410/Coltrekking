@@ -1,10 +1,12 @@
 {
-  	"name": "firebaseauth",
-  	"version": "1.0.0",
-  	"dependencies": {
-		"express": "^4.10.6",
-		"mysql": "^2.5.4",
-		"body-parser": "*",
-		"express-session": "*"
-	}
+  "name": "firebaseauth",
+  "version": "1.0.0",
+  "dependencies": {
+    "angular": "^1.6.4",
+    "angular-route": "^1.6.4",
+    "body-parser": "*",
+    "express": "^4.10.6",
+    "express-session": "*",
+    "mysql": "^2.5.4"
+  }
 }

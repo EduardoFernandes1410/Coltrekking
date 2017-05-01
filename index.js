@@ -37,50 +37,57 @@ connection.connect(function(err) {
 	}
 });
 
-/*************************VARIAVEIS DE EXECUCAO**************************/
-//var userLogado;
-var loginSucesso = false;
+/*********************************PAGINAS********************************/
 var index	= './index.html';
-var logout	= 'logout/index.html';
 var login = 'login/index.html';
 
+/*************************VARIAVEIS DE EXECUCAO**************************/
+var loginSucesso = false;
+
+//Construtor do usuario
+function Usuario(nome, email, foto, id, fatork, posicao, listaNegra, admin) {
+	this.Nome = nome;
+	this.Email = email;
+	this.Foto = foto;
+	this.ID = id;
+	this.FatorK = fatork;
+	this.Posicao = posicao;
+	this.ListaNegra = listaNegra;
+	this.Admin = admin;
+}
 /******************************REQUISICOES*******************************/
 //*****Carrega pagina inicial*****//
 app.get("/", function(req, res) {
-	res.sendFile(path.join(__dirname, index));
+	res.sendFile(path.join(__dirname, login));
 });
 
 //*****Posta usuario logado*****//
 app.post("/postUser", function(req, res) {
-	req.session.userLogado = req.body;
+	req.session.usuarioLogado = req.body;
+
 	//Adiciona usuario ao DB
 	addDB(req);
 	
-	//Pega info do DB
-	//pegaInfoUsuarioLogado(function callback() {
-		//Usuario logado com sucesso
-		loginSucesso = true;
+	loginSucesso = true;
 
-		//Depois de fazer login, manda pagina a ser redirecionado
-		res.send("/redirectLogin");
-	//});
-
+	//Depois de fazer login, manda pagina a ser redirecionado
+	res.send("/redirectLogin");
 });
 
 //*****Redireciona para pagina do usuario*****//
 app.get("/redirectLogin", function(req, res) {
 	if(loginSucesso) {
-		res.sendFile(path.join(__dirname, login));
+		res.sendFile(path.join(__dirname, index));
 	}
 	else {
-		res.sendFile(path.join(__dirname, index));
+		res.sendFile(path.join(__dirname, login));
 	}
 });
 
 //*****Acessa info do usuario logado*****//
 app.post("/login", function(req, res) {
 	res.setHeader('Content-Type', 'application/json');
-	res.json(req.session.userLogado);
+	res.json(req.session.usuarioLogado);
 });
 
 //*****Ranking*****//
@@ -96,26 +103,19 @@ app.get("/ranking", function(req, res) {
 //*****Log Out*****//
 app.get("/logout", function(req, res) {
 	//Deleta session
-	delete req.session.userLogado;
+	delete req.session.usuarioLogado;
 	//Usuario deslogado
 	loginSucesso = false;
 	//Manda para pagina de logout
-	res.sendFile(path.join(__dirname, logout));
+	res.sendFile(path.join(__dirname, login));
 });
 
 /***************************BANCO DE DADOS*****************************/
 //*****Adicionar usuario ao DB*****//
 function addDB(req) {
-	//Pega propiedades do req.session.userLogado
-	var nome = req.session.userLogado.Nome;
-	var email = req.session.userLogado.Email;
-	var foto = req.session.userLogado.Foto;
-	var id = req.session.userLogado.ID;
-	var fatorK = 0;
-	var posicao = 1;
-	var listaNegra = 0;
-	var admin = 0;
-	var post = {Nome: nome, Email: email, Foto: foto, ID: id, FatorK: fatorK, Posicao: posicao, ListaNegra: listaNegra, Admin: admin};
+	//Cria usuario com propriedades do req.session.usuarioLogado
+	var usuario = new Usuario(req.session.usuarioLogado.Nome, req.session.usuarioLogado.Email, req.session.usuarioLogado.Foto, req.session.usuarioLogado.ID, 0, 1, 0, 0);
+	var post = usuario;
 
 	//Adiciona ao DB de Pessoas
 	connection.query('INSERT IGNORE INTO Pessoa SET ?', post, function(err, rows, fields) {
@@ -134,13 +134,13 @@ function addDB(req) {
 
 //*****Pega Info do Usuario Logado*****//
 function pegaInfoUsuarioLogado(req, callback) {
-	connection.query('SELECT * FROM Pessoa WHERE ID = ?', req.session.userLogado.ID, function(err, rows, fields) {
+	connection.query('SELECT * FROM Pessoa WHERE ID = ?', req.session.usuarioLogado.ID, function(err, rows, fields) {
 		if(!err) {
 			//Retrieve info do DB
-			req.session.userLogado.FatorK = rows[0].FatorK;
-			req.session.userLogado.Posicao = rows[0].Posicao;
-			req.session.userLogado.ListaNegra = rows[0].ListaNegra;
-			req.session.userLogado.Admin = rows[0].Admin;
+			req.session.usuarioLogado.FatorK = rows[0].FatorK;
+			req.session.usuarioLogado.Posicao = rows[0].Posicao;
+			req.session.usuarioLogado.ListaNegra = rows[0].ListaNegra;
+			req.session.usuarioLogado.Admin = rows[0].Admin;
 			
 			//Realiza o callback
 			callback();

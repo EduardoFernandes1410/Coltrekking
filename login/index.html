@@ -1,36 +1,23 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>LoggedIn</title>
+		<title>Bem Vindo - Coltrekking</title>
+
 		<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
 		<script src="https://apis.google.com/js/platform.js" async defer></script>
-
+		<meta name="google-signin-client_id" content="436699561525-24tmevumrhqj4dct2rlcukesubat6ugl.apps.googleusercontent.com">
+		
 		<!--Adiciona firebase.js-->
 		<script src="js/firebase.js"></script>
 		<!--Adiciona index.js-->
 		<script src="js/login/index.js"></script>
 	</head>
-	
+
 	<body>
-		<h1>Usuario logado com sucesso</h1>
+		<h1>COLTREKKING</h1>
 
-		<!--Info do usuario-->
-		<div>
-			<img id="userImage" height="0px" width="0px" style="display: inline-block; border-radius: 100%; vertical-align: middle;" hidden="true">
-			<h2 id="welcomeMessage" style="display: inline-block;" hidden="true"></h2>
-			<h3 id="fatork"></h3>
-			<h3 id="posicao"></h3>
-			<h3 id="listaNegra"></h3>
-		</div>
+		<input id="loginGoogle" type="button" value="Entrar com o Google" name="login" onclick="googleSignIn();">
 
-		<!--Mostrar ranking button-->
-		<input type="button" name="ranking" value="Ranking" onclick="ranking();">
-		<br>
-		<br>
-
-		<!--Sign out button-->
-		<form action="/logout" method="get">
-			<input type="submit" value="Logout" name="logout" onclick="signOut();">
-		</form>
+		<input id="loginFacebook" type="button" value="Entrar com o Facebook" name="login" onclick="facebookSignIn();">
 	</body>
 </html>

@@ -1,81 +1,79 @@
-var googleProvider = new firebase.auth.GoogleAuthProvider();
-var facebookProvider = new firebase.auth.FacebookAuthProvider();
-
-var user;
+var usuarioLogado;
 var url;
 var xmlhttp = new XMLHttpRequest();
-var userInfo = new Object();
 
-/***Quando a pagina carrega***/
-window.onload = function() {
-	initApp();
+/***********************CARREGAR PAGINA*********************/
+window.onload = function(){
+	//Monta ranking
+	//ranking();
 }
 
-/***Google Sign In***/
-function googleSignIn() {
-	firebase.auth().signInWithRedirect(googleProvider);
-	
-	//Altera botao de login
-	document.getElementById('loginGoogle').disabled = true;
-	document.getElementById('loginGoogle').value = "Redirecting...";
-}
-
-/***Facebook Sign In***/
-function facebookSignIn() {
-	facebookProvider.addScope('email');
-	firebase.auth().signInWithRedirect(facebookProvider);
-}
-
-/***Inicializar App***/
-function initApp() {
-	/*Ao mudar de estado (logado/deslogado)*/
-	firebase.auth().onAuthStateChanged(function(user) {
-		/*Se logou*/
-		if(user) {
-			//Seta info do usuario logado
-			userInfo.Nome = user.displayName;
-			userInfo.Email = user.email;
-			userInfo.Foto = user.photoURL;
-			userInfo.ID = user.uid;
-
-			/*Manda userInfo para server*/
-			url = "/postUser";
-			xmlhttp.onreadystatechange = function() {
-				if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-					/*Redireciona para logged.html*/
-					window.location = xmlhttp.responseText;
-				}
-			};
-			xmlhttp.open("POST", url, true);
-			xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-			xmlhttp.send(JSON.stringify(userInfo));				
+/*********************POST INFO DO LOGADO**********************/
+function login() {
+	url = '/login'; //URL da solicitacao
+	xmlhttp.onreadystatechange = function(){
+		if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+			usuarioLogado = JSON.parse(xmlhttp.responseText);
+			//Atualiza a pagina
+			mostraInfo();
 		}
-		else {					
-			console.log("Nao tem user");
-		}					
+	};
+	xmlhttp.open("POST", url, true);
+	xmlhttp.send();
+/*
+	//ANGULAR
+	$http({
+		method: 'POST',
+		url: '/login'
+	}).then(function successCallback(response) {
+		usuarioLogado = JSON.parse(response.data);
+		mostraInfo();
+	}, function errorCallback(response) {
+		//erro
+		console.log(response.status);
 	});
+	*/
+}
 
-	/*Pega resultado de redirecionamento*/
-	firebase.auth().getRedirectResult().then(function(result) {
-		if(result.credential) {
-			var token = result.credential.accessToken;
+/*******************MOSTRA DADOS DO USUARIO*********************/
+function mostraInfo() {
+/*
+	//Mostra imagem
+	document.getElementById('userImage').src = usuarioLogado.Foto;
+	document.getElementById('userImage').style.width = "50px";
+	document.getElementById('userImage').style.height = "50px";
+	//Mostra mensagem de boas vindas
+	document.getElementById('welcomeMessage').innerHTML = "Bem Vindo " + usuarioLogado.Nome;
+	//Mostra fator k
+	document.getElementById('fatork').innerHTML = "Fator K: " + usuarioLogado.FatorK;
+	//Mostra posicao
+	document.getElementById('posicao').innerHTML = "Posição no Ranking: " + usuarioLogado.Posicao;
+	//Mostra estado lista negra
+	document.getElementById('listaNegra').innerHTML = "Estado na Lista Negra: " + usuarioLogado.ListaNegra;
+*/
+}
+
+/**************************RANKING***************************/
+function ranking() {
+	//Monta o ranking
+	url = '/ranking'; //URL da solicitacao
+	xmlhttp.onreadystatechange = function(){
+		if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+			console.log("Ranking bem-sucedido");
+			login();
 		}
-		//Info do usuario logado
-		user = result.user;
+	};
+	xmlhttp.open("GET", url, true);
+	xmlhttp.send();
+}
 
-	}).catch(function(error) {
-		//Aqui cuida dos erros
-		var errorCode = error.code;
-		//Erro de ja ter cadastrado com outro provider
-		if(errorCode == 'auth/account-exists-with-different-credential') {
-			alert("Ja tem cadastro");
-		}
-
-		var errorMessage = error.message;
-
-		//O email do usuario logado
-		var email = error.email;
-		//Tipo de credencial do FireBase usada
-		var credential = error.credential;
+/*************************SIGN OUT**************************/
+function signOut() {
+	firebase.auth().signOut().then(function() {
+		//SignOut bem-sucedido
+		userInfo = null;
+		user = null;
+	}, function(error) {
+		//Deu ruim
 	});
 }
