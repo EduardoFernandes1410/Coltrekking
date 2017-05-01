@@ -25,7 +25,9 @@ app.use(bodyParser.json());
 app.use(session({secret: 'S3NH4'}));
 
 //Utilizar o express-static
-app.use(express.static('./'));
+app.use(express.static('./', {
+	index: 'login/index.html'
+}));
 
 //Conecta ao Banco de Dados
 connection.connect(function(err) {
@@ -38,7 +40,7 @@ connection.connect(function(err) {
 });
 
 /*********************************PAGINAS********************************/
-var index	= './index.html';
+var index	= 'index.html';
 var login = 'login/index.html';
 
 /*************************VARIAVEIS DE EXECUCAO**************************/
@@ -92,10 +94,10 @@ app.post("/login", function(req, res) {
 
 //*****Ranking*****//
 app.get("/ranking", function(req, res) {
-	montaRanking(function callback() {
+	montaRanking(function callback(rows) {
 		//Atualiza info do usuario
 		pegaInfoUsuarioLogado(req, function callback() {
-			res.send();
+			res.send(rows);
 		}); 
 	});
 });
@@ -186,7 +188,7 @@ function montaRanking(callback) {
 			}
 
 			console.log(rows);
-			callback();
+			callback(rows);
 		}
 		else {
 			console.log('Error while performing Query (MONTA RANKING)');

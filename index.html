@@ -26,24 +26,38 @@
 		<!--Info do usuario-->
 		<div ng-controller="MainController as main">
 			<img id="userImage" ng-src="{{ main.usuarioLogado.Foto }}" height="50px" width="50px" style="display: inline-block; border-radius: 100%; vertical-align: middle;">
-			<h2 id="welcomeMessage" style="display: inline-block;">{{ "Bem Vindo " + main.usuarioLogado.Nome }}</h2>
+			<h2 id="welcomeMessage" style="display: inline-block;">Bem Vindo {{ main.usuarioLogado.Nome }}</h2>
 			
-			<h3 id="fatork">{{ "Fator K: " + main.usuarioLogado.FatorK }}</h3>
-			<h3 id="posicao">{{ "Posição no Ranking: " + main.usuarioLogado.Posicao }}</h3>
-			<h3 id="listaNegra">{{ "Estado na Lista Negra: " + main.usuarioLogado.ListaNegra }}</h3>
+			<h3 id="fatork">Fator K: {{ main.usuarioLogado.FatorK }}</h3>
+			<h3 id="posicao">Posição no Ranking: {{ main.usuarioLogado.Posicao }}</h3>
+			<h3 id="listaNegra">Estado na Lista Negra: {{ main.usuarioLogado.ListaNegra }}</h3>
 
 			<!--Criar Evento-->
 			<input type="button" name="criarEvento" ng-show="main.usuarioLogado.Admin == 1" value="Criar Evento">			
 		</div>
 
-		<!--Mostrar ranking button-->
-		<input type="button" name="ranking" value="Ranking" onclick="ranking();">
-		<br>
-		<br>
+		<!--Ranking-->
+		<div ng-controller="RankingController as ranking">
+			<table>
+				<!--Titulos da tabela-->
+				<tr>
+					<th>Posição</th>
+					<th>Nome</th>
+					<th>Fator K</th>
+				</tr>
+
+				<!--Linha para cada usuario-->
+				<tr ng-repeat="pessoa in ranking.ranking">
+					<td>{{pessoa.Posicao}}</td>
+					<td>{{pessoa.Nome}}</td>
+					<td>{{pessoa.FatorK}}</td>
+				</tr>
+			</table>
+		</div>
 
 		<!--Sign out button-->
 		<form action="/logout" method="get">
-			<input type="submit" value="Logout" name="logout" onclick="signOut();">
+			<input type="submit" value="Logout" name="logout" onclick="logOut();">
 		</form>
 	</body>
 </html>
