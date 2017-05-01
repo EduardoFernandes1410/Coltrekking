@@ -24,6 +24,9 @@ app.use(bodyParser.json());
 //Utilizar o express-session
 app.use(session({secret: 'S3NH4'}));
 
+//Utilizar o express-static
+app.use(express.static('./'));
+
 //Conecta ao Banco de Dados
 connection.connect(function(err) {
 	if(!err){
@@ -37,25 +40,19 @@ connection.connect(function(err) {
 /*************************VARIAVEIS DE EXECUCAO**************************/
 //var userLogado;
 var loginSucesso = false;
-var index	= 'index.html';
-var signout	= 'signout.html';
-var logged = 'logged.html';
+var index	= './index.html';
+var logout	= 'logout/index.html';
+var login = 'login/index.html';
 
 /******************************REQUISICOES*******************************/
 //*****Carrega pagina inicial*****//
 app.get("/", function(req, res) {
-	if(req.session.userLogado) {
-		res.sendFile(path.join(__dirname, logged));
-	}
-	else {
-		res.sendFile(path.join(__dirname, index));
-	}
+	res.sendFile(path.join(__dirname, index));
 });
 
 //*****Posta usuario logado*****//
 app.post("/postUser", function(req, res) {
 	req.session.userLogado = req.body;
-
 	//Adiciona usuario ao DB
 	addDB(req);
 	
@@ -73,7 +70,7 @@ app.post("/postUser", function(req, res) {
 //*****Redireciona para pagina do usuario*****//
 app.get("/redirectLogin", function(req, res) {
 	if(loginSucesso) {
-		res.sendFile(path.join(__dirname, logged));
+		res.sendFile(path.join(__dirname, login));
 	}
 	else {
 		res.sendFile(path.join(__dirname, index));
@@ -96,14 +93,14 @@ app.get("/ranking", function(req, res) {
 	});
 });
 
-//*****Sign Out*****//
-app.get("/signout", function(req, res) {
+//*****Log Out*****//
+app.get("/logout", function(req, res) {
 	//Deleta session
 	delete req.session.userLogado;
 	//Usuario deslogado
 	loginSucesso = false;
 	//Manda para pagina de logout
-	res.sendFile(path.join(__dirname, signout));
+	res.sendFile(path.join(__dirname, logout));
 });
 
 /***************************BANCO DE DADOS*****************************/
