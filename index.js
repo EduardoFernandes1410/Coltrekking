@@ -26,7 +26,7 @@ app.use(session({secret: 'S3NH4'}));
 
 //Utilizar o express-static
 app.use(express.static('./', {
-	index: 'login/index.html'
+	index: 'html/login/index.html'
 }));
 
 //Conecta ao Banco de Dados
@@ -40,8 +40,8 @@ connection.connect(function(err) {
 });
 
 /*********************************PAGINAS********************************/
-var index	= 'index.html';
-var login = 'login/index.html';
+var index	= '/html/index.html';
+var login = '/html/login/index.html';
 
 /*************************VARIAVEIS DE EXECUCAO**************************/
 var loginSucesso = false;
@@ -68,12 +68,15 @@ app.post("/postUser", function(req, res) {
 	req.session.usuarioLogado = req.body;
 
 	//Adiciona usuario ao DB
-	addDB(req);
-	
+	addDB(req);	
 	loginSucesso = true;
 
-	//Depois de fazer login, manda pagina a ser redirecionado
-	res.send("/redirectLogin");
+	//Pega info como fatork, posicao, etc
+	pegaInfoUsuarioLogado(req, function callback() {
+		//Depois de fazer login, manda pagina a ser redirecionado
+		res.send("/redirectLogin");
+	});
+
 });
 
 //*****Redireciona para pagina do usuario*****//

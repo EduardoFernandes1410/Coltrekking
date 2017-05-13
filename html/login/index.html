@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bem Vindo - Coltrekking</title>
+
+		<!--Importa firebase + login google-->
+		<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
+		<script src="https://apis.google.com/js/platform.js" async defer></script>
+		<meta name="google-signin-client_id" content="436699561525-24tmevumrhqj4dct2rlcukesubat6ugl.apps.googleusercontent.com">
+		
+		<!--Importa Google Icon Font-->
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Importa materialize.css-->
+		<link type="text/css" rel="stylesheet" href="./node_modules/materialize-css/dist/css/materialize.min.css"  media="screen,projection"/>
+		<!--Mobile Viewport-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+		<!--Adiciona firebase.js-->
+		<script src="./js/firebase.js"></script>
+		<!--Adiciona script.js-->
+		<script src="./js/login/script.js"></script>
+
+		<!--Importa CSS-->
+		<link rel="stylesheet" type="text/css" href="css/login/style.css">
+	</head>
+
+	<body>
+		<!--Conteudo-->
+		<div class="content">
+			<div class="container">
+				<div class="row">
+					<div class="col ">
+						
+					</div>
+				</div>
+				<!--Card central-->
+				<div class="card">
+					<div class="card-content">
+						<!--Logo-->
+						<span class="card-title">Coltrekking</span>
+
+						<!--Botoes de Login-->
+						<input id="loginGoogle" type="button" value="Entrar com o Google" name="login" onclick="googleSignIn();">
+						<input id="loginFacebook" type="button" value="Entrar com o Facebook" name="login" onclick="facebookSignIn();">
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!--Importa jQuery + materialize.js-->
+		<script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
+		<script type="text/javascript" src="./node_modules/materialize-css/dist/js/materialize.min.js"></script>
+	</body>
+</html>

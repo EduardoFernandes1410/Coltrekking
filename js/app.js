@@ -3,10 +3,10 @@
 
 //**********Servicos**********//
 	//POST /login
-	app.factory('MainService', function($http) {
-		var mainService = {};
+	app.factory('LoginService', function($http) {
+		var loginService = {};
 
-		mainService.postUsuario = function(callback) {
+		loginService.postUsuario = function(callback) {
 			$http.post('/login').then(function successCallback(response) {
 				//Sucesso
 				var answer = response.data;
@@ -18,7 +18,7 @@
 			});
 		}
 
-		return mainService;
+		return loginService;
 	});
 
 	//GET /ranking
@@ -41,10 +41,12 @@
 	});
 
 //**********Controles**********//
-	//Main Controller
-	app.controller('MainController', ['MainService', function(mainService) {
-		//Chama MainService
-		mainService.postUsuario(function(answer) {
+	//Login Controller
+	app.controller('LoginController', ['LoginService', function(loginService) {
+		var usuarioLogado;
+
+		//Chama LoginService
+		loginService.postUsuario(function(answer) {
 			if(answer != null) {
 				this.usuarioLogado = answer;
 			}
@@ -53,6 +55,8 @@
 
 	//Ranking Controller
 	app.controller('RankingController', ['RankingService', function(rankingService) {
+		var ranking;
+
 		//Chama RankingService
 		rankingService.getRanking(function(answer) {
 			if(answer != null) {

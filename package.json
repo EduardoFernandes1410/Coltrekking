@@ -7,6 +7,15 @@
     "body-parser": "*",
     "express": "^4.10.6",
     "express-session": "*",
+    "jquery": "^3.2.1",
+    "materialize-css": "^0.98.2",
     "mysql": "^2.5.4"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0"
   }
 }
