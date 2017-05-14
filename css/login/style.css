@@ -10,8 +10,39 @@
   background-image: url("../../rsc/login/img/login-background.jpg");
   width: 1920px;
   height: 1080px;
-  -webkit-filter: contrast(60%);
-  -moz-filter: contrast(60%);
-  -o-filter: contrast(60%);
-  -ms-filter: contrast(60%);
-  filter: contrast(60%); }
+  -webkit-filter: contrast(50%);
+  -moz-filter: contrast(50%);
+  -o-filter: contrast(50%);
+  -ms-filter: contrast(50%);
+  filter: contrast(50%); }
+
+/*****Leva card ao centro da tela*****/
+html, body, .content, .container, .row, .col, .valign-wrapper {
+  height: 100%; }
+
+/*****Card Central*****/
+.valign-wrapper {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto; }
+
+.card {
+  width: 100%;
+  max-width: 486px;
+  margin-left: auto;
+  margin-right: auto; }
+  .card #logo {
+    width: 90%;
+    margin-left: 5%;
+    margin-bottom: 8%;
+    margin-top: 5%; }
+  .card blockquote {
+    font-size: 20px;
+    font-weight: 300;
+    color: white;
+    margin-bottom: 13%;
+    border-left: 5px solid #795548;
+    /* Just change the color value and that's it*/ }
+  .card a {
+    display: block;
+    margin-bottom: 50px; }

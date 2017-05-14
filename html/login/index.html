@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title>Bem Vindo - Coltrekking</title>
+		<meta charset="utf-8">
 
 		<!--Importa firebase + login google-->
 		<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
@@ -29,18 +30,31 @@
 		<div class="content">
 			<div class="container">
 				<div class="row">
-					<div class="col s10 offset-s1 l8 offset-l2 xl6 offset-xl3">
-						<!--Card central-->
-						<div class="card">
-							<div class="card-content">
-								<!--Logo-->
-								<span class="card-title">Coltrekking</span>
+					<div class="col s10 offset-s1 m6 offset-m3 l6 offset-l3 xl6 offset-xl3">
+						<div class="valign-wrapper">
+							<!--Card central-->
+							<div class="card light-green z-depth-5">
+								<div class="card-content">
+									<!--Logo-->
+									<span class="card-title">
+										<img id="logo" src="../rsc/logo/coltrekking-logo-2.png">
+									</span>
 
-								<!--Botoes de Login-->
-								<input id="loginGoogle" type="button" value="Entrar com o Google" name="login" onclick="googleSignIn();">
-								<input id="loginFacebook" type="button" value="Entrar com o Facebook" name="login" onclick="facebookSignIn();">
+									<blockquote>
+										Bem-vindo à experiência definitiva <br>
+										Está preparado?
+									</blockquote>
+
+									<!--Botoes de Login para !mobile-->
+									<a id="loginGoogle" href="#" class="hide-on-small-only waves-effect waves-light btn-large red lighten-1" onclick="googleSignIn();"><i class="material-icons left"><img src="../rsc/login/icones/google.png"></i>Entrar com o Google</a>
+									<a id="loginFacebook" href="#" class="hide-on-small-only waves-effect waves-light btn-large blue lighten-1" onclick="facebookSignIn();"><i class="material-icons left"><img src="../rsc/login/icones/facebook-box.png"></i>Entrar com o Facebook</a>
+
+									<!--Botoes de Login para !mobile-->
+									<a id="loginGoogle" href="#" class="hide-on-med-and-up waves-effect waves-light btn-large red lighten-1" onclick="googleSignIn();">Entrar c/ Google</a>
+									<a id="loginFacebook" href="#" class="hide-on-med-and-up waves-effect waves-light btn-large blue lighten-1" onclick="facebookSignIn();">Entrar c/ Facebook</a>
+								</div>
 							</div>
-						</div>						
+						</div>
 					</div>
 				</div>
 			</div>
