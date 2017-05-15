@@ -1,0 +1,94 @@
+/*****Body*****/
+body {
+	background-color: #fafafa;
+}
+
+/*****Nav Bar*****/
+nav {
+	.row {
+		margin-bottom: 0px;
+	}
+
+	//Logo
+	#logo {
+		width: 120px;
+		margin-top: 4%;
+		margin-left: 10%;
+	}
+
+	//Search Bar
+	form {
+		.input-field {
+			margin-top: 8px !important;
+			margin: auto;
+			border-radius: 2px;
+		}
+
+		#inputWrapper {
+			width: 70%;
+			height: 50px !important;
+		}
+
+		#search {
+			text-color: white;
+		}
+
+		.material-icons {
+			margin-top: -6px;
+		}
+
+		//Mudar a cor do place-holder
+		::-webkit-input-placeholder {
+			color: white;
+		}
+		:-moz-placeholder {
+			color: white;
+			opacity:  1;
+		}
+		::-moz-placeholder {
+			color: white;
+			opacity:  1;
+		}
+		:-ms-input-placeholder {
+			color: white;
+		}
+		::-ms-input-placeholder {
+			color: white;
+		}
+	}
+
+	//Menu Usuario
+	ul {
+		margin-right: 8% !important;
+		
+		#userImage {
+			width: 35px;
+			margin-top: 40%;
+		}		
+	}
+	
+	//Tweaks do mobile
+	@media screen and (max-width: 992px) {
+		.input-field {
+			margin-bottom: 8px !important;
+		}
+
+		form {
+			.material-icons {
+				margin-top: -5px;
+			}
+		}
+
+		.button-collapse {
+			margin-top: 4px !important;
+		}
+	}
+
+	@media screen and (max-width: 600px) {
+		form {
+			.material-icons {
+				margin-top: -2px;
+			}
+		}
+	}
+}
