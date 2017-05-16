@@ -1,6 +1,12 @@
+/*****ANOTACOES*****/
 /*****Body*****/
 body {
   background-color: #fafafa; }
+
+/*****Container*****/
+.container {
+  width: 96.5% !important;
+  margin-left: 3.5% !important; }
 
 /*****Nav Bar*****/
 nav .row {
@@ -9,54 +15,56 @@ nav .row {
 nav #logo {
   width: 120px;
   margin-top: 4%;
-  margin-left: 10%; }
+  margin-left: 12%; }
 
-nav form .input-field {
-  margin-top: 8px !important;
-  margin: auto;
-  -webkit-border-radius: 2px;
-  border-radius: 2px; }
-
-nav form #inputWrapper {
-  width: 70%;
-  height: 50px !important; }
-
-nav form #search {
-  text-color: white; }
-
-nav form .material-icons {
-  margin-top: -6px; }
-
-nav form ::-webkit-input-placeholder {
-  color: white; }
-
-nav form :-moz-placeholder {
-  color: white;
-  opacity: 1; }
-
-nav form ::-moz-placeholder {
-  color: white;
-  opacity: 1; }
-
-nav form :-ms-input-placeholder {
-  color: white; }
-
-nav form ::-ms-input-placeholder {
-  color: white; }
+nav form {
+  margin-top: 8px; }
+  nav form .input-field {
+    margin: auto;
+    -webkit-border-radius: 2px;
+    border-radius: 2px; }
+  nav form #inputWrapper {
+    width: 100%;
+    height: 50px !important; }
+  nav form #search {
+    text-color: white; }
+  nav form .material-icons {
+    margin-top: -6px; }
+  nav form ::-webkit-input-placeholder {
+    color: white; }
+  nav form :-moz-placeholder {
+    color: white;
+    opacity: 1; }
+  nav form ::-moz-placeholder {
+    color: white;
+    opacity: 1; }
+  nav form :-ms-input-placeholder {
+    color: white; }
+  nav form ::-ms-input-placeholder {
+    color: white; }
 
 nav ul {
   margin-right: 8% !important; }
+  nav ul #messageIcon {
+    margin-right: 30px; }
   nav ul #userImage {
-    width: 35px;
-    margin-top: 40%; }
+    width: 40px;
+    margin-top: 30%; }
+
+nav .tabs {
+  margin-left: 3.5%; }
 
 @media screen and (max-width: 992px) {
-  nav .input-field {
+  nav form .input-field {
     margin-bottom: 8px !important; }
+  nav form #inputWrapper {
+    width: 90%; }
   nav form .material-icons {
     margin-top: -5px; }
   nav .button-collapse {
-    margin-top: 4px !important; } }
+    margin-top: 4px !important; }
+  nav .tabs {
+    margin-left: 0%; } }
 
 @media screen and (max-width: 600px) {
   nav form .material-icons {

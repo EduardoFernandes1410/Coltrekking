@@ -1,6 +1,15 @@
+/*****ANOTACOES*****/
+//Elementos fora da navbar tem 3.5% de margin-left
+
 /*****Body*****/
 body {
 	background-color: #fafafa;
+}
+
+/*****Container*****/
+.container {
+	width: 96.5% !important;
+	margin-left: 3.5% !important;
 }
 
 /*****Nav Bar*****/
@@ -13,19 +22,20 @@ nav {
 	#logo {
 		width: 120px;
 		margin-top: 4%;
-		margin-left: 10%;
+		margin-left: 12%;
 	}
 
 	//Search Bar
 	form {
+		margin-top: 8px;
+
 		.input-field {
-			margin-top: 8px !important;
 			margin: auto;
 			border-radius: 2px;
 		}
 
 		#inputWrapper {
-			width: 70%;
+			width: 100%;
 			height: 50px !important;
 		}
 
@@ -61,19 +71,35 @@ nav {
 	ul {
 		margin-right: 8% !important;
 		
+		//Icone de Mensagens
+		#messageIcon {
+			margin-right: 30px;
+		}
+
+		//Foto do Usuario
 		#userImage {
-			width: 35px;
-			margin-top: 40%;
+			width: 40px;			
+			margin-top: 30%;
 		}		
+	}
+
+	//Tabs
+	.tabs {
+		margin-left: 3.5%;
 	}
 	
 	//Tweaks do mobile
 	@media screen and (max-width: 992px) {
-		.input-field {
-			margin-bottom: 8px !important;
-		}
-
+		//Barra de Pesquisa
 		form {
+			.input-field {
+				margin-bottom: 8px !important;
+			}
+
+			#inputWrapper {
+				width: 90%;
+			}
+
 			.material-icons {
 				margin-top: -5px;
 			}
@@ -81,6 +107,11 @@ nav {
 
 		.button-collapse {
 			margin-top: 4px !important;
+		}
+
+		//Tabs
+		.tabs {
+			margin-left: 0%;
 		}
 	}
 
