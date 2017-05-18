@@ -5,8 +5,7 @@ body {
 
 /*****Container*****/
 .container {
-  width: 96.5% !important;
-  margin-left: 3.5% !important; }
+  margin: auto !important; }
 
 /*****Nav Bar*****/
 nav .row {
@@ -14,8 +13,8 @@ nav .row {
 
 nav #logo {
   width: 120px;
-  margin-top: 4%;
-  margin-left: 12%; }
+  margin-left: -2%;
+  margin-top: 8px; }
 
 nav form {
   margin-top: 8px; }
@@ -43,18 +42,34 @@ nav form {
   nav form ::-ms-input-placeholder {
     color: white; }
 
-nav ul {
-  margin-right: 8% !important; }
-  nav ul #messageIcon {
-    margin-right: 30px; }
-  nav ul #userImage {
-    width: 40px;
-    margin-top: 30%; }
+nav ul #messageIcon {
+  margin-right: 25px; }
 
-nav .tabs {
-  margin-left: 3.5%; }
+nav ul .dropdown-button {
+  height: 62px; }
+
+nav ul .dropdown-content {
+  width: 230px !important; }
+  nav ul .dropdown-content a {
+    color: #000;
+    cursor: default; }
+    nav ul .dropdown-content a span {
+      float: right;
+      color: #00c853; }
+  nav ul .dropdown-content #nome-usuario {
+    font-weight: 500; }
+  nav ul .dropdown-content #sair-button {
+    cursor: pointer; }
+
+nav ul #userImage {
+  width: 40px;
+  margin-top: 11px; }
 
 @media screen and (max-width: 992px) {
+  nav .nav-container {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    width: 100%; }
   nav form .input-field {
     margin-bottom: 8px !important; }
   nav form #inputWrapper {
@@ -62,10 +77,14 @@ nav .tabs {
   nav form .material-icons {
     margin-top: -5px; }
   nav .button-collapse {
-    margin-top: 4px !important; }
-  nav .tabs {
-    margin-left: 0%; } }
+    margin-top: 4px !important; } }
 
 @media screen and (max-width: 600px) {
   nav form .material-icons {
     margin-top: -2px; } }
+
+/*****RANKING*****/
+#ranking {
+  margin-top: 25px !important; }
+  #ranking thead th {
+    padding-top: 0px !important; }

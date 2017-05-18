@@ -8,8 +8,7 @@ body {
 
 /*****Container*****/
 .container {
-	width: 96.5% !important;
-	margin-left: 3.5% !important;
+	margin: auto !important;
 }
 
 /*****Nav Bar*****/
@@ -21,8 +20,8 @@ nav {
 	//Logo
 	#logo {
 		width: 120px;
-		margin-top: 4%;
-		margin-left: 12%;
+		margin-left: -2%;
+		margin-top: 8px;
 	}
 
 	//Search Bar
@@ -68,28 +67,56 @@ nav {
 	}
 
 	//Menu Usuario
-	ul {
-		margin-right: 8% !important;
-		
+	ul {		
 		//Icone de Mensagens
 		#messageIcon {
-			margin-right: 30px;
+			margin-right: 25px;
+		}
+
+		//Ativador do Dropdown
+		.dropdown-button {
+			height: 62px;
+		}
+
+		//Menu Dropdown
+		.dropdown-content {
+			width: 230px !important;
+
+			a {
+				color: #000;
+				cursor: default;
+				
+				span {
+					float: right;
+					color: #00c853;
+				}			
+			}
+
+			#nome-usuario {
+				font-weight: 500;
+			}
+
+			#sair-button {
+				cursor: pointer;
+			}
 		}
 
 		//Foto do Usuario
 		#userImage {
 			width: 40px;			
-			margin-top: 30%;
+			margin-top: 11px;
 		}		
-	}
-
-	//Tabs
-	.tabs {
-		margin-left: 3.5%;
 	}
 	
 	//Tweaks do mobile
 	@media screen and (max-width: 992px) {
+		//Nav-Container
+		.nav-container {
+			margin-left: 0px !important;
+			margin-right: 0px !important;
+			width: 100%;
+		}
+
 		//Barra de Pesquisa
 		form {
 			.input-field {
@@ -108,11 +135,6 @@ nav {
 		.button-collapse {
 			margin-top: 4px !important;
 		}
-
-		//Tabs
-		.tabs {
-			margin-left: 0%;
-		}
 	}
 
 	@media screen and (max-width: 600px) {
@@ -121,5 +143,14 @@ nav {
 				margin-top: -2px;
 			}
 		}
+	}
+}
+
+/*****RANKING*****/
+#ranking {
+	margin-top: 25px !important;
+
+	thead th {
+		padding-top: 0px !important;
 	}
 }

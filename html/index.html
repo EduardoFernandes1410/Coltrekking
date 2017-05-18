@@ -35,42 +35,57 @@
 				<nav class="nav-extended light-green z-depth-2">
 					<div class="nav-wrapper light-green">
 						<div class="row">
-							<!--Logo-->
-							<div class="col l3 hide-on-med-and-down">
-								<img id="logo" src="../rsc/logo/coltrekking-logo-3.png">					
-							</div>
+							<div class="container nav-container">
+								<!--Logo-->
+								<div class="col l3 hide-on-med-and-down">
+									<img id="logo" src="../rsc/logo/coltrekking-logo-3.png">					
+								</div>
 
-							<!--Botao Hamburger-->
-							<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+								<!--Botao Hamburger-->
+								<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 
-							<!--Search Bar-->
-							<div class="col s10 m11 l6">
-								<form>
-									<div id="inputWrapper" class="input-field light-green lighten-1">
-										<input id="search" type="search" placeholder="Pesquisar" required>
-										<label class="label-icon" for="search"><i class="material-icons">search</i></label>
-										<i class="material-icons">close</i>
-									</div>
-								</form>
-							</div>
+								<!--Search Bar-->
+								<div class="col s10 m11 l6">
+									<form>
+										<div id="inputWrapper" class="input-field light-green lighten-1">
+											<input id="search" type="search" placeholder="Pesquisar" required>
+											<label class="label-icon" for="search"><i class="material-icons">search</i></label>
+											<i class="material-icons">close</i>
+										</div>
+									</form>
+								</div>
 
-							<!--User Menu-->
-							<div class="col l3 hide-on-med-and-down">
-								<ul id="nav-mobile" class="right">
-									<li><i id="messageIcon" class="material-icons">message</i></li>
-									<li><img id="userImage" class="circle" ng-src="{{ login.usuarioLogado.Foto }}"></li>			
-								</ul>
+								<!--User Menu-->
+								<div class="col l3 hide-on-med-and-down">
+									<ul id="nav-user" class="right">
+										<!--Mensagenss-->
+										<li><i id="messageIcon" class="material-icons">message</i></li>
+										<!--User Dropdown-->
+										<li><a class="dropdown-button" href="#" data-beloworigin="true" data-activates="dropdown-menu"><img id="userImage" class="circle" ng-src="{{ login.usuarioLogado.Foto }}"></a></li>
+										<ul id="dropdown-menu" class="dropdown-content">
+											<li><a href="#!" id="nome-usuario">{{ login.usuarioLogado.Nome }}</a></li>
+											<li><a href="#!">Colocação no Ranking: <span>{{ login.usuarioLogado.Posicao }}º</span></a></li>
+											<li><a href="#!">Fator K: <span>{{ login.usuarioLogado.FatorK }}</span></a></li>
+											<li><a href="#!">Lista Negra: <span>{{ login.usuarioLogado.ListaNegra }}</span></a></li>
+											<li class="divider"></li>
+											<!--Logout Button-->
+											<li><a id="sair-button" href="/logout" onclick="logOut();">Sair</a></li>
+										</ul>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</div>
 
 					<!--Tabs-->
-					<div class="nav-content">
-						<ul class="tabs tabs-transparent">
-							<li class="tab"><a href="#newsFeed">News Feed</a></li>
-							<li class="tab"><a href="#eventos">Eventos</a></li>
-							<li class="tab"><a href="#classificacao">Classificação</a></li>
-						</ul>
+					<div class="container nav-container">
+						<div class="nav-content">
+							<ul class="tabs tabs-transparent">
+								<li class="tab"><a href="#newsFeed">News Feed</a></li>
+								<li class="tab"><a href="#eventos">Eventos</a></li>
+								<li class="tab"><a href="#ranking">Ranking</a></li>
+							</ul>
+						</div>
 					</div>
 				</nav>
 			</div>
@@ -86,50 +101,48 @@
 
 		<!--Paginas-->
 		<div class="container">
+			<!--News Feed-->
 			<div id="newsFeed">
 				<p>Bem Vindo ao News Feed do Coltrekking!</p>
+			</div>
+
+			<!--Ranking-->
+			<div id="ranking">
+				<div class="card">
+					<div class="card-content">
+						<!--Tabela-->
+						<div ng-controller="RankingController as ranking">
+							<table class="striped">
+								<!--Titulos da tabela-->
+								<thead>
+									<tr>
+										<th>Posição</th>
+										<th>Nome</th>
+										<th>Fator K</th>
+									</tr>
+								</thead>
+
+								<!--Linha para cada usuario-->
+								<tbody>
+									<tr ng-repeat="pessoa in ranking.ranking">
+										<td>{{pessoa.Posicao}}º</td>
+										<td>{{pessoa.Nome}}</td>
+										<td>{{pessoa.FatorK}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
 
 
 <!--
-		<!-Info do usuario->
-		<div ng-controller="LoginController as login">
-			<img id="userImage" ng-src="{{ login.usuarioLogado.Foto }}" style="display: inline-block; border-radius: 100%; vertical-align: middle;">
-			<h2 id="welcomeMessage" style="display: inline-block;">Bem Vindo {{ login.usuarioLogado.Nome }}</h2>
-			
-			<h3 id="fatork">Fator K: {{ login.usuarioLogado.FatorK }}</h3>
-			<h3 id="posicao">Posição no Ranking: {{ login.usuarioLogado.Posicao }}</h3>
-			<h3 id="listaNegra">Estado na Lista Negra: {{ login.usuarioLogado.ListaNegra }}</h3>
-
-			<!-Criar Evento->
-			<input type="button" name="criarEvento" ng-show="login.usuarioLogado.Admin == 1" value="Criar Evento">			
-		</div>
-
-		<!-Ranking->
-		<div ng-controller="RankingController as ranking">
-			<table>
-				<!-Titulos da tabela->
-				<tr>
-					<th>Posição</th>
-					<th>Nome</th>
-					<th>Fator K</th>
-				</tr>
-
-				<!-Linha para cada usuario->
-				<tr ng-repeat="pessoa in ranking.ranking">
-					<td>{{pessoa.Posicao}}</td>
-					<td>{{pessoa.Nome}}</td>
-					<td>{{pessoa.FatorK}}</td>
-				</tr>
-			</table>
-		</div>
+		<!-Criar Evento->
+		<input type="button" name="criarEvento" ng-show="login.usuarioLogado.Admin == 1" value="Criar Evento">
 -->
-		<!--Sign out button-->
-		<form action="/logout" method="get">
-			<input type="submit" value="Logout" name="logout" onclick="logOut();">
-		</form>
 
 		<!--Importa jQuery + materialize.js-->
 		<script type="text/javascript" src="../../node_modules/jquery/dist/jquery.min.js"></script>
