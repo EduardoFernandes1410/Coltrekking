@@ -1,7 +1,6 @@
 /**********Materialize**********/
 $(document).ready(function() {
 	$(".button-collapse").sideNav({closeOnClick: true, draggable: false});
-
 });
 
 /**********LOG OUT**********/

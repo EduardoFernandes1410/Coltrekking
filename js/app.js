@@ -42,7 +42,7 @@
 
 		return loginService;
 	});
-	
+
 
 	//GET /ranking
 	app.factory('RankingService', function($http) {
@@ -79,8 +79,8 @@
 
 	//Route Controller
 	app.controller('RouteController', function($scope, $location) {
-		$scope.$location = $location.path();
-	}.bind(this));
+		$scope.$location = $location;
+	});
 
 
 	//Ranking Controller

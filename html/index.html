@@ -38,7 +38,7 @@
 							<div class="container nav-container">
 								<!--Logo-->
 								<div id="logo-wrapper" class="col l3 hide-on-med-and-down">
-									<img id="logo" src="../rsc/logo/coltrekking-logo-3.png">					
+									<a href="/main-page"><img id="logo" src="../rsc/logo/coltrekking-logo-3.png"></a>
 								</div>
 
 								<!--Botao Hamburger-->
@@ -81,7 +81,7 @@
 					<div ng-controller="RouteController">
 						<div class="container nav-container">
 							<div class="nav-content">
-								<ul class="tabs tabs-transparent" ng-show="$location === ''">
+								<ul class="tabs tabs-transparent" ng-show="$location.path() === ''"> <!--So aparece na Pagina Principal-->
 									<li class="tab"><a href="#news-feed">News Feed</a></li>
 									<li class="tab"><a href="#eventos">Eventos</a></li>
 									<li class="tab"><a href="#ranking">Ranking</a></li>
@@ -176,7 +176,7 @@
 			<div ng-controller="RouteController">
 				<!--Rotas-->
 				<div ng-view></div>
-				<pre>$location.path() = {{$location}}</pre>
+				<pre>$location.path() = {{$location.path()}}</pre>
 			</div>
 		</div>
 

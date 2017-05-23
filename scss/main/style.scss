@@ -1,6 +1,29 @@
 /*****ANOTACOES*****/
 //Elementos fora da navbar tem 3.5% de margin-left
 
+/*****Mixins*****/
+//Menu
+@mixin menu() {
+	a {
+		color: #000;
+		cursor: default;
+		font-weight: 400;
+		
+		span {
+			float: right;
+			color: #00c853;
+		}			
+	}
+
+	.nome-usuario {
+		font-weight: 500 !important;
+	}
+
+	#sair-button, #main-page {
+		cursor: pointer;
+	}
+}
+
 /*****Body*****/
 body {
 	background-color: #fafafa;
@@ -22,6 +45,16 @@ nav {
 		width: 120px;
 		margin-left: -2%;
 		margin-top: 8px;
+	}
+
+	#logo-wrapper {
+		height: 48.3px;
+	}
+
+	//Icone Hamburguer
+	#hamburguer {
+		padding-left: 10px;
+		margin-right: 0px;
 	}
 
 	//Search Bar
@@ -65,7 +98,7 @@ nav {
 			color: white;
 		}
 	}
-
+	
 	//Menu Usuario
 	ul {		
 		//Icone de Mensagens
@@ -82,30 +115,16 @@ nav {
 		.dropdown-content {
 			width: 230px !important;
 
-			a {
-				color: #000;
-				cursor: default;
-				
-				span {
-					float: right;
-					color: #00c853;
-				}			
-			}
-
-			#nome-usuario {
-				font-weight: 500;
-			}
-
-			#sair-button {
-				cursor: pointer;
-			}
+			//Mixin do Menu
+			@include menu();
 		}
 
 		//Foto do Usuario
-		#userImage {
+		.userImage {
 			width: 40px;			
 			margin-top: 11px;
-		}		
+		}
+
 	}
 	
 	//Tweaks do mobile
@@ -144,6 +163,30 @@ nav {
 			}
 		}
 	}
+}
+
+/*****Side Navbar*****/
+.side-nav {
+	@include menu();
+
+	.divider {
+		margin-top: 0px !important;
+	}
+
+	#cabecote {
+		margin-top: 13px;
+		margin-bottom: 7px;
+
+		span {
+			color: rgba(0,0,0,0.87) !important;
+		}
+
+		//Foto do Usuario
+		.userImage {
+			width: 40px;
+		}		
+	}
+
 }
 
 /*****RANKING*****/
