@@ -64,7 +64,7 @@ app.get("/", function(req, res) {
 });
 
 //*****Posta usuario logado*****//
-app.post("/postUser", function(req, res) {
+app.post("/post-user", function(req, res) {
 	req.session.usuarioLogado = req.body;
 
 	//Adiciona usuario ao DB
@@ -74,13 +74,13 @@ app.post("/postUser", function(req, res) {
 	//Pega info como fatork, posicao, etc
 	pegaInfoUsuarioLogado(req, function callback() {
 		//Depois de fazer login, manda pagina a ser redirecionado
-		res.send("/redirectLogin");
+		res.send("/main-page");
 	});
 
 });
 
-//*****Redireciona para pagina do usuario*****//
-app.get("/redirectLogin", function(req, res) {
+//*****Redireciona para pagina principal*****//
+app.get("/main-page", function(req, res) {
 	if(loginSucesso) {
 		res.sendFile(path.join(__dirname, index));
 	}
@@ -90,7 +90,7 @@ app.get("/redirectLogin", function(req, res) {
 });
 
 //*****Acessa info do usuario logado*****//
-app.post("/login", function(req, res) {
+app.get("/get-user", function(req, res) {
 	res.setHeader('Content-Type', 'application/json');
 	res.json(req.session.usuarioLogado);
 });

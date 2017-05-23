@@ -37,12 +37,12 @@
 						<div class="row">
 							<div class="container nav-container">
 								<!--Logo-->
-								<div class="col l3 hide-on-med-and-down">
+								<div id="logo-wrapper" class="col l3 hide-on-med-and-down">
 									<img id="logo" src="../rsc/logo/coltrekking-logo-3.png">					
 								</div>
 
 								<!--Botao Hamburger-->
-								<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+								<a id="hamburguer" href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 
 								<!--Search Bar-->
 								<div class="col s10 m11 l6">
@@ -61,9 +61,9 @@
 										<!--Mensagenss-->
 										<li><i id="messageIcon" class="material-icons">message</i></li>
 										<!--User Dropdown-->
-										<li><a class="dropdown-button" href="#" data-beloworigin="true" data-activates="dropdown-menu"><img id="userImage" class="circle" ng-src="{{ login.usuarioLogado.Foto }}"></a></li>
+										<li><a class="dropdown-button" href="#" data-beloworigin="true" data-activates="dropdown-menu"><img class="userImage circle" ng-src="{{ login.usuarioLogado.Foto }}"></a></li>
 										<ul id="dropdown-menu" class="dropdown-content">
-											<li><a href="#!" id="nome-usuario">{{ login.usuarioLogado.Nome }}</a></li>
+											<li><a href="#!" class="nome-usuario">{{ login.usuarioLogado.Nome }}</a></li>
 											<li><a href="#!">Colocação no Ranking: <span>{{ login.usuarioLogado.Posicao }}º</span></a></li>
 											<li><a href="#!">Fator K: <span>{{ login.usuarioLogado.FatorK }}</span></a></li>
 											<li><a href="#!">Lista Negra: <span>{{ login.usuarioLogado.ListaNegra }}</span></a></li>
@@ -78,13 +78,15 @@
 					</div>
 
 					<!--Tabs-->
-					<div class="container nav-container">
-						<div class="nav-content">
-							<ul class="tabs tabs-transparent">
-								<li class="tab"><a href="#newsFeed">News Feed</a></li>
-								<li class="tab"><a href="#eventos">Eventos</a></li>
-								<li class="tab"><a href="#ranking">Ranking</a></li>
-							</ul>
+					<div ng-controller="RouteController">
+						<div class="container nav-container">
+							<div class="nav-content">
+								<ul class="tabs tabs-transparent" ng-show="$location === ''">
+									<li class="tab"><a href="#news-feed">News Feed</a></li>
+									<li class="tab"><a href="#eventos">Eventos</a></li>
+									<li class="tab"><a href="#ranking">Ranking</a></li>
+								</ul>
+							</div>
 						</div>
 					</div>
 				</nav>
@@ -92,26 +94,60 @@
 			
 			<!--SideNav-->
 			<ul class="side-nav" id="mobile-demo">
-				<li><a href="#">Sass</a></li>
-				<li><a href="#">Components</a></li>
-				<li><a href="#">Javascript</a></li>
-				<li><a href="#">Mobile</a></li>
+				<!--Nome + Foto-->
+				<li id="cabecote"><a href="#!" class="nome-usuario"><img class="userImage circle" ng-src="{{ login.usuarioLogado.Foto }}"><span>{{ login.usuarioLogado.Nome }}</span></a></li>
+				<li class="divider"></li>
+				
+				<!--Main Page Button-->
+				<li><a id="main-page" href="/main-page">Página Principal</a></li>
+				<li class="divider"></li>
+				
+				<!--Info do Usuario-->
+				<li><a href="#!">Colocação no Ranking: <span>{{ login.usuarioLogado.Posicao }}º</span></a></li>
+				<li><a href="#!">Fator K: <span>{{ login.usuarioLogado.FatorK }}</span></a></li>
+				<li><a href="#!">Lista Negra: <span>{{ login.usuarioLogado.ListaNegra }}</span></a></li>
+				<li class="divider"></li>
+				
+				<!--Logout Button-->
+				<li><a id="sair-button" href="/logout" onclick="logOut();">Sair</a></li>
 			</ul>
 		</div>
 
 		<!--Paginas-->
 		<div class="container">
+			<!--FAB-->
+			<div ng-controller="LoginController as login"> <!--So mostra se for admin-->
+				<div ng-show="login.usuarioLogado.Admin" class="fixed-action-btn">
+					<a class="btn-floating btn-large red accent-2">
+						<i class="large material-icons">mode_edit</i>
+					</a>
+
+					<ul>
+						<li><a href="#!/create-event" class="btn-floating blue"><i class="material-icons">event</i></a></li>
+						<li><a href="#!/create-news" class="btn-floating yellow darken-2"><i class="material-icons">chat</i></a></li>
+					</ul>
+				</div>
+			</div>
+
+
 			<!--News Feed-->
-			<div id="newsFeed">
+			<div id="news-feed">
 				<p>Bem Vindo ao News Feed do Coltrekking!</p>
 			</div>
 
+
+			<!--Eventos-->
+			<div id="eventos">
+				<p>Aqui aparecerão seus eventos!</p>
+			</div>
+
+
 			<!--Ranking-->
-			<div id="ranking">
-				<div class="card">
-					<div class="card-content">
-						<!--Tabela-->
-						<div ng-controller="RankingController as ranking">
+			<div ng-controller="RankingController as ranking">
+				<div id="ranking">
+					<div class="card">
+						<div class="card-content">
+							<!--Tabela-->
 							<table class="striped">
 								<!--Titulos da tabela-->
 								<thead>
@@ -135,14 +171,16 @@
 					</div>
 				</div>
 			</div>
+
+
+			<div ng-controller="RouteController">
+				<!--Rotas-->
+				<div ng-view></div>
+				<pre>$location.path() = {{$location}}</pre>
+			</div>
 		</div>
 
 
-
-<!--
-		<!-Criar Evento->
-		<input type="button" name="criarEvento" ng-show="login.usuarioLogado.Admin == 1" value="Criar Evento">
--->
 
 		<!--Importa jQuery + materialize.js-->
 		<script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>

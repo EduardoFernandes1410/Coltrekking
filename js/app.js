@@ -1,13 +1,35 @@
 (function() {
 	var app = angular.module('main', ['ngRoute']);
 
+//**********Navegacao**********//
+	app.config(function($routeProvider) {
+		$routeProvider
+		.when("/create-event",
+			{
+				templateUrl: "../html/create/event.html"
+				//controller: "EventosController",
+				//controllerAs: "eventos"
+			}
+		)
+		.when("/create-news",
+			{
+				templateUrl: "../html/create/news.html"
+			}
+		)
+		.otherwise(
+			{
+				//redirectTo: "/"
+			}
+		);
+	});
+
 //**********Servicos**********//
 	//POST /login
 	app.factory('LoginService', function($http) {
 		var loginService = {};
 
 		loginService.postUsuario = function(callback) {
-			$http.post('/login').then(function successCallback(response) {
+			$http.get('/get-user').then(function successCallback(response) {
 				//Sucesso
 				var answer = response.data;
 				callback(answer);
@@ -20,6 +42,7 @@
 
 		return loginService;
 	});
+	
 
 	//GET /ranking
 	app.factory('RankingService', function($http) {
@@ -52,6 +75,13 @@
 			}
 		}.bind(this));
 	}]);
+
+
+	//Route Controller
+	app.controller('RouteController', function($scope, $location) {
+		$scope.$location = $location.path();
+	}.bind(this));
+
 
 	//Ranking Controller
 	app.controller('RankingController', ['RankingService', function(rankingService) {

@@ -39,7 +39,7 @@ function initApp() {
 			usuarioInfo.ID = user.uid;
 
 			/*Manda usuarioInfo para server*/
-			url = "/postUser";
+			url = "/post-user";
 			xmlhttp.onreadystatechange = function() {
 				if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 					/*Redireciona para logged.html*/

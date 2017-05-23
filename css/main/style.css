@@ -1,4 +1,5 @@
 /*****ANOTACOES*****/
+/*****Mixins*****/
 /*****Body*****/
 body {
   background-color: #fafafa; }
@@ -15,6 +16,13 @@ nav #logo {
   width: 120px;
   margin-left: -2%;
   margin-top: 8px; }
+
+nav #logo-wrapper {
+  height: 48.3px; }
+
+nav #hamburguer {
+  padding-left: 10px;
+  margin-right: 0px; }
 
 nav form {
   margin-top: 8px; }
@@ -52,16 +60,17 @@ nav ul .dropdown-content {
   width: 230px !important; }
   nav ul .dropdown-content a {
     color: #000;
-    cursor: default; }
+    cursor: default;
+    font-weight: 400; }
     nav ul .dropdown-content a span {
       float: right;
       color: #00c853; }
-  nav ul .dropdown-content #nome-usuario {
-    font-weight: 500; }
-  nav ul .dropdown-content #sair-button {
+  nav ul .dropdown-content .nome-usuario {
+    font-weight: 500 !important; }
+  nav ul .dropdown-content #sair-button, nav ul .dropdown-content #main-page {
     cursor: pointer; }
 
-nav ul #userImage {
+nav ul .userImage {
   width: 40px;
   margin-top: 11px; }
 
@@ -82,6 +91,32 @@ nav ul #userImage {
 @media screen and (max-width: 600px) {
   nav form .material-icons {
     margin-top: -2px; } }
+
+/*****Side Navbar*****/
+.side-nav a {
+  color: #000;
+  cursor: default;
+  font-weight: 400; }
+  .side-nav a span {
+    float: right;
+    color: #00c853; }
+
+.side-nav .nome-usuario {
+  font-weight: 500 !important; }
+
+.side-nav #sair-button, .side-nav #main-page {
+  cursor: pointer; }
+
+.side-nav .divider {
+  margin-top: 0px !important; }
+
+.side-nav #cabecote {
+  margin-top: 13px;
+  margin-bottom: 7px; }
+  .side-nav #cabecote span {
+    color: rgba(0, 0, 0, 0.87) !important; }
+  .side-nav #cabecote .userImage {
+    width: 40px; }
 
 /*****RANKING*****/
 #ranking {
