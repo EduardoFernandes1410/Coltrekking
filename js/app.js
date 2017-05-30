@@ -1,6 +1,35 @@
 (function() {
 	var app = angular.module('main', ['ngRoute']);
 
+//**********Middleware**********//
+	app.run(['$rootScope', '$location', 'LoginService', function($rootScope, $location, Login) {
+		$rootScope.$on('$routeChangeStart', function(event, next, current) {
+			var admin;
+			console.log(next.templateUrl);
+			
+			//Pega permissao de admin de usuario logado
+			Login.getUsuario(function(usuario) {
+				this.admin = usuario.Admin;
+
+				//Se for admin
+				if(this.admin) {
+					//Se for pra MAIN-PAGE
+					if(!next.templateUrl) {
+						$location.path('/');
+					}
+					if(next.templateUrl == "../html/create/event.html") {
+						$location.path('/create-event');
+					}
+				}
+				//Se nao for admin
+				else {
+					event.preventDefault();
+					$location.path('/');
+				}
+			});
+		});
+	}]);
+
 //**********Navegacao**********//
 	app.config(function($routeProvider) {
 		$routeProvider
@@ -24,19 +53,20 @@
 	});
 
 //**********Servicos**********//
-	//POST /login
+	//GET /login
 	app.factory('LoginService', function($http) {
 		var loginService = {};
+		var usuario;
 
-		loginService.postUsuario = function(callback) {
+		loginService.getUsuario = function(callback) {
 			$http.get('/get-user').then(function successCallback(response) {
 				//Sucesso
-				var answer = response.data;
-				callback(answer);
+				usuario = response.data;
+				callback(usuario);
 			}, function errorCallback(response) {
 				//Erro
-				var answer = null;
-				callback(answer)
+				usuario = null;
+				callback(usuario);
 			});
 		}
 
@@ -69,7 +99,7 @@
 		var usuarioLogado;
 
 		//Chama LoginService
-		loginService.postUsuario(function(answer) {
+		loginService.getUsuario(function(answer) {
 			if(answer != null) {
 				this.usuarioLogado = answer;
 			}

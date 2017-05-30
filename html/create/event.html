@@ -1,1 +1,27 @@
-<p>CLique aqui para criar um novo evento!</p>
+<div class="card" id="event-form">
+	<div class="card-content">
+		<span class="card-title">Criar um Evento</span>
+		<div class="row">
+			<!--Form em si-->
+			<form class="col s12">
+				<div class="row">
+					<!--Nome-->
+					<div class="input-field col s12 l6">
+						<input id="nome" type="text" name="nome">
+						<label for="nome">Nome do Evento</label>
+					</div>
+
+					<!--Tipo-->
+					<div class="input-field col s12 l6">
+						<select name="tipo" class="browser-default">
+							<option value="" disabled selected>Tipo de Evento</option>
+							<option value="1">Preleção</option>
+							<option value="2">Trekking</option>
+							<option value="3">Acampamento</option>
+						</select>
+					</div>
+				</div>
+			</form>			
+		</div>
+	</div>
+</div>

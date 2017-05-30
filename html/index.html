@@ -81,7 +81,7 @@
 					<div ng-controller="RouteController">
 						<div class="container nav-container">
 							<div class="nav-content">
-								<ul class="tabs tabs-transparent" ng-show="$location.path() === ''"> <!--So aparece na Pagina Principal-->
+								<ul class="tabs tabs-transparent" ng-show="$location.path() === '/'"> <!--So aparece na Pagina Principal-->
 									<li class="tab"><a href="#news-feed">News Feed</a></li>
 									<li class="tab"><a href="#eventos">Eventos</a></li>
 									<li class="tab"><a href="#ranking">Ranking</a></li>
@@ -113,13 +113,13 @@
 			</ul>
 		</div>
 
-		<!--Paginas-->
-		<div class="container">
+		<!--Corpo Principal da Pagina-->
+		<div id="corpo" class="container">
 			<!--FAB-->
 			<div ng-controller="LoginController as login"> <!--So mostra se for admin-->
 				<div ng-show="login.usuarioLogado.Admin" class="fixed-action-btn">
 					<a class="btn-floating btn-large red accent-2">
-						<i class="large material-icons">mode_edit</i>
+						<i class="large material-icons">add</i>
 					</a>
 
 					<ul>
@@ -129,54 +129,55 @@
 				</div>
 			</div>
 
-
-			<!--News Feed-->
-			<div id="news-feed">
-				<p>Bem Vindo ao News Feed do Coltrekking!</p>
-			</div>
-
-
-			<!--Eventos-->
-			<div id="eventos">
-				<p>Aqui aparecerão seus eventos!</p>
-			</div>
+			<!--Paginas das Abas-->
+			<div ng-controller="RouteController">
+				<div ng-show="$location.path() === '/'">					
+					<!--News Feed-->
+					<div id="news-feed">
+						<p>Bem Vindo ao News Feed do Coltrekking!</p>
+					</div>
 
 
-			<!--Ranking-->
-			<div ng-controller="RankingController as ranking">
-				<div id="ranking">
-					<div class="card">
-						<div class="card-content">
-							<!--Tabela-->
-							<table class="striped">
-								<!--Titulos da tabela-->
-								<thead>
-									<tr>
-										<th>Posição</th>
-										<th>Nome</th>
-										<th>Fator K</th>
-									</tr>
-								</thead>
+					<!--Eventos-->
+					<div id="eventos">
+						<p>Aqui aparecerão seus eventos!</p>
+					</div>
 
-								<!--Linha para cada usuario-->
-								<tbody>
-									<tr ng-repeat="pessoa in ranking.ranking">
-										<td>{{pessoa.Posicao}}º</td>
-										<td>{{pessoa.Nome}}</td>
-										<td>{{pessoa.FatorK}}</td>
-									</tr>
-								</tbody>
-							</table>
+
+					<!--Ranking-->
+					<div ng-controller="RankingController as ranking">
+						<div id="ranking">
+							<div class="card">
+								<div class="card-content">
+									<!--Tabela-->
+									<table class="striped">
+										<!--Titulos da tabela-->
+										<thead>
+											<tr>
+												<th>Posição</th>
+												<th>Nome</th>
+												<th>Fator K</th>
+											</tr>
+										</thead>
+
+										<!--Linha para cada usuario-->
+										<tbody>
+											<tr ng-repeat="pessoa in ranking.ranking">
+												<td>{{pessoa.Posicao}}º</td>
+												<td>{{pessoa.Nome}}</td>
+												<td>{{pessoa.FatorK}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+				
 
-
-			<div ng-controller="RouteController">
 				<!--Rotas-->
 				<div ng-view></div>
-				<pre>$location.path() = {{$location.path()}}</pre>
 			</div>
 		</div>
 

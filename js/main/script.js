@@ -1,5 +1,6 @@
 /**********Materialize**********/
 $(document).ready(function() {
+	//SideNav
 	$(".button-collapse").sideNav({closeOnClick: true, draggable: false});
 });
 

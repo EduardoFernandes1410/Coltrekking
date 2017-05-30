@@ -118,8 +118,10 @@ nav ul .userImage {
   .side-nav #cabecote .userImage {
     width: 40px; }
 
-/*****RANKING*****/
-#ranking {
+/*****CORPO*****/
+#corpo {
   margin-top: 25px !important; }
-  #ranking thead th {
-    padding-top: 0px !important; }
+
+/*****RANKING*****/
+#ranking thead th {
+  padding-top: 0px !important; }
