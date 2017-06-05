@@ -44,8 +44,6 @@ var index	= '/html/index.html';
 var login = '/html/login/index.html';
 
 /*************************VARIAVEIS DE EXECUCAO**************************/
-var loginSucesso = false;
-
 //Construtor do usuario
 function Usuario(nome, email, foto, id, fatork, posicao, listaNegra, admin) {
 	this.Nome = nome;
@@ -57,9 +55,11 @@ function Usuario(nome, email, foto, id, fatork, posicao, listaNegra, admin) {
 	this.ListaNegra = listaNegra;
 	this.Admin = admin;
 }
+
 /******************************REQUISICOES*******************************/
 //*****Carrega pagina inicial*****//
 app.get("/", function(req, res) {
+	req.session.loginSucesso = false;
 	res.sendFile(path.join(__dirname, login));
 });
 
@@ -69,7 +69,7 @@ app.post("/post-user", function(req, res) {
 
 	//Adiciona usuario ao DB
 	addDB(req);	
-	loginSucesso = true;
+	req.session.loginSucesso = true;
 
 	//Pega info como fatork, posicao, etc
 	pegaInfoUsuarioLogado(req, function callback() {
@@ -81,7 +81,7 @@ app.post("/post-user", function(req, res) {
 
 //*****Redireciona para pagina principal*****//
 app.get("/main-page", function(req, res) {
-	if(loginSucesso) {
+	if(req.session.loginSucesso) {
 		res.sendFile(path.join(__dirname, index));
 	}
 	else {
@@ -93,6 +93,23 @@ app.get("/main-page", function(req, res) {
 app.get("/get-user", function(req, res) {
 	res.setHeader('Content-Type', 'application/json');
 	res.json(req.session.usuarioLogado);
+});
+
+//*****Criar Evento*****//
+app.post("/criar-evento", function(req, res) {
+	console.log(req.body);
+
+	criarEventoDB(req.body, function(status) {
+		status ? console.log("Evento criado com sucesso") : console.log("Evento nao foi criado");
+		res.send(status);
+	});
+});
+
+//******Get Eventos*****//
+app.get("/eventos", function(req, res) {
+	getEventos(function(rows) {
+		res.send(rows);
+	})
 });
 
 //*****Ranking*****//
@@ -132,9 +149,6 @@ function addDB(req) {
 			console.log('Error while performing Query (ADICIONA AO DB PESSOAS)');
 		}
 	});
-
-	//Printa Tabela
-	//printTabela('Pessoa');
 }
 
 //*****Pega Info do Usuario Logado*****//
@@ -149,9 +163,33 @@ function pegaInfoUsuarioLogado(req, callback) {
 			
 			//Realiza o callback
 			callback();
-		}
-		else {
+		} else {
 			console.log('Error while performing Query (PEGA INFO DB)');
+		}
+	});
+}
+
+//*****Adiciona Evento ao DB*****//
+function criarEventoDB(data, callback) {
+	connection.query('INSERT INTO Evento SET ?', data, function(err, rows, fields) {
+		if(!err) {
+			callback(true);
+		} else {
+			console.log(err);
+			callback(false);
+		}
+	});
+}
+
+//******Get Eventos*****//
+function getEventos(callback) {
+	connection.query('SELECT * FROM Evento', function(err, rows, fields) {
+		if(!err) {
+			//Retorna o inverso do array, para mostrar pela ordem de criacao
+			callback(rows.reverse());
+		} else {
+			console.log(err);
+			callback(false);
 		}
 	});
 }
@@ -161,8 +199,7 @@ function printTabela(tabela) {
 	connection.query('SELECT * FROM ??', [tabela], function(err, rows, fields) {
 		if(!err) {
 			console.log(rows);
-		}
-		else {
+		} else {
 			console.log('Error while performing Query (PRINTA TABELA)');
 		}
 	});
@@ -177,13 +214,11 @@ function montaRanking(callback) {
 				if(i == 0) {
 					connection.query('UPDATE Pessoa SET Posicao = 1 WHERE ID = ?', rows[0].ID);
 					rows[0].Posicao = 1;
-				}
-				else {
+				} else {
 					if(rows[i].FatorK == rows[i - 1].FatorK) {
 						connection.query('UPDATE Pessoa SET Posicao = ? WHERE ID = ?', [rows[i - 1].Posicao, rows[i].ID]);
 						rows[i].Posicao = rows[i - 1].Posicao;
-					}
-					else {
+					} else {
 						connection.query('UPDATE Pessoa SET Posicao = ? WHERE ID = ?', [(i + 1), rows[i].ID]);
 						rows[i].Posicao = i + 1;
 					}
@@ -192,8 +227,7 @@ function montaRanking(callback) {
 
 			console.log(rows);
 			callback(rows);
-		}
-		else {
+		} else {
 			console.log('Error while performing Query (MONTA RANKING)');
 			console.log(err);
 		}

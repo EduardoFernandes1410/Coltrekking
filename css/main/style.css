@@ -30,11 +30,12 @@ nav form {
     margin: auto;
     -webkit-border-radius: 2px;
     border-radius: 2px; }
+  nav form #search:focus {
+    -webkit-border-radius: 2px !important;
+    border-radius: 2px !important; }
   nav form #inputWrapper {
     width: 100%;
     height: 50px !important; }
-  nav form #search {
-    text-color: white; }
   nav form .material-icons {
     margin-top: -6px; }
   nav form ::-webkit-input-placeholder {
@@ -73,6 +74,11 @@ nav ul .dropdown-content {
 nav ul .userImage {
   width: 40px;
   margin-top: 11px; }
+
+nav .tabs {
+  margin-top: 10px !important; }
+  nav .tabs a {
+    font-weight: 500; }
 
 @media screen and (max-width: 992px) {
   nav .nav-container {
@@ -122,6 +128,16 @@ nav ul .userImage {
 #corpo {
   margin-top: 25px !important; }
 
+/*****CARDS*****/
+.card-content {
+  overflow: hidden; }
+
+/*****FORMS*****/
+#cancelar-btn {
+  color: #ff6e40;
+  margin-right: 20px; }
+
+/*****EVENTOS*****/
 /*****RANKING*****/
 #ranking thead th {
   padding-top: 0px !important; }

@@ -66,13 +66,13 @@ nav {
 			border-radius: 2px;
 		}
 
+		#search:focus {
+			border-radius: 2px !important;
+		}
+
 		#inputWrapper {
 			width: 100%;
 			height: 50px !important;
-		}
-
-		#search {
-			text-color: white;
 		}
 
 		.material-icons {
@@ -124,7 +124,15 @@ nav {
 			width: 40px;			
 			margin-top: 11px;
 		}
+	}
 
+	//Tabs
+	.tabs {
+		margin-top: 10px !important;
+
+		a {
+			font-weight: 500;
+		}
 	}
 	
 	//Tweaks do mobile
@@ -194,6 +202,21 @@ nav {
 	margin-top: 25px !important;
 }
 
+/*****CARDS*****/
+.card-content {
+	overflow: hidden;
+}
+
+/*****FORMS*****/
+#cancelar-btn {
+	color: #ff6e40;
+	margin-right: 20px;
+}
+
+/*****EVENTOS*****/
+.card-evento:nth-child(2n) {
+	//margin-left: 16.666% !important;
+}
 
 /*****RANKING*****/
 #ranking {

@@ -4,6 +4,9 @@
 		<title>Página Inicial - Coltrekking</title>
 		<meta charset="utf-8">
 
+		<!--Adiciona jQuery-->
+		<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+
 		<!--Adiciona Angular-->
 		<script src="../node_modules/angular/angular.min.js"></script>
 		<script src="../node_modules/angular-route/angular-route.min.js"></script>
@@ -83,7 +86,7 @@
 							<div class="nav-content">
 								<ul class="tabs tabs-transparent" ng-show="$location.path() === '/'"> <!--So aparece na Pagina Principal-->
 									<li class="tab"><a href="#news-feed">News Feed</a></li>
-									<li class="tab"><a href="#eventos">Eventos</a></li>
+									<li class="tab"><a href="#eventos" class="active">Eventos</a></li>
 									<li class="tab"><a href="#ranking">Ranking</a></li>
 								</ul>
 							</div>
@@ -117,14 +120,14 @@
 		<div id="corpo" class="container">
 			<!--FAB-->
 			<div ng-controller="LoginController as login"> <!--So mostra se for admin-->
-				<div ng-show="login.usuarioLogado.Admin" class="fixed-action-btn">
-					<a class="btn-floating btn-large red accent-2">
+				<div ng-if="login.usuarioLogado.Admin" class="fixed-action-btn">
+					<a class="btn-floating btn-large deep-orange accent-2">
 						<i class="large material-icons">add</i>
 					</a>
 
 					<ul>
-						<li><a href="#!/create-event" class="btn-floating blue"><i class="material-icons">event</i></a></li>
-						<li><a href="#!/create-news" class="btn-floating yellow darken-2"><i class="material-icons">chat</i></a></li>
+						<li><a href="#!/create-event" class="btn-floating deep-orange accent-2"><i class="material-icons">event</i></a></li>
+						<li><a href="#!/create-news" class="btn-floating deep-orange accent-2"><i class="material-icons">chat</i></a></li>
 					</ul>
 				</div>
 			</div>
@@ -139,8 +142,25 @@
 
 
 					<!--Eventos-->
-					<div id="eventos">
-						<p>Aqui aparecerão seus eventos!</p>
+					<div ng-controller="EventosController as eventos">
+						<div id="eventos">
+							<div class="row">
+								<!--Cria os cards de evento-->
+								<div ng-repeat="evento in eventos.eventos" class="card card-evento col s12 l5">
+									<div class="card-content">
+										<!--Nome-->
+										<span class="card-title">{{evento.Nome}}</span>
+
+										<!--Info do Evento-->
+										<p>Tipo: {{evento.Tipo}}</p>
+										<p>Data início: {{evento.DataInicio}}</p>
+										<p>Data fim: {{evento.DataFim}}</p>
+										<p class="truncate">Local: {{evento.Local}}</p>
+										<p>Dificuldade: {{evento.Dificuldade}}</p>
+									</div>
+								</div>								
+							</div>
+						</div>
 					</div>
 
 
@@ -182,11 +202,8 @@
 		</div>
 
 
-
-		<!--Importa jQuery + materialize.js-->
-		<script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
-		<script type="text/javascript" src="../node_modules/materialize-css/dist/js/materialize.min.js"></script>
-		
+		<!--Adiciona materialize.js-->
+		<script src="../node_modules/materialize-css/dist/js/materialize.min.js"></script>	
 		<!--Adiciona script.js-->
 		<script src="../js/main/script.js"></script>
 	</body>

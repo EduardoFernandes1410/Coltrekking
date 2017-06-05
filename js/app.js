@@ -5,11 +5,15 @@
 	app.run(['$rootScope', '$location', 'LoginService', function($rootScope, $location, Login) {
 		$rootScope.$on('$routeChangeStart', function(event, next, current) {
 			var admin;
-			console.log(next.templateUrl);
 			
 			//Pega permissao de admin de usuario logado
 			Login.getUsuario(function(usuario) {
 				this.admin = usuario.Admin;
+
+				//Se nao estiver logado
+				if(!usuario) {
+					$location.path('/logout');
+				}
 
 				//Se for admin
 				if(this.admin) {
@@ -35,9 +39,8 @@
 		$routeProvider
 		.when("/create-event",
 			{
-				templateUrl: "../html/create/event.html"
-				//controller: "EventosController",
-				//controllerAs: "eventos"
+				templateUrl: "../html/create/event.html",
+				controller: "CriarEventoController"
 			}
 		)
 		.when("/create-news",
@@ -72,6 +75,44 @@
 
 		return loginService;
 	});
+
+
+	//POST /criar-evento
+	app.factory('CriarEventoService', function($http) {
+		var criarEventoService = {};
+
+		criarEventoService.postCriarEvento = function(data, callback) {
+			$http.post('/criar-evento', data).then(function successCallback(response) {
+				//Sucesso
+				var answer = response.data;
+				callback(answer);
+			}, function errorCallback(response) {
+
+			});
+		}
+
+		return criarEventoService;
+	});
+
+
+	//GET /eventos
+	app.factory('EventosService', function($http) {
+		var eventosService = {};
+
+		eventosService.getEventos = function(callback) {
+			$http.get('/eventos').then(function successCallback(response) {
+				//Sucesso
+				var answer = response.data;
+				callback(answer);
+			}, function errorCallback(callback) {
+				//Erro
+				var answer = null;
+				callback(answer);
+			});
+		}
+
+		return eventosService;
+	});	
 
 
 	//GET /ranking
@@ -111,6 +152,68 @@
 	app.controller('RouteController', function($scope, $location) {
 		$scope.$location = $location;
 	});
+
+
+	//CriarEventos Controller
+	app.controller('CriarEventoController', ['CriarEventoService', '$timeout', '$scope', '$location', function(criarEventoService, $timeout, $scope, $location) {
+		//Inicializa elementos do Materialize
+		$timeout(function() {
+			//Select
+			$(document).ready(function() {
+				$('select').material_select();
+			});
+
+			//Date-Picker
+			$('.datepicker').pickadate({
+				monthsFull: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+				monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+				weekdaysFull: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabádo'],
+				weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+				today: 'Hoje',
+				clear: 'Limpar',
+				close: 'Pronto',
+				labelMonthNext: 'Próximo mês',
+				labelMonthPrev: 'Mês anterior',
+				labelMonthSelect: 'Selecione um mês',
+				labelYearSelect: 'Selecione um ano',
+				selectMonths: true,
+				selectYears: 2,
+				format: 'dd/mm/yyyy'
+			});
+		});
+
+		//Submit o formulario
+		$scope.criarEvento = function(params) {
+			//Chama o POST Criar Evento
+			criarEventoService.postCriarEvento(params, function(answer) {
+				//Emite alerta sobre o status da operacao e redireciona
+				if(answer) {
+					Materialize.toast("Evento criado com sucesso!", 3000);
+					$location.path('/');
+				} else {
+					Materialize.toast("Erro ao criar o evento!", 3000);
+				}
+			});
+		}
+	}]);
+
+
+	//Eventos Controller
+	app.controller('EventosController', ['EventosService', '$timeout', function(eventosService, $timeout) {
+		var eventos;
+
+		//Chama EventosService
+		eventosService.getEventos(function(answer) {
+			if(answer != false) {
+				this.eventos = answer;
+
+				//Adiciona propriedades aos elementos recem-criados
+				$timeout(function() {
+					$(".card-evento:odd").addClass("offset-l2");
+				});
+			}
+		}.bind(this));
+	}]);
 
 
 	//Ranking Controller
