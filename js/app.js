@@ -209,7 +209,7 @@
 
 				//Adiciona propriedades aos elementos recem-criados
 				$timeout(function() {
-					$(".card-evento:odd").addClass("offset-l2");
+					//$(".card-evento:odd").addClass("offset-l2");
 				});
 			}
 		}.bind(this));
