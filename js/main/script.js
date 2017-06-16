@@ -40,6 +40,16 @@ function verificaTipo() {
 		$("#dificuldade").attr("disabled", false);
 		$("#dificuldade").material_select();
 	}
+	
+	//Se for trekking, permitir inserir tipo do trekking
+	if($("#tipo").find(":selected").val() == 2) {
+		$("#tipoTrekking").attr("disabled", false);
+		$("#tipoTrekking").material_select();
+	}
+	else {
+		$("#tipoTrekking").attr("disabled", true);
+		$("#tipoTrekking").material_select();
+	}
 }
 
 /**********LOG OUT**********/

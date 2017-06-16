@@ -24,10 +24,21 @@
 						</select>
 						<label>Tipo do Evento</label>
 					</div>
+					
+					<!--Tipo de Trekking-->
+					<div class="input-field col s12 l4">
+						<select disabled id="tipoTrekking" name="tipotipoTrekking" onchange="verificaTipo();" ng-model="params.TipoTrekking">
+							<option value="" disabled selected>Tipo do Trekking</option>
+							<option value="Ping-Pong">Ping-Pong</option>
+							<option value="Circuito">Circuito</option>
+							<option value="Travessia">Travessia</option>
+						</select>
+						<label>Tipo do Evento</label>
+					</div>
 
 					<!--Dificuldade-->
 					<div class="input-field col s12 l4">
-						<select id="dificuldade" name="dificuldade" ng-model="params.Dificuldade">
+						<select disabled id="dificuldade" name="dificuldade" ng-model="params.Dificuldade">
 							<option value="" disabled selected>Dificuldade</option>
 							<option value="Fácil Pacas">Fácil Pacas</option>
 							<option value="Fácil">Fácil</option>
@@ -37,25 +48,25 @@
 						</select>
 						<label>Dificuldade</label>
 					</div>
-
-					<!--Numero Maximo-->
-					<div class="input-field col s12 l4">
-						<input id="numeroMax" type="number" name="numeroMax" ng-model="params.NumeroMax">
-						<label for="numeroMax">Número Máximo de Pessoas</label>
-					</div>
 				</div>
 
 				<div class="row">
 					<!--Data Inicio-->
-					<div class="input-field col s12 l6">
+					<div class="input-field col s12 l4">
 						<input id="data-inicio" type="text" class="datepicker" name="data-inicio" ng-model="params.DataInicio">
 						<label for="data-inicio" class="active">Data de Início</label>
 					</div>
 
 					<!--Data Fim-->
-					<div class="input-field col s12 l6">
+					<div class="input-field col s12 l4">
 						<input id="data-fim" type="text" class="datepicker" name="data-fim" ng-model="params.DataFim">
 						<label for="data-fim" class="active">Data de Fim</label>
+					</div>
+					
+					<!--Numero Maximo-->
+					<div class="input-field col s12 l4">
+						<input id="numeroMax" type="number" name="numeroMax" ng-model="params.NumeroMax">
+						<label for="numeroMax">Número Máximo de Pessoas</label>
 					</div>
 				</div>
 

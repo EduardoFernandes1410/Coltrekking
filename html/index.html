@@ -153,11 +153,12 @@
 											<span class="card-title">{{evento.Nome}}</span>
 
 											<!--Info do Evento-->
-											<p>Tipo: {{evento.Tipo}}</p>
+											<p>Tipo: {{evento.TipoString}}</p>
+											<p ng-show="evento.Tipo == 2">Modalidade: {{evento.TipoTrekking}}
 											<p>Data início: {{evento.DataInicio}}</p>
 											<p>Data fim: {{evento.DataFim}}</p>
 											<p class="truncate">Local: {{evento.Local}}</p>
-											<p>Dificuldade: {{evento.Dificuldade}}</p>
+											<p ng-show="evento.Tipo != 1">Dificuldade: {{evento.Dificuldade}}</p> <!--Nao mostra se for prelecao-->
 										</div>
 									</div>
 								</div>

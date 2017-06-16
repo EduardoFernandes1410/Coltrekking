@@ -184,6 +184,15 @@
 
 		//Submit o formulario
 		$scope.criarEvento = function(params) {
+			//Verifica tipo de evento
+			if(params.Tipo == 1) { //se for prelecao
+				params.Dificuldade = null;
+			}
+			
+			if(params.Tipo != 2) { //se nao for trekking
+				params.TipoTrekking = null;
+			}
+			
 			//Chama o POST Criar Evento
 			criarEventoService.postCriarEvento(params, function(answer) {
 				//Emite alerta sobre o status da operacao e redireciona
@@ -199,17 +208,27 @@
 
 
 	//Eventos Controller
-	app.controller('EventosController', ['EventosService', '$timeout', function(eventosService, $timeout) {
+	app.controller('EventosController', ['EventosService', function(eventosService) {
 		var eventos;
 
 		//Chama EventosService
 		eventosService.getEventos(function(answer) {
 			if(answer != false) {
 				this.eventos = answer;
-
-				//Adiciona propriedades aos elementos recem-criados
-				$timeout(function() {
-					//$(".card-evento:odd").addClass("offset-l2");
+				
+				//Seta strings
+				this.eventos.forEach(function(element) {
+					switch(element.Tipo) {
+						case 1:
+							element.TipoString = "Preleção";
+						break;
+						case 2:
+							element.TipoString = "Trekking";
+						break;
+						case 3:
+							element.TipoString = "Acampamento";
+						break;
+					}
 				});
 			}
 		}.bind(this));
