@@ -130,18 +130,29 @@ nav .tabs {
 
 /*****CORPO*****/
 #corpo {
-  margin-top: 25px !important; }
+  margin-top: 73px !important; }
 
 /*****CARDS*****/
 .card-content {
-  overflow: hidden; }
+  overflow: hidden;
+  font-size: 16px; }
+  .card-content span {
+    font-weight: 500; }
+
+#card-confirmados {
+  position: fixed;
+  margin-right: 6%; }
+
+#event-form {
+  margin-top: -48px !important; }
 
 /*****FORMS*****/
 #cancelar-btn {
   color: #ff6e40;
   margin-right: 20px; }
 
-/*****EVENTOS*****/
 /*****RANKING*****/
-#ranking thead th {
-  padding-top: 0px !important; }
+#ranking {
+  margin-top: 80px !important; }
+  #ranking thead th {
+    padding-top: 0px !important; }

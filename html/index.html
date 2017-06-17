@@ -34,7 +34,7 @@
 	<body>
 		<div ng-controller="LoginController as login">
 			<!--NavBar-->
-			<div class="">
+			<div class="navbar-fixed">
 				<nav class="nav-extended light-green z-depth-2">
 					<div class="nav-wrapper light-green">
 						<div class="row">
@@ -145,20 +145,59 @@
 					<div ng-controller="EventosController as eventos">
 						<div id="eventos">
 							<div class="row">
-								<div class="container col s12 l6" ng-repeat="evento in eventos.eventos">
-									<!--Cria os cards de evento-->
-									<div class="card card-evento">
+								<!--Fixacoes-->
+								<div class="container col hide-on-med-and-down l4 right pin-top">
+									<!--Eventos Cadastrados-->
+									<div class="card" id="card-confirmados">
 										<div class="card-content">
+											<span class="card-title">Eventos Confirmados por Você</span>
+											
+											<p>Você ainda não confirmou presença em nenhum evento</p>
+										</div>
+									</div>
+								</div>								
+								
+								<!--Cria os cards de evento-->
+								<div class="container col s12 l7" ng-repeat="evento in eventos.eventos">
+									<div class="card card-evento" ng-attr-id="{{evento.ID}}">
+										<!--Cabecalho-->
+										<div class="card-image">
+											<!--Imagem-->
+											<img ng-src="{{evento.Capa}}">
 											<!--Nome-->
 											<span class="card-title">{{evento.Nome}}</span>
-
-											<!--Info do Evento-->
-											<p>Tipo: {{evento.TipoString}}</p>
-											<p ng-show="evento.Tipo == 2">Modalidade: {{evento.TipoTrekking}}
-											<p>Data início: {{evento.DataInicio}}</p>
-											<p>Data fim: {{evento.DataFim}}</p>
-											<p class="truncate">Local: {{evento.Local}}</p>
-											<p ng-show="evento.Tipo != 1">Dificuldade: {{evento.Dificuldade}}</p> <!--Nao mostra se for prelecao-->
+											<!--FAB-->
+											<a ng-click="confirmarEvento(this.evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">add</i></a>
+										</div>
+										
+										<!--Info do Evento-->
+										<div class="card-content">
+											<p>
+												<i class="tiny material-icons">label</i>
+												<span> Tipo:</span> {{evento.TipoString}}
+											</p>
+											
+											<p ng-show="evento.Tipo == 2">
+												<i class="tiny material-icons">label_outline</i>
+												<span> Modalidade:</span> {{evento.TipoTrekking}}
+											</p>
+											
+											<!--Nao mostra se for prelecao-->
+											<p ng-show="evento.Tipo != 1">
+												<i class="tiny material-icons">warning</i>
+												<span> Dificuldade:</span> {{evento.Dificuldade}}
+											</p>
+											
+											<p>
+												<i class="tiny material-icons">today</i>
+												<span> De</span> {{evento.DataInicio}}
+												<span> a</span> {{evento.DataFim}}
+											</p>
+											
+											<p class="truncate">
+												<i class="tiny material-icons">location_on</i>
+												<span> Local:</span> {{evento.Local}}
+											</p>
 										</div>
 									</div>
 								</div>

@@ -205,12 +205,26 @@ nav {
 
 /*****CORPO*****/
 #corpo {
-	margin-top: 25px !important;
+	margin-top: 48+25px !important;
 }
 
 /*****CARDS*****/
 .card-content {
 	overflow: hidden;
+	font-size: 16px;
+	
+	span {
+		font-weight: 500;
+	}
+}
+
+#card-confirmados {
+	position: fixed;
+	margin-right: 6%;
+}
+
+#event-form {
+	margin-top: -48px !important;
 }
 
 /*****FORMS*****/
@@ -219,13 +233,10 @@ nav {
 	margin-right: 20px;
 }
 
-/*****EVENTOS*****/
-.card-evento:nth-child(2n) {
-	//margin-left: 16.666% !important;
-}
-
 /*****RANKING*****/
 #ranking {
+	margin-top: 80px !important;
+	
 	thead th {
 		padding-top: 0px !important;
 	}

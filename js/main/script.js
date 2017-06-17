@@ -2,16 +2,13 @@
 $(document).ready(function() {
 	//SideNav
 	$(".button-collapse").sideNav({closeOnClick: true, draggable: false});
+	
+	//ScrollSpy
+	$('.scrollspy').scrollSpy();
 });
 
 
 /**********FORMULARIO**********/
-//Pega a data inserida
-function pegaData() {
-	console.log($("#data-inicio"));
-	console.log($("#nome"));
-}
-
 //Redimensiona a Textarea
 function resize() {
 	//Calculate number of lines

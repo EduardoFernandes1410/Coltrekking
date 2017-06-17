@@ -136,13 +136,15 @@
 
 //**********Controles**********//
 	//Login Controller
-	app.controller('LoginController', ['LoginService', function(loginService) {
+	app.controller('LoginController', ['LoginService', '$rootScope', function(loginService, $rootScope) {
 		var usuarioLogado;
 
 		//Chama LoginService
 		loginService.getUsuario(function(answer) {
 			if(answer != null) {
 				this.usuarioLogado = answer;
+				//Salva no rootScope para uso posterior
+				$rootScope.usuario = answer;
 			}
 		}.bind(this));
 	}]);
@@ -208,7 +210,7 @@
 
 
 	//Eventos Controller
-	app.controller('EventosController', ['EventosService', function(eventosService) {
+	app.controller('EventosController', ['EventosService', '$timeout', '$rootScope', '$scope',  function(eventosService, $timeout, $rootScope, $scope) {
 		var eventos;
 
 		//Chama EventosService
@@ -216,22 +218,41 @@
 			if(answer != false) {
 				this.eventos = answer;
 				
-				//Seta strings
+				//Seta strings e capa
 				this.eventos.forEach(function(element) {
 					switch(element.Tipo) {
 						case 1:
 							element.TipoString = "Preleção";
+							element.Capa = "../rsc/event_images/prelecao-crop.jpg";
 						break;
 						case 2:
 							element.TipoString = "Trekking";
+							
+							switch(element.TipoTrekking) {
+								case "Ping-Pong":
+									element.Capa = "../rsc/event_images/ping-pong-crop.jpg";
+								break;
+								case "Circuito":
+									element.Capa = "../rsc/event_images/circuito.jpg";
+								break;
+								case "Travessia":
+									element.Capa = "../rsc/event_images/travessia.jpg";
+								break;
+							}
 						break;
 						case 3:
 							element.TipoString = "Acampamento";
+							element.Capa = "../rsc/event_images/camping-crop.jpg";
 						break;
 					}
 				});
 			}
 		}.bind(this));
+		
+		//Confirmar em Evento
+		$scope.confirmarEvento = function(evento) {
+			console.log(evento);
+		}
 	}]);
 
 
