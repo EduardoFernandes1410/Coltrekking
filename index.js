@@ -112,6 +112,29 @@ app.get("/eventos", function(req, res) {
 	})
 });
 
+//*****Post Confirmados*****//
+app.post("/confirmados", function(req, res) {
+	getConfirmados(req.body.IDEvento, function(rows) {
+		res.send(rows);
+	});
+});
+
+//*****Post Confirmados por Mim*****//
+app.post("/confirmados-por-mim", function(req, res) {
+	getConfirmadosPorMim(req.body.usuarioID, function(rows) {
+		res.send(rows);
+	});
+});
+
+//*****Confirmar Evento*****//
+app.post("/confirmar-evento", function(req, res) {
+	
+	confirmarEventoDB(req.body, function(status) {
+		status ? console.log("Inscrição realizada com sucesso") : console.log("Erro ao realizar a inscrição");
+		res.send(status);
+	});
+});
+
 //*****Ranking*****//
 app.get("/ranking", function(req, res) {
 	montaRanking(function callback(rows) {
@@ -181,7 +204,7 @@ function criarEventoDB(data, callback) {
 	});
 }
 
-//******Get Eventos*****//
+//*****Get Eventos*****//
 function getEventos(callback) {
 	connection.query('SELECT * FROM Evento', function(err, rows, fields) {
 		if(!err) {
@@ -189,6 +212,92 @@ function getEventos(callback) {
 			callback(rows.reverse());
 		} else {
 			console.log(err);
+			callback(false);
+		}
+	});
+}
+
+//*****Get Confirmados*****//
+function getConfirmados(data, callback) {
+	//Get os IDs dos confirmados com INNER JOIN
+	connection.query('SELECT ID, Nome, FatorK, `Pessoa-Evento`.Colocacao FROM `Pessoa` INNER JOIN `Pessoa-Evento` ON Pessoa.ID = `Pessoa-Evento`.IDPessoa WHERE `Pessoa-Evento`.IDEvento = ?', data, function(err, rows, fields) {
+		if(!err) {
+			console.log(rows);
+			callback(rows);
+		} else {
+			console.log('this.sql', this.sql);
+			console.log(err);
+			callback(false);
+		}
+	});
+}
+
+//*****Get Confirmados Por Mim*****//
+function getConfirmadosPorMim(data, callback) {
+	connection.query('SELECT ID, Nome FROM `Evento` INNER JOIN `Pessoa-Evento` ON Evento.ID = `Pessoa-Evento`.IDEvento WHERE `Pessoa-Evento`.IDPessoa = ? ORDER BY ID DESC', data, function(err, rows, fields) {
+		if(!err) {
+			console.log(rows);
+			callback(rows);
+		} else {
+			console.log('this.sql', this.sql);
+			console.log(err);
+			callback(false);
+		}
+	});
+}
+
+//*****Confirmar Evento DB*****//
+function confirmarEventoDB(data, callback) {
+	var post;
+	
+	//Pega o numero de inscritos no evento
+	connection.query('SELECT * FROM `Pessoa-Evento` WHERE IDEvento = ?', data.evento, function(err, rows, fields) {
+		//Seta o post
+		post = {
+			IDPessoa: data.usuario,
+			IDEvento: data.evento,
+			Colocacao: (rows.length + 1),
+			ListaEspera: 0			
+		}
+		
+		//Verifica se o cara nao esta inscrito
+		estaInscrito(post, function(status) {
+			//Se nao esta inscrito
+			if(status) {
+				//GET numero maximo de pessoas no Evento
+				connection.query('SELECT NumeroMax FROM Evento WHERE ID = ?', data.evento, function(err, rows, fields) {
+					var max = rows[0].NumeroMax;
+					
+					//Se esta na lista de espera
+					(post.Colocacao > max) ? post.ListaEspera = 1 : post.ListaEspera = 0;
+					
+					//Adiciona pessoa ao evento
+					connection.query('INSERT INTO `Pessoa-Evento` SET ?', post, function(err, rows, fields) {
+						if(!err) {
+							callback(true);
+						} else {
+							console.log('this.sql', this.sql);
+							console.log(err);
+							callback(false);
+						}
+					});
+				});				
+			} else {
+				callback(false);
+			}
+			
+		});
+	});	
+}
+
+//*****Esta Inscrito*****//
+function estaInscrito(post, callback) {	
+	connection.query('SELECT * FROM `Pessoa-Evento` WHERE IDPessoa = ? AND IDEvento = ?', [post.IDPessoa, post.IDEvento], function(err, rows, fields) {
+		if(!err) {
+			//Se esta ou nao inscrito
+			rows.length == 0 ? callback(true) : callback(false);
+		} else {
+			console.log('Error while performing Query (PRINTA TABELA)');
 			callback(false);
 		}
 	});

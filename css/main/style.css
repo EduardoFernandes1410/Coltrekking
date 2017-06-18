@@ -4,6 +4,9 @@
 body {
   background-color: #fafafa; }
 
+::-webkit-scrollbar {
+  display: none; }
+
 /*****Container*****/
 .container {
   margin: auto !important; }
@@ -80,7 +83,8 @@ nav ul .userImage {
   margin-top: 11px; }
 
 nav .tabs {
-  margin-top: 10px !important; }
+  margin-top: 10px !important;
+  overflow-x: hidden; }
   nav .tabs a {
     font-weight: 500; }
 
@@ -142,9 +146,38 @@ nav .tabs {
 #card-confirmados {
   position: fixed;
   margin-right: 6%; }
+  #card-confirmados ul {
+    margin-bottom: 0px; }
+    #card-confirmados ul li {
+      margin: 8px 0px 0px 0px; }
 
 #event-form {
   margin-top: -48px !important; }
+
+.card-action a {
+  color: #ff6e40 !important; }
+
+/*****SCROLL SPY*****/
+.section {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important; }
+
+.table-of-contents {
+  position: fixed; }
+  .table-of-contents a {
+    border-color: #ff6e40 !important; }
+
+/*****MODAL*****/
+.modal-header {
+  font-size: 24px;
+  font-weight: 300;
+  margin-top: 0px; }
+
+.modal-content table thead tr th:first-child {
+  width: 20%; }
+
+.modal-content table thead tr th:nth-child(2) {
+  width: 60%; }
 
 /*****FORMS*****/
 #cancelar-btn {

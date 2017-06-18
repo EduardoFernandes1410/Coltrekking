@@ -5,6 +5,12 @@ $(document).ready(function() {
 	
 	//ScrollSpy
 	$('.scrollspy').scrollSpy();
+	
+	//Margin Top do ScrollSpy
+	$(window).resize(function() {
+		var altura = $('#card-confirmados').height() + 36;		
+		$('.table-of-contents').css("margin-top", altura + "px");
+	});
 });
 
 

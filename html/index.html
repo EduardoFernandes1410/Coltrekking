@@ -84,7 +84,7 @@
 					<div ng-controller="RouteController">
 						<div class="container nav-container">
 							<div class="nav-content">
-								<ul class="tabs tabs-transparent" ng-show="$location.path() === '/'"> <!--So aparece na Pagina Principal-->
+								<ul class="tabs tabs-transparent tabs-fixed-width" ng-show="$location.path() === '/'"> <!--So aparece na Pagina Principal-->
 									<li class="tab"><a href="#news-feed">News Feed</a></li>
 									<li class="tab"><a href="#eventos" class="active">Eventos</a></li>
 									<li class="tab"><a href="#ranking">Ranking</a></li>
@@ -146,20 +146,36 @@
 						<div id="eventos">
 							<div class="row">
 								<!--Fixacoes-->
-								<div class="container col hide-on-med-and-down l4 right pin-top">
+								<div class="container col hide-on-med-and-down l4 right">
 									<!--Eventos Cadastrados-->
 									<div class="card" id="card-confirmados">
 										<div class="card-content">
 											<span class="card-title">Eventos Confirmados por Você</span>
 											
-											<p>Você ainda não confirmou presença em nenhum evento</p>
+											<!-- Lista de Eventos Confirmados -->
+											<ul>
+												<li ng-repeat="confirmados in eventosConfirmados">
+													<i class="tiny material-icons">label_outline</i>
+													{{confirmados.Nome}}
+												</li>
+											</ul>
+											
+											<!-- Mensagem Default -->
+											<p ng-show="eventosConfirmados.length == 0">Você não confirmou presença em evento algum</p>
 										</div>
 									</div>
-								</div>								
+									
+									<!-- Scroll Spy -->
+									<ul class="section table-of-contents">
+										<li ng-repeat="evento in eventos.eventos">
+											<a ng-attr-href="{{'#' + evento.ID}}">{{evento.Nome}}</a>
+										</li>
+									</ul>
+								</div>
 								
 								<!--Cria os cards de evento-->
 								<div class="container col s12 l7" ng-repeat="evento in eventos.eventos">
-									<div class="card card-evento" ng-attr-id="{{evento.ID}}">
+									<div class="card card-evento section scrollspy" ng-attr-id="{{evento.ID}}">
 										<!--Cabecalho-->
 										<div class="card-image">
 											<!--Imagem-->
@@ -198,6 +214,43 @@
 												<i class="tiny material-icons">location_on</i>
 												<span> Local:</span> {{evento.Local}}
 											</p>
+										</div>
+										
+										<!--Card Action-->
+										<div class="card-action">
+											<a ng-attr-href="{{'#lista-inscritos' + evento.ID}}" onclick="return false;">Lista de Inscritos no Evento</a>
+										</div>
+									</div>
+									
+									<!--Lista de Inscritos-->
+									<div ng-attr-id="{{'lista-inscritos' + evento.ID}}" class="modal modal-fixed-footer">
+										<div class="modal-content">
+											<p class="modal-header">{{evento.Nome}}</p>
+											
+											<!--Tabela-->
+											<table class="striped">
+												<!--Titulos da tabela-->
+												<thead>
+													<tr>
+														<th>Posição</th>
+														<th>Nome</th>
+														<th>Fator K</th>
+													</tr>
+												</thead>
+
+												<!--Linha para cada usuario-->
+												<tbody>
+													<tr ng-repeat="pessoa in evento.Confirmados">
+														<td>{{pessoa.Colocacao}}º</td>
+														<td>{{pessoa.Nome}}</td>
+														<td>{{pessoa.FatorK}}</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										
+										<div class="modal-footer">
+											<button type="button" class="modal-action modal-close waves-effect waves-orange btn-flat">Fechar</button>
 										</div>
 									</div>
 								</div>

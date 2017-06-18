@@ -95,10 +95,11 @@
 	});
 
 
-	//GET /eventos
+	//Tudo relacionado a eventos
 	app.factory('EventosService', function($http) {
 		var eventosService = {};
 
+		//GET /eventos
 		eventosService.getEventos = function(callback) {
 			$http.get('/eventos').then(function successCallback(response) {
 				//Sucesso
@@ -110,9 +111,50 @@
 				callback(answer);
 			});
 		}
+		
+		//POST /confirmar-evento
+		eventosService.confirmarEvento = function(data, callback) {
+			$http.post('/confirmar-evento', data).then(function successCallback(response) {
+				//Sucesso
+				var answer = response.data;
+				callback(answer);
+			}, function errorCallback(response) {
+
+			});
+		}
+
+		//POST /confirmados
+		eventosService.getConfirmados = function(data, callback) {
+			var post = {IDEvento: data};
+			
+			$http.post('/confirmados', post).then(function successCallback(response) {
+				//Sucesso
+				var answer = response.data;
+				callback(answer);
+			}, function errorCallback(callback) {
+				//Erro
+				var answer = null;
+				callback(answer);
+			});
+		}
+		
+		//POST /confirmados-por-mim
+		eventosService.getConfirmadosPorMim = function(data, callback) {
+			var post = {usuarioID: data};
+			
+			$http.post('/confirmados-por-mim', post).then(function successCallback(response) {
+				//Sucesso
+				var answer = response.data;
+				callback(answer);
+			}, function errorCallback(callback) {
+				//Erro
+				var answer = null;
+				callback(answer);
+			});
+		}
 
 		return eventosService;
-	});	
+	});
 
 
 	//GET /ranking
@@ -246,12 +288,65 @@
 						break;
 					}
 				});
+				
+				//POST Confirmados
+				this.eventos.forEach(function(element) {
+					$scope.postConfirmado(element);
+				});
+				
+				//POST Confirmados Por Mim
+				$scope.confirmadosPorMim();
+				
+				//Inicializa Materialize stuff
+				$(document).ready(function() {
+					$('.modal').modal();
+					$('.scrollspy').scrollSpy();
+				});
 			}
 		}.bind(this));
 		
+		//POST Confirmados em Eventos
+		$scope.postConfirmado = function(evento) {
+			eventosService.getConfirmados(evento.ID, function(answer) {
+				evento.Confirmados = answer;
+				
+				//Seta margin top do scroll spy em funcao da altura do card (Pessima solucao)
+				setTimeout(function() {
+					var altura = $('#card-confirmados').height() + 36;
+					
+					$('.table-of-contents').css("margin-top", altura + "px");
+				}, 100);
+			});
+		}
+		
 		//Confirmar em Evento
 		$scope.confirmarEvento = function(evento) {
-			console.log(evento);
+			var data = {
+				evento: evento.ID,
+				usuario: $rootScope.usuario.ID
+			}
+			
+			//Chama POST Confirmar Evento
+			eventosService.confirmarEvento(data, function(answer) {
+				//Emite alerta sobre o status da operacao e redireciona
+				if(answer) {
+					Materialize.toast("Inscrição em evento realizada com sucesso!", 3000);
+					
+					//Atualiza lista de confirmados
+					$scope.postConfirmado(evento);
+				} else {
+					Materialize.toast("Erro ao se inscrever no evento!", 3000);
+				}
+			});
+		}
+		
+		//POST Eventos Confirmados
+		$scope.confirmadosPorMim = function() {
+			var usuarioID = $rootScope.usuario.ID;
+			
+			eventosService.getConfirmadosPorMim(usuarioID, function(answer) {
+				$rootScope.eventosConfirmados = answer;
+			});
 		}
 	}]);
 
@@ -267,33 +362,4 @@
 			}
 		}.bind(this));
 	}]);
-
-
-	/*
-	var usuarios = [ 
-		{
-			Nome: "Eduardo Fernandes",
-			FatorK: 24,
-			Foto: "https://lh5.googleusercontent.com/-xlrnfmDLIX0/AAAAAAAAAAI/AAAAAAAACK4/Olb5-F2BglA/photo.jpg",
-			Posicao: 1,
-			ListaNegra: 0,
-			Admin: 0
-		},
-		{
-			Nome: "Pedro Militao",
-			FatorK: 12,
-			Foto: "https://lh5.googleusercontent.com/-xlrnfmDLIX0/AAAAAAAAAAI/AAAAAAAACK4/Olb5-F2BglA/photo.jpg",
-			Posicao: 2,
-			ListaNegra: 0,
-			Admin: 0
-		},
-		{
-			Nome: "João Lucio",
-			FatorK: 8,
-			Foto: "https://lh5.googleusercontent.com/-xlrnfmDLIX0/AAAAAAAAAAI/AAAAAAAACK4/Olb5-F2BglA/photo.jpg",
-			Posicao: 3,
-			ListaNegra: 0,
-			Admin: 0
-		}
-	];*/
 })();
