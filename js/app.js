@@ -334,6 +334,7 @@
 					
 					//Atualiza lista de confirmados
 					$scope.postConfirmado(evento);
+					$scope.confirmadosPorMim();
 				} else {
 					Materialize.toast("Erro ao se inscrever no evento!", 3000);
 				}
