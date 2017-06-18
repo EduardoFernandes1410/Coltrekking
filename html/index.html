@@ -182,8 +182,10 @@
 											<img ng-src="{{evento.Capa}}">
 											<!--Nome-->
 											<span class="card-title">{{evento.Nome}}</span>
-											<!--FAB-->
+											<!--FAB Confirmar-->
 											<a ng-click="confirmarEvento(this.evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">add</i></a>
+											<!--FAB Cancelar-->
+											<a ng-click="cancelarEvento(this.evento)" ng-show="estaConfirmado(evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">remove</i></a>
 										</div>
 										
 										<!--Info do Evento-->
@@ -218,7 +220,7 @@
 										
 										<!--Card Action-->
 										<div class="card-action">
-											<a ng-attr-href="{{'#lista-inscritos' + evento.ID}}" onclick="return false;">Lista de Inscritos no Evento</a>
+											<a ng-attr-href="{{'#lista-inscritos' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
 										</div>
 									</div>
 									
@@ -228,7 +230,7 @@
 											<p class="modal-header">{{evento.Nome}}</p>
 											
 											<!--Tabela-->
-											<table class="striped">
+											<table class="bordered">
 												<!--Titulos da tabela-->
 												<thead>
 													<tr>
@@ -240,7 +242,7 @@
 
 												<!--Linha para cada usuario-->
 												<tbody>
-													<tr ng-repeat="pessoa in evento.Confirmados">
+													<tr ng-repeat="pessoa in evento.Confirmados" ng-class="{espera: pessoa.ListaEspera}">
 														<td>{{pessoa.Colocacao}}º</td>
 														<td>{{pessoa.Nome}}</td>
 														<td>{{pessoa.FatorK}}</td>

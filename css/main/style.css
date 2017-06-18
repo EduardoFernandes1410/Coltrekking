@@ -179,6 +179,9 @@ nav .tabs {
 .modal-content table thead tr th:nth-child(2) {
   width: 60%; }
 
+.modal-content table tbody .espera {
+  background-color: #ffebee !important; }
+
 /*****FORMS*****/
 #cancelar-btn {
   color: #ff6e40;

@@ -122,6 +122,17 @@
 
 			});
 		}
+		
+		//POST /cancelar-evento
+		eventosService.cancelarEvento = function(data, callback) {
+			$http.post('/cancelar-evento', data).then(function successCallback(response) {
+				//Sucesso
+				var answer = response.data;
+				callback(answer);
+			}, function errorCallback(response) {
+
+			});
+		}
 
 		//POST /confirmados
 		eventosService.getConfirmados = function(data, callback) {
@@ -309,13 +320,6 @@
 		$scope.postConfirmado = function(evento) {
 			eventosService.getConfirmados(evento.ID, function(answer) {
 				evento.Confirmados = answer;
-				
-				//Seta margin top do scroll spy em funcao da altura do card (Pessima solucao)
-				setTimeout(function() {
-					var altura = $('#card-confirmados').height() + 36;
-					
-					$('.table-of-contents').css("margin-top", altura + "px");
-				}, 100);
 			});
 		}
 		
@@ -341,13 +345,54 @@
 			});
 		}
 		
+		//Cancelar em Evento
+		$scope.cancelarEvento = function(evento) {
+			var data = {
+				evento: evento.ID,
+				max: evento.NumeroMax,
+				usuario: $rootScope.usuario.ID
+			}
+			
+			//Chama POST Confirmar Evento
+			eventosService.cancelarEvento(data, function(answer) {
+				//Emite alerta sobre o status da operacao e redireciona
+				if(answer) {
+					Materialize.toast("Cancelamento em evento realizado com sucesso!", 3000);
+					
+					//Atualiza lista de confirmados
+					$scope.postConfirmado(evento);
+					$scope.confirmadosPorMim();
+				} else {
+					Materialize.toast("Erro ao se cancelar no evento!", 3000);
+				}
+			});
+		}
+		
 		//POST Eventos Confirmados
 		$scope.confirmadosPorMim = function() {
 			var usuarioID = $rootScope.usuario.ID;
 			
 			eventosService.getConfirmadosPorMim(usuarioID, function(answer) {
 				$rootScope.eventosConfirmados = answer;
+				
+				//Seta margin top do scroll spy em funcao da altura do card (Pessima solucao)
+				setTimeout(function() {
+					var altura = $('#card-confirmados').height() + 36;
+					
+					$('.table-of-contents').css("margin-top", altura + "px");
+				}, 100);
 			});
+		}
+		
+		//Verifica se evento foi confirmado pelo cara
+		$scope.estaConfirmado = function(evento) {
+			if(!$rootScope.eventosConfirmados) {
+				return false;
+			} else {
+				return $rootScope.eventosConfirmados.some(function(element) {
+					return element.ID == evento.ID;
+				});				
+			}
 		}
 	}]);
 

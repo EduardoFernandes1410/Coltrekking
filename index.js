@@ -128,9 +128,16 @@ app.post("/confirmados-por-mim", function(req, res) {
 
 //*****Confirmar Evento*****//
 app.post("/confirmar-evento", function(req, res) {
-	
 	confirmarEventoDB(req.body, function(status) {
 		status ? console.log("Inscrição realizada com sucesso") : console.log("Erro ao realizar a inscrição");
+		res.send(status);
+	});
+});
+
+//*****Cancelar Evento*****//
+app.post("/cancelar-evento", function(req, res) {	
+	cancelarEventoDB(req.body, function(status) {
+		status ? console.log("Cancelamento realizado com sucesso") : console.log("Erro ao cancelar a inscrição");
 		res.send(status);
 	});
 });
@@ -220,7 +227,7 @@ function getEventos(callback) {
 //*****Get Confirmados*****//
 function getConfirmados(data, callback) {
 	//Get os IDs dos confirmados com INNER JOIN
-	connection.query('SELECT ID, Nome, FatorK, `Pessoa-Evento`.Colocacao FROM `Pessoa` INNER JOIN `Pessoa-Evento` ON Pessoa.ID = `Pessoa-Evento`.IDPessoa WHERE `Pessoa-Evento`.IDEvento = ?', data, function(err, rows, fields) {
+	connection.query('SELECT ID, Nome, FatorK, `Pessoa-Evento`.ListaEspera, `Pessoa-Evento`.Colocacao FROM `Pessoa` INNER JOIN `Pessoa-Evento` ON Pessoa.ID = `Pessoa-Evento`.IDPessoa WHERE `Pessoa-Evento`.IDEvento = ?', data, function(err, rows, fields) {
 		if(!err) {
 			console.log(rows);
 			callback(rows);
@@ -288,6 +295,33 @@ function confirmarEventoDB(data, callback) {
 			
 		});
 	});	
+}
+
+//*****Cancelar Evento*****//
+function cancelarEventoDB(post, callback) {	
+	connection.query('DELETE FROM `Pessoa-Evento` WHERE IDEvento = ? AND IDPessoa = ?', [post.evento, post.usuario], function(err, rows, fields) {
+		if(!err) {
+			//Atualiza posicao do ranking
+			connection.query('SELECT * FROM `Pessoa-Evento` WHERE IDEvento = ? ORDER BY Colocacao ASC', [post.evento, post.usuario], function(err, rows, fields) {
+				if(!err) {
+					//Atualiza a posicao no ranking
+					for(var i = 0; i < rows.length; i++) {
+						//Verifica se esta na lista de espera
+						var espera;
+						((i + 1) > post.max) ? espera = 1 : espera = 0;
+						
+						connection.query('UPDATE `Pessoa-Evento` SET Colocacao = ?, ListaEspera = ? WHERE IDPessoa = ?', [i + 1, espera, rows[i].IDPessoa]);
+					}
+				}
+				
+				callback(true);
+			});
+		} else {
+			console.log('Error while performing Query');
+			console.log(err);
+			callback(false);
+		}
+	});
 }
 
 //*****Esta Inscrito*****//
