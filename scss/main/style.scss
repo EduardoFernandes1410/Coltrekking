@@ -1,0 +1,306 @@
+/*****ANOTACOES*****/
+//Elementos fora da navbar tem 3.5% de margin-left
+
+/*****Mixins*****/
+//Menu
+@mixin menu() {
+	a {
+		color: #000;
+		cursor: default;
+		font-weight: 400;
+		
+		span {
+			float: right;
+			color: #00c853;
+		}			
+	}
+
+	.nome-usuario {
+		font-weight: 500 !important;
+	}
+
+	#sair-button, #main-page {
+		cursor: pointer;
+	}
+}
+
+/*****Body*****/
+body {
+	background-color: #fafafa;
+}
+
+//Esconde a scroll bar
+::-webkit-scrollbar { 
+	display: none; 
+}
+
+/*****Container*****/
+.container {
+	margin: auto !important;
+}
+
+@media only screen and (min-width: 993px) {
+	.container {
+		width: 90%;
+	}	
+}
+
+/*****Nav Bar*****/
+nav {
+	.row {
+		margin-bottom: 0px;
+	}
+
+	//Logo
+	#logo {
+		width: 120px;
+		margin-left: -2%;
+		margin-top: 8px;
+	}
+
+	#logo-wrapper {
+		height: 48.3px;
+	}
+
+	//Icone Hamburguer
+	#hamburguer {
+		padding-left: 10px;
+		margin-right: 0px;
+	}
+
+	//Search Bar
+	form {
+		margin-top: 8px;
+
+		.input-field {
+			margin: auto;
+			border-radius: 2px;
+		}
+
+		#search:focus {
+			border-radius: 2px !important;
+		}
+
+		#inputWrapper {
+			width: 100%;
+			height: 50px !important;
+		}
+
+		.material-icons {
+			margin-top: -6px;
+		}
+
+		//Mudar a cor do place-holder
+		::-webkit-input-placeholder {
+			color: white;
+		}
+		:-moz-placeholder {
+			color: white;
+			opacity:  1;
+		}
+		::-moz-placeholder {
+			color: white;
+			opacity:  1;
+		}
+		:-ms-input-placeholder {
+			color: white;
+		}
+		::-ms-input-placeholder {
+			color: white;
+		}
+	}
+	
+	//Menu Usuario
+	ul {		
+		//Icone de Mensagens
+		#messageIcon {
+			margin-right: 25px;
+		}
+
+		//Ativador do Dropdown
+		.dropdown-button {
+			height: 62px;
+		}
+
+		//Menu Dropdown
+		.dropdown-content {
+			width: 230px !important;
+
+			//Mixin do Menu
+			@include menu();
+		}
+
+		//Foto do Usuario
+		.userImage {
+			width: 40px;			
+			margin-top: 11px;
+		}
+	}
+
+	//Tabs
+	.tabs {
+		margin-top: 10px !important;
+		overflow-x: hidden;
+
+		a {
+			font-weight: 500;
+		}
+	}
+	
+	//Tweaks do mobile
+	@media screen and (max-width: 992px) {
+		//Nav-Container
+		.nav-container {
+			margin-left: 0px !important;
+			margin-right: 0px !important;
+			width: 100%;
+		}
+
+		//Barra de Pesquisa
+		form {
+			.input-field {
+				margin-bottom: 8px !important;
+			}
+
+			#inputWrapper {
+				width: 90%;
+			}
+
+			.material-icons {
+				margin-top: -5px;
+			}
+		}
+
+		.button-collapse {
+			margin-top: 4px !important;
+		}
+	}
+
+	@media screen and (max-width: 600px) {
+		form {
+			.material-icons {
+				margin-top: -2px;
+			}
+		}
+	}
+}
+
+/*****Side Navbar*****/
+.side-nav {
+	@include menu();
+
+	.divider {
+		margin-top: 0px !important;
+	}
+
+	#cabecote {
+		margin-top: 13px;
+		margin-bottom: 7px;
+
+		span {
+			color: rgba(0,0,0,0.87) !important;
+		}
+
+		//Foto do Usuario
+		.userImage {
+			width: 40px;
+		}		
+	}
+
+}
+
+/*****CORPO*****/
+#corpo {
+	margin-top: 48+25px !important;
+}
+
+/*****CARDS*****/
+.card-content {
+	overflow: hidden;
+	font-size: 16px;
+	
+	span {
+		font-weight: 500;
+	}
+}
+
+#card-confirmados {
+	position: fixed;
+	margin-right: 6%;
+	
+	ul {
+		margin-bottom: 0px;
+		
+		li {
+			margin: 8px 0px 0px 0px;
+		}
+	}
+}
+
+#event-form {
+	margin-top: -48px !important;
+}
+
+.card-action a {
+	color: #ff6e40 !important;
+}
+
+/*****SCROLL SPY*****/
+.section {
+	padding-top: 0px !important;
+	padding-bottom: 0px !important;
+}
+
+.table-of-contents {
+	position: fixed;
+	
+	a {
+		border-color: #ff6e40 !important;
+	}
+}
+
+/*****MODAL*****/
+.modal-header {
+	font-size: 24px;
+	font-weight: 300;
+	margin-top: 0px;
+}
+
+//Largura de cada coluna da tabela
+.modal-content {
+	table {
+		thead {
+			tr {
+				th:first-child {
+					width: 20%;
+				}
+				
+				th:nth-child(2) {
+					width: 60%;
+				}
+			}
+		}
+		
+		tbody {
+			//Lista de Espera
+			.espera {
+				background-color: #ffebee !important;
+			}
+		}
+	}
+}
+
+/*****FORMS*****/
+#cancelar-btn {
+	color: #ff6e40;
+	margin-right: 20px;
+}
+
+/*****RANKING*****/
+#ranking {
+	margin-top: 80px !important;
+	
+	thead th {
+		padding-top: 0px !important;
+	}
+}

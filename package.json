@@ -1,10 +1,21 @@
 {
-  	"name": "firebaseauth",
-  	"version": "1.0.0",
-  	"dependencies": {
-		"express": "^4.10.6",
-		"mysql": "^2.5.4",
-		"body-parser": "*",
-		"express-session": "*"
-	}
+  "name": "firebaseauth",
+  "version": "1.0.0",
+  "dependencies": {
+    "angular": "^1.6.4",
+    "angular-route": "^1.6.4",
+    "body-parser": "*",
+    "express": "^4.10.6",
+    "express-session": "*",
+    "jquery": "^3.2.1",
+    "materialize-css": "^0.98.2",
+    "mysql": "^2.5.4"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^4.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0"
+  }
 }

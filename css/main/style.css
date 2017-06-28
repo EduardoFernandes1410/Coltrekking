@@ -1,0 +1,194 @@
+/*****ANOTACOES*****/
+/*****Mixins*****/
+/*****Body*****/
+body {
+  background-color: #fafafa; }
+
+::-webkit-scrollbar {
+  display: none; }
+
+/*****Container*****/
+.container {
+  margin: auto !important; }
+
+@media only screen and (min-width: 993px) {
+  .container {
+    width: 90%; } }
+
+/*****Nav Bar*****/
+nav .row {
+  margin-bottom: 0px; }
+
+nav #logo {
+  width: 120px;
+  margin-left: -2%;
+  margin-top: 8px; }
+
+nav #logo-wrapper {
+  height: 48.3px; }
+
+nav #hamburguer {
+  padding-left: 10px;
+  margin-right: 0px; }
+
+nav form {
+  margin-top: 8px; }
+  nav form .input-field {
+    margin: auto;
+    -webkit-border-radius: 2px;
+    border-radius: 2px; }
+  nav form #search:focus {
+    -webkit-border-radius: 2px !important;
+    border-radius: 2px !important; }
+  nav form #inputWrapper {
+    width: 100%;
+    height: 50px !important; }
+  nav form .material-icons {
+    margin-top: -6px; }
+  nav form ::-webkit-input-placeholder {
+    color: white; }
+  nav form :-moz-placeholder {
+    color: white;
+    opacity: 1; }
+  nav form ::-moz-placeholder {
+    color: white;
+    opacity: 1; }
+  nav form :-ms-input-placeholder {
+    color: white; }
+  nav form ::-ms-input-placeholder {
+    color: white; }
+
+nav ul #messageIcon {
+  margin-right: 25px; }
+
+nav ul .dropdown-button {
+  height: 62px; }
+
+nav ul .dropdown-content {
+  width: 230px !important; }
+  nav ul .dropdown-content a {
+    color: #000;
+    cursor: default;
+    font-weight: 400; }
+    nav ul .dropdown-content a span {
+      float: right;
+      color: #00c853; }
+  nav ul .dropdown-content .nome-usuario {
+    font-weight: 500 !important; }
+  nav ul .dropdown-content #sair-button, nav ul .dropdown-content #main-page {
+    cursor: pointer; }
+
+nav ul .userImage {
+  width: 40px;
+  margin-top: 11px; }
+
+nav .tabs {
+  margin-top: 10px !important;
+  overflow-x: hidden; }
+  nav .tabs a {
+    font-weight: 500; }
+
+@media screen and (max-width: 992px) {
+  nav .nav-container {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    width: 100%; }
+  nav form .input-field {
+    margin-bottom: 8px !important; }
+  nav form #inputWrapper {
+    width: 90%; }
+  nav form .material-icons {
+    margin-top: -5px; }
+  nav .button-collapse {
+    margin-top: 4px !important; } }
+
+@media screen and (max-width: 600px) {
+  nav form .material-icons {
+    margin-top: -2px; } }
+
+/*****Side Navbar*****/
+.side-nav a {
+  color: #000;
+  cursor: default;
+  font-weight: 400; }
+  .side-nav a span {
+    float: right;
+    color: #00c853; }
+
+.side-nav .nome-usuario {
+  font-weight: 500 !important; }
+
+.side-nav #sair-button, .side-nav #main-page {
+  cursor: pointer; }
+
+.side-nav .divider {
+  margin-top: 0px !important; }
+
+.side-nav #cabecote {
+  margin-top: 13px;
+  margin-bottom: 7px; }
+  .side-nav #cabecote span {
+    color: rgba(0, 0, 0, 0.87) !important; }
+  .side-nav #cabecote .userImage {
+    width: 40px; }
+
+/*****CORPO*****/
+#corpo {
+  margin-top: 73px !important; }
+
+/*****CARDS*****/
+.card-content {
+  overflow: hidden;
+  font-size: 16px; }
+  .card-content span {
+    font-weight: 500; }
+
+#card-confirmados {
+  position: fixed;
+  margin-right: 6%; }
+  #card-confirmados ul {
+    margin-bottom: 0px; }
+    #card-confirmados ul li {
+      margin: 8px 0px 0px 0px; }
+
+#event-form {
+  margin-top: -48px !important; }
+
+.card-action a {
+  color: #ff6e40 !important; }
+
+/*****SCROLL SPY*****/
+.section {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important; }
+
+.table-of-contents {
+  position: fixed; }
+  .table-of-contents a {
+    border-color: #ff6e40 !important; }
+
+/*****MODAL*****/
+.modal-header {
+  font-size: 24px;
+  font-weight: 300;
+  margin-top: 0px; }
+
+.modal-content table thead tr th:first-child {
+  width: 20%; }
+
+.modal-content table thead tr th:nth-child(2) {
+  width: 60%; }
+
+.modal-content table tbody .espera {
+  background-color: #ffebee !important; }
+
+/*****FORMS*****/
+#cancelar-btn {
+  color: #ff6e40;
+  margin-right: 20px; }
+
+/*****RANKING*****/
+#ranking {
+  margin-top: 80px !important; }
+  #ranking thead th {
+    padding-top: 0px !important; }

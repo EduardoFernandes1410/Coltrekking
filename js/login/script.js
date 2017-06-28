@@ -4,7 +4,7 @@ var facebookProvider = new firebase.auth.FacebookAuthProvider();
 var user;
 var url;
 var xmlhttp = new XMLHttpRequest();
-var userInfo = new Object();
+var usuarioInfo = new Object();
 
 /***Quando a pagina carrega***/
 window.onload = function() {
@@ -33,13 +33,13 @@ function initApp() {
 		/*Se logou*/
 		if(user) {
 			//Seta info do usuario logado
-			userInfo.Nome = user.displayName;
-			userInfo.Email = user.email;
-			userInfo.Foto = user.photoURL;
-			userInfo.ID = user.uid;
+			usuarioInfo.Nome = user.displayName;
+			usuarioInfo.Email = user.email;
+			usuarioInfo.Foto = user.photoURL;
+			usuarioInfo.ID = user.uid;
 
-			/*Manda userInfo para server*/
-			url = "/postUser";
+			/*Manda usuarioInfo para server*/
+			url = "/post-user";
 			xmlhttp.onreadystatechange = function() {
 				if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 					/*Redireciona para logged.html*/
@@ -48,7 +48,7 @@ function initApp() {
 			};
 			xmlhttp.open("POST", url, true);
 			xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-			xmlhttp.send(JSON.stringify(userInfo));				
+			xmlhttp.send(JSON.stringify(usuarioInfo));				
 		}
 		else {					
 			console.log("Nao tem user");
