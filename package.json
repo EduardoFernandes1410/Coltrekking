@@ -1,6 +1,9 @@
 {
-  "name": "firebaseauth",
+  "name": "coltrekking",
   "version": "1.0.0",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "angular": "^1.6.4",
     "angular-route": "^1.6.4",
