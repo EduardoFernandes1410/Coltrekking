@@ -11,9 +11,9 @@ var app 			= express();
 //MySQL
 var mysql		= require('mysql');
 var connection	= mysql.createConnection({
-	host	: 'localhost',
-	user	: 'root',
-	password: 'eduardo007',
+	host	: 'us-cdbr-iron-east-03.cleardb.net',
+	user	: 'bae2902327afa9',
+	password: 'aa09eff1',
 	database: 'Coltrekking'
 });
 
