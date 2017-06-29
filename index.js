@@ -14,7 +14,7 @@ var connection	= mysql.createConnection({
 	host	: 'us-cdbr-iron-east-03.cleardb.net',
 	user	: 'bae2902327afa9',
 	password: 'aa09eff1',
-	database: 'Coltrekking'
+	database: 'coltrekking'
 });
 
 //Utilizar o BodyParser
