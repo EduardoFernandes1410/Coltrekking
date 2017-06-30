@@ -98,6 +98,8 @@ app.post("/post-user", function(req, res) {
 
 //*****Redireciona para pagina principal*****//
 app.get("/main-page", function(req, res) {
+	console.log("PEDIU PRA IR PRA MAIN PAGE");
+	console.log(req.session.loginSucesso);
 	if(req.session.loginSucesso) {
 		res.sendFile(path.join(__dirname, index));
 	}
