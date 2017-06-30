@@ -162,10 +162,7 @@ app.post("/cancelar-evento", function(req, res) {
 //*****Ranking*****//
 app.get("/ranking", function(req, res) {
 	montaRanking(function callback(rows) {
-		//Atualiza info do usuario
-		pegaInfoUsuarioLogado(req, function callback() {
-			res.send(rows);
-		}); 
+		res.send(rows);
 	});
 });
 
