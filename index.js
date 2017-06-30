@@ -9,13 +9,13 @@ var session			= require('express-session');
 var app 			= express();
 
 //MySQL
-var mysql		= require('mysql');
+/*var mysql		= require('mysql');
 var connection	= mysql.createConnection({
 	host	: 'us-cdbr-iron-east-03.cleardb.net',
 	user	: 'bae2902327afa9',
 	password: 'aa09eff1',
 	database: 'heroku_c4f1d12a0ffd9dd'
-});
+});*/
 
 //Utilizar o BodyParser
 app.use(bodyParser.urlencoded({ extended: true }));
