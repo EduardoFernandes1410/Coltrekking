@@ -163,7 +163,7 @@ app.get("/logout", function(req, res) {
 });
 
 /***************************BANCO DE DADOS*****************************/
-*****Adicionar usuario ao DB*****//
+//*****Adicionar usuario ao DB*****//
 function addDB(req) {
 	//Cria usuario com propriedades do req.session.usuarioLogado
 	var usuario = new Usuario(req.session.usuarioLogado.Nome, req.session.usuarioLogado.Email, req.session.usuarioLogado.Foto, req.session.usuarioLogado.ID, 0, 1, 0, 0);
