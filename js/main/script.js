@@ -11,6 +11,11 @@ $(document).ready(function() {
 		var altura = $('#card-confirmados').height() + 36;		
 		$('.table-of-contents').css("margin-top", altura + "px");
 	});
+	
+	setTimeout(function() {		
+		var altura = $('#card-confirmados').height() + 36;		
+		$('.table-of-contents').css("margin-top", altura + "px");
+	}, 500);
 });
 
 
