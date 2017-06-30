@@ -170,7 +170,7 @@ function addDB(req) {
 	var post = usuario;
 
 	//Adiciona ao DB de Pessoas
-	connection.query('INSERT IGNORE INTO Pessoa SET ?', post, function(err, rows, fields) {
+	connection.query('INSERT IGNORE INTO pessoa SET ?', post, function(err, rows, fields) {
 		if(!err) {
 			console.log(rows);
 		}
@@ -183,7 +183,7 @@ function addDB(req) {
 
 //*****Pega Info do Usuario Logado*****//
 function pegaInfoUsuarioLogado(req, callback) {
-	connection.query('SELECT * FROM Pessoa WHERE ID = ?', req.session.usuarioLogado.ID, function(err, rows, fields) {
+	connection.query('SELECT * FROM pessoa WHERE ID = ?', req.session.usuarioLogado.ID, function(err, rows, fields) {
 		if(!err) {
 			//Retrieve info do DB
 			req.session.usuarioLogado.FatorK = rows[0].FatorK;
@@ -201,7 +201,7 @@ function pegaInfoUsuarioLogado(req, callback) {
 
 //*****Adiciona Evento ao DB*****//
 function criarEventoDB(data, callback) {
-	connection.query('INSERT INTO Evento SET ?', data, function(err, rows, fields) {
+	connection.query('INSERT INTO evento SET ?', data, function(err, rows, fields) {
 		if(!err) {
 			callback(true);
 		} else {
@@ -213,7 +213,7 @@ function criarEventoDB(data, callback) {
 
 //*****Get Eventos*****//
 function getEventos(callback) {
-	connection.query('SELECT * FROM Evento', function(err, rows, fields) {
+	connection.query('SELECT * FROM evento', function(err, rows, fields) {
 		if(!err) {
 			//Retorna o inverso do array, para mostrar pela ordem de criacao
 			callback(rows.reverse());
@@ -227,7 +227,7 @@ function getEventos(callback) {
 //*****Get Confirmados*****//
 function getConfirmados(data, callback) {
 	//Get os IDs dos confirmados com INNER JOIN
-	connection.query('SELECT ID, Nome, FatorK, `Pessoa-Evento`.ListaEspera, `Pessoa-Evento`.Colocacao FROM `Pessoa` INNER JOIN `Pessoa-Evento` ON Pessoa.ID = `Pessoa-Evento`.IDPessoa WHERE `Pessoa-Evento`.IDEvento = ?', data, function(err, rows, fields) {
+	connection.query('SELECT ID, Nome, FatorK, `pessoa-evento`.ListaEspera, `pessoa-evento`.Colocacao FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ?', data, function(err, rows, fields) {
 		if(!err) {
 			console.log(rows);
 			callback(rows);
@@ -241,7 +241,7 @@ function getConfirmados(data, callback) {
 
 //*****Get Confirmados Por Mim*****//
 function getConfirmadosPorMim(data, callback) {
-	connection.query('SELECT ID, Nome FROM `Evento` INNER JOIN `Pessoa-Evento` ON Evento.ID = `Pessoa-Evento`.IDEvento WHERE `Pessoa-Evento`.IDPessoa = ? ORDER BY ID DESC', data, function(err, rows, fields) {
+	connection.query('SELECT ID, Nome FROM `evento` INNER JOIN `pessoa-evento` ON evento.ID = `pessoa-evento`.IDEvento WHERE `pessoa-evento`.IDPessoa = ? ORDER BY ID DESC', data, function(err, rows, fields) {
 		if(!err) {
 			console.log(rows);
 			callback(rows);
@@ -258,7 +258,7 @@ function confirmarEventoDB(data, callback) {
 	var post;
 	
 	//Pega o numero de inscritos no evento
-	connection.query('SELECT * FROM `Pessoa-Evento` WHERE IDEvento = ?', data.evento, function(err, rows, fields) {
+	connection.query('SELECT * FROM `pessoa-evento` WHERE IDEvento = ?', data.evento, function(err, rows, fields) {
 		//Seta o post
 		post = {
 			IDPessoa: data.usuario,
@@ -272,14 +272,14 @@ function confirmarEventoDB(data, callback) {
 			//Se nao esta inscrito
 			if(status) {
 				//GET numero maximo de pessoas no Evento
-				connection.query('SELECT NumeroMax FROM Evento WHERE ID = ?', data.evento, function(err, rows, fields) {
+				connection.query('SELECT NumeroMax FROM evento WHERE ID = ?', data.evento, function(err, rows, fields) {
 					var max = rows[0].NumeroMax;
 					
 					//Se esta na lista de espera
 					(post.Colocacao > max) ? post.ListaEspera = 1 : post.ListaEspera = 0;
 					
 					//Adiciona pessoa ao evento
-					connection.query('INSERT INTO `Pessoa-Evento` SET ?', post, function(err, rows, fields) {
+					connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
 						if(!err) {
 							callback(true);
 						} else {
@@ -299,10 +299,10 @@ function confirmarEventoDB(data, callback) {
 
 //*****Cancelar Evento*****//
 function cancelarEventoDB(post, callback) {	
-	connection.query('DELETE FROM `Pessoa-Evento` WHERE IDEvento = ? AND IDPessoa = ?', [post.evento, post.usuario], function(err, rows, fields) {
+	connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ? AND IDPessoa = ?', [post.evento, post.usuario], function(err, rows, fields) {
 		if(!err) {
 			//Atualiza posicao do ranking
-			connection.query('SELECT * FROM `Pessoa-Evento` WHERE IDEvento = ? ORDER BY Colocacao ASC', [post.evento, post.usuario], function(err, rows, fields) {
+			connection.query('SELECT * FROM `pessoa-evento` WHERE IDEvento = ? ORDER BY Colocacao ASC', [post.evento, post.usuario], function(err, rows, fields) {
 				if(!err) {
 					//Atualiza a posicao no ranking
 					for(var i = 0; i < rows.length; i++) {
@@ -310,7 +310,7 @@ function cancelarEventoDB(post, callback) {
 						var espera;
 						((i + 1) > post.max) ? espera = 1 : espera = 0;
 						
-						connection.query('UPDATE `Pessoa-Evento` SET Colocacao = ?, ListaEspera = ? WHERE IDPessoa = ?', [i + 1, espera, rows[i].IDPessoa]);
+						connection.query('UPDATE `pessoa-evento` SET Colocacao = ?, ListaEspera = ? WHERE IDPessoa = ?', [i + 1, espera, rows[i].IDPessoa]);
 					}
 				}
 				
@@ -326,7 +326,7 @@ function cancelarEventoDB(post, callback) {
 
 //*****Esta Inscrito*****//
 function estaInscrito(post, callback) {	
-	connection.query('SELECT * FROM `Pessoa-Evento` WHERE IDPessoa = ? AND IDEvento = ?', [post.IDPessoa, post.IDEvento], function(err, rows, fields) {
+	connection.query('SELECT * FROM `pessoa-evento` WHERE IDPessoa = ? AND IDEvento = ?', [post.IDPessoa, post.IDEvento], function(err, rows, fields) {
 		if(!err) {
 			//Se esta ou nao inscrito
 			rows.length == 0 ? callback(true) : callback(false);
@@ -350,19 +350,19 @@ function printTabela(tabela) {
 
 //*****Monta Ranking*****//
 function montaRanking(callback) {
-	connection.query('SELECT ID, Nome, FatorK FROM Pessoa ORDER BY FatorK DESC', function(err, rows, fields) {
+	connection.query('SELECT ID, Nome, FatorK FROM pessoa ORDER BY FatorK DESC', function(err, rows, fields) {
 		if(!err) {
 			//Atualiza a posicao no ranking
 			for(var i = 0; i < rows.length; i++) {
 				if(i == 0) {
-					connection.query('UPDATE Pessoa SET Posicao = 1 WHERE ID = ?', rows[0].ID);
+					connection.query('UPDATE pessoa SET Posicao = 1 WHERE ID = ?', rows[0].ID);
 					rows[0].Posicao = 1;
 				} else {
 					if(rows[i].FatorK == rows[i - 1].FatorK) {
-						connection.query('UPDATE Pessoa SET Posicao = ? WHERE ID = ?', [rows[i - 1].Posicao, rows[i].ID]);
+						connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [rows[i - 1].Posicao, rows[i].ID]);
 						rows[i].Posicao = rows[i - 1].Posicao;
 					} else {
-						connection.query('UPDATE Pessoa SET Posicao = ? WHERE ID = ?', [(i + 1), rows[i].ID]);
+						connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [(i + 1), rows[i].ID]);
 						rows[i].Posicao = i + 1;
 					}
 				}
