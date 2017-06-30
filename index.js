@@ -30,14 +30,14 @@ app.use(express.static('./', {
 }));
 
 //Conecta ao Banco de Dados
-connection.connect(function(err) {
+/*connection.connect(function(err) {
 	if(!err){
 		console.log("Database connected...");
 	}
 	else{
 		console.log("Error connecting to database...");
 	}
-});
+});*/
 
 /*********************************PAGINAS********************************/
 var index	= '/html/index.html';
