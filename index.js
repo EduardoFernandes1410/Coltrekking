@@ -170,10 +170,10 @@ app.get("/ranking", function(req, res) {
 
 //*****Log Out*****//
 app.get("/logout", function(req, res) {
+	//Usuario deslogado
+	req.session.loginSucesso = false;
 	//Deleta session
 	delete req.session.usuarioLogado;
-	//Usuario deslogado
-	loginSucesso = false;
 	//Manda para pagina de logout
 	res.sendFile(path.join(__dirname, login));
 });
