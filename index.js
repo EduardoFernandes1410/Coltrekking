@@ -327,7 +327,7 @@ function cancelarEventoDB(post, callback) {
 						var espera;
 						((i + 1) > post.max) ? espera = 1 : espera = 0;
 						
-						connection.query('UPDATE `pessoa-evento` SET Colocacao = ?, ListaEspera = ? WHERE IDPessoa = ?', [i + 1, espera, rows[i].IDPessoa]);
+						connection.query('UPDATE `pessoa-evento` SET Colocacao = ?, ListaEspera = ? WHERE IDPessoa = ? AND IDEvento = ?', [i + 1, espera, rows[i].IDPessoa], post.evento);
 					}
 				}
 				
