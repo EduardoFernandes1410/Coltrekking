@@ -2,6 +2,8 @@
 <html ng-app="main">
 	<head>
 		<title>Página Inicial - Coltrekking</title>
+		<link rel="icon" type="image/png" href="../rsc/logo/macaco.png" />
+		<meta name="theme-color" content="#8bc34a">
 		<meta charset="utf-8">
 
 		<!--Adiciona jQuery-->
@@ -183,7 +185,7 @@
 											<!--Nome-->
 											<span class="card-title">{{evento.Nome}}</span>
 											<!--FAB Confirmar-->
-											<a ng-click="confirmarEvento(this.evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">add</i></a>
+											<a ng-disabled="!evento.Disponivel" ng-click="confirmarEvento(this.evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">add</i></a>
 											<!--FAB Cancelar-->
 											<a ng-click="cancelarEvento(this.evento)" ng-show="estaConfirmado(evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">remove</i></a>
 										</div>
@@ -218,9 +220,14 @@
 											</p>
 										</div>
 										
-										<!--Card Action-->
-										<div class="card-action">
+										<!--Card Action LISTA DE INSCRITOS-->
+										<div class="card-action" ng-show="evento.Disponivel">
 											<a ng-attr-href="{{'#lista-inscritos' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
+										</div>
+										
+										<!--Card Action COUNTDOWN-->										
+										<div class="card-action" ng-show="!evento.Disponivel">
+											<a href="#" onclick="return false;">{{evento.Countdown}}</a>
 										</div>
 									</div>
 									
@@ -262,7 +269,7 @@
 
 
 					<!--Ranking-->
-					<div ng-controller="RankingController as ranking">
+					<div ng-controller="RankingController as Ranking">
 						<div id="ranking">
 							<div class="card">
 								<div class="card-content">
@@ -279,7 +286,7 @@
 
 										<!--Linha para cada usuario-->
 										<tbody>
-											<tr ng-repeat="pessoa in ranking.ranking">
+											<tr ng-repeat="pessoa in ranking">
 												<td>{{pessoa.Posicao}}º</td>
 												<td>{{pessoa.Nome}}</td>
 												<td>{{pessoa.FatorK}}</td>

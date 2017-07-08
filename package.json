@@ -11,7 +11,7 @@
     "express": "^4.10.6",
     "express-session": "*",
     "jquery": "^3.2.1",
-    "materialize-css": "^0.98.2",
+    "materialize-css": "^0.99",
     "mysql": "^2.5.4"
   },
   "devDependencies": {
