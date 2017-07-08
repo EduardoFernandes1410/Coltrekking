@@ -235,6 +235,19 @@
 				selectYears: 2,
 				format: 'dd/mm/yyyy'
 			});
+			
+			//Time-Picker
+			$('.timepicker').pickatime({
+				default: 'now', // Set default time
+				fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+				twelvehour: false, // Use AM/PM or 24-hour format
+				donetext: 'OK', // text for done-button
+				cleartext: 'Limpar', // text for clear-button
+				canceltext: 'Cancelar', // Text for cancel-button
+				autoclose: false, // automatic close timepicker
+				ampmclickable: true, // make AM PM clickable
+				aftershow: function(){} //Function for after opening timepicker  
+			});
 		});
 
 		//Submit o formulario
@@ -247,6 +260,14 @@
 			if(params.Tipo != 2) { //se nao for trekking
 				params.TipoTrekking = null;
 			}
+			
+			//Seta data de inscricao
+			params.DataInscricao = params.DataInscricao.split("/").reverse().join("-");
+			params.DataInscricao += 'T' + params.HorarioInscricao + ":00";
+			params.DataInscricao = new Date(params.DataInscricao).toUTCString().replace(" GMT", "");
+			
+			//Deleta params.HorarioInscricao
+			delete params.HorarioInscricao;
 			
 			//Chama o POST Criar Evento
 			criarEventoService.postCriarEvento(params, function(answer) {
@@ -263,7 +284,7 @@
 
 
 	//Eventos Controller
-	app.controller('EventosController', ['EventosService', '$timeout', '$rootScope', '$scope',  function(eventosService, $timeout, $rootScope, $scope) {
+	app.controller('EventosController', ['EventosService', '$timeout', '$rootScope', '$scope', '$interval',  function(eventosService, $timeout, $rootScope, $scope, $interval) {
 		var eventos;
 
 		//Chama EventosService
@@ -271,8 +292,9 @@
 			if(answer != false) {
 				this.eventos = answer;
 				
-				//Seta strings e capa
+				//Para cada evento
 				this.eventos.forEach(function(element) {
+					//Seta strings e capa
 					switch(element.Tipo) {
 						case 1:
 							element.TipoString = "Preleção";
@@ -298,7 +320,34 @@
 							element.Capa = "../rsc/event_images/camping-crop.jpg";
 						break;
 					}
-				});
+					
+					//Seta Countdown
+					var data = element.DataInscricao;
+					var dataCountdown = new Date(data).getTime();
+					element.Disponivel = 0;
+					element.Countdown = "Disponível em 0 dias 0 horas 0 min 0 seg";
+										
+					//Inicia Countdown
+					element.Intervalo = $interval(function() {
+						var agora = new Date(new Date().toUTCString().replace(" GMT", "")).getTime();
+						var distancia = dataCountdown - agora;
+						
+						//Transforma distancia em d h m s
+						var days = Math.floor(distancia / (1000 * 60 * 60 * 24));
+						var hours = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+						var minutes = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+						var seconds = Math.floor((distancia % (1000 * 60)) / 1000);
+						
+						//Transforma distancia em string
+						element.Countdown = "Disponível em " + days + " dias " + hours + " horas " + minutes + " min " + seconds + " seg ";
+						
+						//Confere se acabou o tempo
+						if(distancia <= 0) {
+							element.Disponivel = 1;
+							$interval.cancel(element.Intervalo);
+						}
+					}, 1000);
+				});				
 				
 				//POST Confirmados
 				this.eventos.forEach(function(element) {
@@ -313,6 +362,9 @@
 					$('.modal').modal();
 					$('.scrollspy').scrollSpy();
 				});
+				
+				//Libera caminho para RANKING
+				$rootScope.$broadcast('dataEventos', true);
 			}
 		}.bind(this));
 		
@@ -398,14 +450,17 @@
 
 
 	//Ranking Controller
-	app.controller('RankingController', ['RankingService', function(rankingService) {
+	app.controller('RankingController', ['RankingService', '$rootScope', function(rankingService, $rootScope) {
 		var ranking;
 
-		//Chama RankingService
-		rankingService.getRanking(function(answer) {
-			if(answer != null) {
-				this.ranking = answer;
-			}
-		}.bind(this));
+		//Quando EventosController ja acabou
+		$rootScope.$on('dataEventos', function(event) {
+			//Chama RankingService
+			rankingService.getRanking(function(answer) {
+				if(answer != null) {
+					$rootScope.ranking = answer;
+				}
+			}.bind(this));			
+		});		
 	}]);
 })();

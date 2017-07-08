@@ -273,44 +273,51 @@ function getConfirmadosPorMim(data, callback) {
 function confirmarEventoDB(data, callback) {
 	var post;
 	
-	//Pega o numero de inscritos no evento
-	connection.query('SELECT * FROM `pessoa-evento` WHERE IDEvento = ?', data.evento, function(err, rows, fields) {
-		//Seta o post
-		post = {
-			IDPessoa: data.usuario,
-			IDEvento: data.evento,
-			Colocacao: (rows.length + 1),
-			ListaEspera: 0			
+	//Verifica se evento esta disponivel para inscricao
+	estaDisponivel(data.evento, function(status) {
+		//Se esta disponivel
+		if(status) {
+			//Pega o numero de inscritos no evento
+			connection.query('SELECT * FROM `pessoa-evento` WHERE IDEvento = ?', data.evento, function(err, rows, fields) {
+				//Seta o post
+				post = {
+					IDPessoa: data.usuario,
+					IDEvento: data.evento,
+					Colocacao: (rows.length + 1),
+					ListaEspera: 0			
+				}
+				
+				//Verifica se o cara nao esta inscrito
+				estaInscrito(post, function(status) {
+					//Se nao esta inscrito
+					if(status) {
+						//GET numero maximo de pessoas no Evento
+						connection.query('SELECT NumeroMax FROM evento WHERE ID = ?', data.evento, function(err, rows, fields) {
+							var max = rows[0].NumeroMax;
+							
+							//Se esta na lista de espera
+							(post.Colocacao > max) ? post.ListaEspera = 1 : post.ListaEspera = 0;
+							
+							//Adiciona pessoa ao evento
+							connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
+								if(!err) {
+									callback(true);
+								} else {
+									console.log('this.sql', this.sql);
+									console.log(err);
+									callback(false);
+								}
+							});
+						});				
+					} else {
+						callback(false);
+					}					
+				});
+			});	
+		} else {
+			callback(false);
 		}
-		
-		//Verifica se o cara nao esta inscrito
-		estaInscrito(post, function(status) {
-			//Se nao esta inscrito
-			if(status) {
-				//GET numero maximo de pessoas no Evento
-				connection.query('SELECT NumeroMax FROM evento WHERE ID = ?', data.evento, function(err, rows, fields) {
-					var max = rows[0].NumeroMax;
-					
-					//Se esta na lista de espera
-					(post.Colocacao > max) ? post.ListaEspera = 1 : post.ListaEspera = 0;
-					
-					//Adiciona pessoa ao evento
-					connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
-						if(!err) {
-							callback(true);
-						} else {
-							console.log('this.sql', this.sql);
-							console.log(err);
-							callback(false);
-						}
-					});
-				});				
-			} else {
-				callback(false);
-			}
-			
-		});
-	});	
+	});
 }
 
 //*****Cancelar Evento*****//
@@ -347,7 +354,25 @@ function estaInscrito(post, callback) {
 			//Se esta ou nao inscrito
 			rows.length == 0 ? callback(true) : callback(false);
 		} else {
-			console.log('Error while performing Query (PRINTA TABELA)');
+			console.log('Error while performing Query');
+			callback(false);
+		}
+	});
+}
+
+//*****Esta Disponivel*****//
+function estaDisponivel(evento, callback) {
+	connection.query('SELECT DataInscricao FROM `evento` WHERE ID = ?', evento, function(err, rows, fields) {
+		if(!err) {			
+			var dataEvento = rows[0].DataInscricao;
+			var dataCountdown = new Date(dataEvento).getTime();
+			var agora = new Date(new Date().toUTCString().replace(" GMT", "")).getTime();
+			var distancia = dataCountdown - agora;
+			
+			distancia <= 0 ? callback(true) : callback(false);
+		} else {
+			console.log('Error while performing Query');
+			console.log(err);
 			callback(false);
 		}
 	});
