@@ -163,6 +163,19 @@
 				callback(answer);
 			});
 		}
+		
+		//POST /excluir-evento
+		eventosService.excluirEvento = function(data, callback) {
+			var post = {ID: data};
+			
+			$http.post('/excluir-evento', post).then(function successCallback(response) {
+				//Sucesso
+				var answer = response.data;
+				callback(answer);
+			}, function errorCallback(response) {
+
+			});
+		}
 
 		return eventosService;
 	});
@@ -361,6 +374,19 @@
 				$(document).ready(function() {
 					$('.modal').modal();
 					$('.scrollspy').scrollSpy();
+					
+					$('.dropdown-button').dropdown({
+						inDuration: 300,
+						outDuration: 225,
+						constrainWidth: false, // Does not change width of dropdown to that of the activator
+						hover: false, // Activate on hover
+						gutter: 0, // Spacing from edge
+						belowOrigin: true, // Displays dropdown below the button
+						alignment: 'right', // Displays dropdown with edge aligned to the left of button
+						stopPropagation: false // Stops event propagation
+					});
+					
+					$('.dropdown-button').dropdown();
 				});
 				
 				//Libera caminho para RANKING
@@ -445,6 +471,19 @@
 					return element.ID == evento.ID;
 				});				
 			}
+		}
+		
+		//Excluir Evento
+		$scope.excluirEvento = function(eventoID) {
+			//Chama POST Excluir Evento
+			eventosService.excluirEvento(eventoID, function(answer) {
+				//Emite alerta sobre o status da operacao
+				if(answer) {
+					Materialize.toast("Evento excluído com sucesso!", 3000);
+				} else {
+					Materialize.toast("Erro ao excluir o evento!", 3000);
+				}
+			});
 		}
 	}]);
 

@@ -149,6 +149,17 @@ nav .tabs {
   font-size: 16px; }
   .card-content span {
     font-weight: 500; }
+  .card-content .dropdown-button {
+    color: #000;
+    margin-top: 15px; }
+  .card-content .dropdown-content {
+    width: 150px !important; }
+    .card-content .dropdown-content li a {
+      color: #000 !important; }
+    .card-content .dropdown-content .finalizador {
+      color: #4caf50 !important; }
+    .card-content .dropdown-content .excluidor {
+      color: #f44336 !important; }
 
 #card-confirmados {
   position: fixed;

@@ -161,6 +161,14 @@ app.post("/cancelar-evento", function(req, res) {
 	});
 });
 
+//*****Excluir Evento*****//
+app.post("/excluir-evento", function(req, res) {
+	excluirEventoDB(req.body, function(status) {
+		status ? console.log("Evento excluido com sucesso") : console.log("Erro ao excluir o evento");
+		res.send(status);
+	});
+});
+
 //*****Ranking*****//
 app.get("/ranking", function(req, res) {
 	montaRanking(function callback(rows) {
@@ -342,6 +350,24 @@ function cancelarEventoDB(post, callback) {
 		} else {
 			console.log('Error while performing Query');
 			console.log(err);
+			callback(false);
+		}
+	});
+}
+
+//*****Excluir Evento*****//
+function excluirEventoDB(post, callback) {	
+	connection.query('DELETE FROM `evento` WHERE ID = ?', post.ID, function(err, rows, fields) {
+		if(!err) {
+			connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ?', post.ID, function(err, rows, fields) {
+				if(!err) {
+					callback(true);
+				} else {
+					console.log('Error while performing Query');
+					callback(false);
+				}
+			});			
+		} else {
 			callback(false);
 		}
 	});

@@ -230,6 +230,30 @@ nav {
 	span {
 		font-weight: 500;
 	}
+	
+	//Menu Dropdown
+	.dropdown-button {
+		color: #000;
+		margin-top: 15px;
+	}
+	
+	.dropdown-content {
+		width: 150px !important;
+		
+		li {
+			a {
+				color: #000 !important;
+			}			
+		}
+		
+		.finalizador {
+			color: #4caf50 !important;
+		}
+		
+		.excluidor {
+			color: #f44336 !important;
+		}
+	}
 }
 
 #card-confirmados {
