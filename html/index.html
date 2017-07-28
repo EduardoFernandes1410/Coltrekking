@@ -196,7 +196,7 @@
 											</a>
 											
 											<ul ng-if="usuario.Admin" ng-attr-id="{{'menu-card' + evento.ID}}" class="dropdown-content">
-												<li><a href="#!" onclick="return false;">Editar evento</a></li>
+												<li><a ng-attr-href="{{'#!/create-event?id=' + evento.ID + '&nome=' + evento.Nome + '&tipo=' + evento.Tipo + '&tipoTrekking=' + evento.TipoTrekking + '&dataInicio=' + evento.DataInicio + '&dataFim=' + evento.DataFim + '&local=' + evento.Local + '&dificuldade=' + evento.Dificuldade + '&numeroMax=' + evento.NumeroMax + '&dataInscricao=' + evento.DataInscricao}}">Editar evento</a></li>
 												<li><a href="#!" class="finalizador" onclick="return false;">Finalizar evento</a></li>
 												<li class="divider"></li>
 												<li><a href="#!" class="excluidor" onclick="return false;" ng-click="excluirEvento(evento.ID)">Excluir evento</a></li>

@@ -76,13 +76,24 @@
 		return loginService;
 	});
 
-
-	//POST /criar-evento
+	//Criar e editar eventos
 	app.factory('CriarEventoService', function($http) {
 		var criarEventoService = {};
 
+		//POST /criar-evento
 		criarEventoService.postCriarEvento = function(data, callback) {
 			$http.post('/criar-evento', data).then(function successCallback(response) {
+				//Sucesso
+				var answer = response.data;
+				callback(answer);
+			}, function errorCallback(response) {
+
+			});
+		}
+		
+		//POST /editar-evento
+		criarEventoService.postEditarEvento = function(data, callback) {
+			$http.post('/editar-evento', data).then(function successCallback(response) {
 				//Sucesso
 				var answer = response.data;
 				callback(answer);
@@ -223,48 +234,102 @@
 
 
 	//CriarEventos Controller
-	app.controller('CriarEventoController', ['CriarEventoService', '$timeout', '$scope', '$location', function(criarEventoService, $timeout, $scope, $location) {
-		//Inicializa elementos do Materialize
-		$timeout(function() {
-			//Select
-			$(document).ready(function() {
-				$('select').material_select();
-			});
-
-			//Date-Picker
-			$('.datepicker').pickadate({
-				monthsFull: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-				monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-				weekdaysFull: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabádo'],
-				weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-				today: 'Hoje',
-				clear: 'Limpar',
-				close: 'Pronto',
-				labelMonthNext: 'Próximo mês',
-				labelMonthPrev: 'Mês anterior',
-				labelMonthSelect: 'Selecione um mês',
-				labelYearSelect: 'Selecione um ano',
-				selectMonths: true,
-				selectYears: 2,
-				format: 'dd/mm/yyyy'
-			});
+	app.controller('CriarEventoController', ['CriarEventoService', '$timeout', '$scope', '$location', '$compile', function(criarEventoService, $timeout, $scope, $location, $compile) {
+		//Modo Edicao
+		$scope.modoEdicao = !jQuery.isEmptyObject($location.search());
+		
+		//Parametros enviados por GET
+		if($scope.modoEdicao) {
+			$scope.eventoAttr = $location.search();
+			$scope.eventoAttr.numeroMax = parseInt($scope.eventoAttr.numeroMax);
+			$scope.eventoAttr.dataInscricao += " GMT";
 			
-			//Time-Picker
-			$('.timepicker').pickatime({
-				default: 'now', // Set default time
-				fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
-				twelvehour: false, // Use AM/PM or 24-hour format
-				donetext: 'OK', // text for done-button
-				cleartext: 'Limpar', // text for clear-button
-				canceltext: 'Cancelar', // Text for cancel-button
-				autoclose: false, // automatic close timepicker
-				ampmclickable: true, // make AM PM clickable
-				aftershow: function(){} //Function for after opening timepicker  
+			//Arruma a data de inscricao
+			var data = new Date($scope.eventoAttr.dataInscricao);
+			$scope.eventoAttr.dataHora = (data.getHours() >= 10 ? data.getHours() : "0" + data.getHours()) + ":" + (data.getMinutes() >= 10 ? data.getMinutes() : "0" + data.getMinutes());
+			$scope.eventoAttr.dataDia = data.getDate() >= 10 ? data.getDate() : "0" + data.getDate();
+			$scope.eventoAttr.dataDia += "/" + (data.getMonth() >= 10 ? data.getMonth() : "0" + data.getMonth());
+			$scope.eventoAttr.dataDia += "/" + data.getFullYear();
+			
+			//Seta os selects
+			$scope.params = {};
+			$scope.params.Tipo = $scope.eventoAttr.tipo;
+			$scope.params.TipoTrekking = $scope.eventoAttr.tipoTrekking;
+			$scope.params.Dificuldade = $scope.eventoAttr.dificuldade;
+		}
+		
+		//Inicia
+		$timeout(function() {
+			//Inicializa elementos do Materialize
+			$(document).ready(function() {
+				//Select
+				$('select').material_select();
+				
+				//Date-Picker
+				$('.datepicker').pickadate({
+					monthsFull: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+					monthsShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+					weekdaysFull: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabádo'],
+					weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
+					today: 'Hoje',
+					clear: 'Limpar',
+					close: 'Pronto',
+					labelMonthNext: 'Próximo mês',
+					labelMonthPrev: 'Mês anterior',
+					labelMonthSelect: 'Selecione um mês',
+					labelYearSelect: 'Selecione um ano',
+					selectMonths: true,
+					selectYears: 2,
+					format: 'dd/mm/yyyy'
+				});
+				
+				//Time-Picker
+				$('.timepicker').pickatime({
+					default: 'now', // Set default time
+					fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+					twelvehour: false, // Use AM/PM or 24-hour format
+					donetext: 'OK', // text for done-button
+					cleartext: 'Limpar', // text for clear-button
+					canceltext: 'Cancelar', // Text for cancel-button
+					autoclose: false, // automatic close timepicker
+					ampmclickable: true, // make AM PM clickable
+					aftershow: function(){} //Function for after opening timepicker  
+				});
+				
+				//MODO EDICAO
+				//Verifica se esta no modo de edicao
+				if($scope.modoEdicao) {					
+					//Edita os valores dos elementos
+					$("#titulo").text("Editar \"" + $scope.eventoAttr.nome + "\"");
+					$("#nome").val($scope.eventoAttr.nome);
+					$("#tipo").val($scope.eventoAttr.tipo);
+					
+					if($scope.eventoAttr.tipoTrekking != "null") {
+						$("#tipoTrekking").val($scope.eventoAttr.tipoTrekking);
+						$("#tipoTrekking").prop('disabled', false);
+					}
+					
+					if($scope.eventoAttr.dificuldade != "null") {
+						$("#dificuldade").val($scope.eventoAttr.dificuldade);
+						$("#dificuldade").prop('disabled', false);
+					}
+
+					$("#dataInicio").val($scope.eventoAttr.dataInicio);
+					$("#dataFim").val($scope.eventoAttr.dataFim);
+					$("#numeroMax").val($scope.eventoAttr.numeroMax);
+					$("#dataInscricao").val($scope.eventoAttr.dataDia);
+					$("#horarioInscricao").val($scope.eventoAttr.dataHora);
+					$("#local").val($scope.eventoAttr.local);
+										
+					//Reinicia os elementos Materialize
+					Materialize.updateTextFields();
+					$('select').material_select();
+				}
 			});
 		});
 
-		//Submit o formulario
-		$scope.criarEvento = function(params) {
+		//Arruma os parametros
+		function arrumaParametros(params) {
 			//Verifica tipo de evento
 			if(params.Tipo == 1) { //se for prelecao
 				params.Dificuldade = null;
@@ -282,6 +347,15 @@
 			//Deleta params.HorarioInscricao
 			delete params.HorarioInscricao;
 			
+			//Retorna os parametros arrumados
+			return params;
+		}
+
+		//Submit o formulario de CRIAR EVENTO
+		$scope.criarEvento = function(params) {
+			//Arruma os parametros
+			params = arrumaParametros(params);
+			
 			//Chama o POST Criar Evento
 			criarEventoService.postCriarEvento(params, function(answer) {
 				//Emite alerta sobre o status da operacao e redireciona
@@ -290,6 +364,27 @@
 					$location.path('/');
 				} else {
 					Materialize.toast("Erro ao criar o evento!", 3000);
+				}
+			});
+		}
+		
+		//Submit o formulario de CRIAR EVENTO
+		$scope.editarEvento = function(params) {
+			console.log("PARAMETROS");
+			console.log(params);
+			//Arruma os parametros
+			params = arrumaParametros(params);			
+			//Pega o ID do evento
+			params.ID = $location.search().id;
+						
+			//Chama o POST Criar Evento
+			criarEventoService.postEditarEvento(params, function(answer) {
+				//Emite alerta sobre o status da operacao e redireciona
+				if(answer) {
+					Materialize.toast("Evento editado com sucesso!", 3000);
+					$location.path('/main-page');
+				} else {
+					Materialize.toast("Erro ao editar o evento!", 3000);
 				}
 			});
 		}

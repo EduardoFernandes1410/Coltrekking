@@ -116,10 +116,16 @@ app.get("/get-user", function(req, res) {
 
 //*****Criar Evento*****//
 app.post("/criar-evento", function(req, res) {
-	console.log(req.body);
-
 	criarEventoDB(req.body, function(status) {
 		status ? console.log("Evento criado com sucesso") : console.log("Evento nao foi criado");
+		res.send(status);
+	});
+});
+
+//*****Editar Evento*****//
+app.post("/editar-evento", function(req, res) {
+	editarEventoDB(req.body, function(status) {
+		status ? console.log("Evento editado com sucesso") : console.log("Evento nao foi editado");
 		res.send(status);
 	});
 });
@@ -226,6 +232,18 @@ function pegaInfoUsuarioLogado(req, callback) {
 //*****Adiciona Evento ao DB*****//
 function criarEventoDB(data, callback) {
 	connection.query('INSERT INTO evento SET ?', data, function(err, rows, fields) {
+		if(!err) {
+			callback(true);
+		} else {
+			console.log(err);
+			callback(false);
+		}
+	});
+}
+
+//*****Editar Evento no DB*****//
+function editarEventoDB(data, callback) {
+	connection.query('UPDATE evento SET ? WHERE ID = ?', [data, data.ID], function(err, rows, fields) {
 		if(!err) {
 			callback(true);
 		} else {

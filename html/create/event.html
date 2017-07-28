@@ -1,6 +1,6 @@
 <div class="card" id="event-form">
 	<div class="card-content">
-		<span class="card-title">Criar um Evento</span>
+		<span class="card-title" id="titulo">Criar um Evento</span>
 
 		<div class="row">
 			<!--Form em si-->
@@ -8,7 +8,7 @@
 				<div class="row">
 					<!--Nome-->
 					<div class="input-field col s12">
-						<input id="nome" type="text" name="nome" ng-model="params.Nome">
+						<input id="nome" type="text" name="nome" ng-model="params.Nome" ng-init="params.Nome = eventoAttr.nome">
 						<label for="nome">Nome do Evento</label>
 					</div>					
 				</div>
@@ -17,7 +17,6 @@
 					<!--Tipo-->
 					<div class="input-field col s12 l4">
 						<select id="tipo" name="tipo" onchange="verificaTipo();" ng-model="params.Tipo">
-							<option value="" disabled selected>Tipo de Evento</option>
 							<option value="1">Preleção</option>
 							<option value="2">Trekking</option>
 							<option value="3">Acampamento</option>
@@ -28,7 +27,6 @@
 					<!--Tipo de Trekking-->
 					<div class="input-field col s12 l4">
 						<select disabled id="tipoTrekking" name="tipotipoTrekking" onchange="verificaTipo();" ng-model="params.TipoTrekking">
-							<option value="" disabled selected>Tipo do Trekking</option>
 							<option value="Ping-Pong">Ping-Pong</option>
 							<option value="Circuito">Circuito</option>
 							<option value="Travessia">Travessia</option>
@@ -39,7 +37,6 @@
 					<!--Dificuldade-->
 					<div class="input-field col s12 l4">
 						<select disabled id="dificuldade" name="dificuldade" ng-model="params.Dificuldade">
-							<option value="" disabled selected>Dificuldade</option>
 							<option value="Fácil Pacas">Fácil Pacas</option>
 							<option value="Fácil">Fácil</option>
 							<option value="Médio">Médio</option>
@@ -53,19 +50,19 @@
 				<div class="row">
 					<!--Data Inicio-->
 					<div class="input-field col s12 l4">
-						<input id="data-inicio" type="text" class="datepicker" name="data-inicio" ng-model="params.DataInicio">
-						<label for="data-inicio" class="active">Data de Início</label>
+						<input id="dataInicio" type="text" class="datepicker" name="dataInicio" ng-model="params.DataInicio" ng-init="params.DataInicio = eventoAttr.dataInicio">
+						<label for="dataInicio" class="active">Data de Início</label>
 					</div>
 
 					<!--Data Fim-->
 					<div class="input-field col s12 l4">
-						<input id="data-fim" type="text" class="datepicker" name="data-fim" ng-model="params.DataFim">
-						<label for="data-fim" class="active">Data de Fim</label>
+						<input id="dataFim" type="text" class="datepicker" name="dataFim" ng-model="params.DataFim" ng-init="params.DataFim = eventoAttr.dataFim">
+						<label for="dataFim" class="active">Data de Fim</label>
 					</div>
 					
 					<!--Numero Maximo-->
 					<div class="input-field col s12 l4">
-						<input id="numeroMax" type="number" name="numeroMax" ng-model="params.NumeroMax">
+						<input id="numeroMax" type="number" name="numeroMax" ng-model="params.NumeroMax" ng-init="params.NumeroMax = eventoAttr.numeroMax">
 						<label for="numeroMax">Número Máximo de Pessoas</label>
 					</div>
 				</div>
@@ -73,29 +70,31 @@
 				<div class="row">
 					<!--Data Inscricao-->
 					<div class="input-field col s12 l6">
-						<input id="data-inscricao" type="text" class="datepicker" name="data-inscricao" ng-model="params.DataInscricao">
-						<label for="data-inscricao" class="active">Data de Inscrição</label>
+						<input id="dataInscricao" type="text" class="datepicker" name="dataInscricao" ng-model="params.DataInscricao" ng-init="params.DataInscricao = eventoAttr.dataDia">
+						<label for="dataInscricao" class="active">Data de Inscrição</label>
 					</div>
 					
 					<!--Horario Inscricao-->
 					<div class="input-field col s12 l6">
-						<input id="horario-inscricao" type="text" class="timepicker" name="horario-inscricao" ng-model="params.HorarioInscricao">
-						<label for="horario-inscricao">Horário de Inscrição</label>
+						<input id="horarioInscricao" type="text" class="timepicker" name="horarioInscricao" ng-model="params.HorarioInscricao" ng-init="params.HorarioInscricao = eventoAttr.dataHora">
+						<label for="horarioInscricao">Horário de Inscrição</label>
 					</div>
 				</div>
 
 				<div class="row">
 					<!--Local-->
 					<div class="input-field col s12">
-						<textarea id="local" class="materialize-textarea" name="local" onkeypress="resize();" ng-model="params.Local"></textarea>
+						<textarea id="local" class="materialize-textarea" name="local" onkeypress="resize();" ng-model="params.Local" ng-init="params.Local = eventoAttr.local"></textarea>
 						<label for="local">Local do Evento</label>
 					</div>
 				</div>
 			</form>
 		</div>
 		
-		<!--Botao Submit-->
-		<a class="waves-effect waves-light btn right deep-orange accent-2" ng-click="criarEvento(params)"><i class="material-icons right">send</i>Criar Evento</a>
+		<!--Botao Submit CRIAR EVENTO-->
+		<a id="botaoSubmitCE" ng-if="!modoEdicao" class="waves-effect waves-light btn right deep-orange accent-2" ng-click="criarEvento(params)"><i class="material-icons right">send</i>Criar Evento</a>
+		<!--Botao Submit EDITAR EVENTO-->
+		<a id="botaoSubmitEE" ng-if="modoEdicao" class="waves-effect waves-light btn right deep-orange accent-2" ng-click="editarEvento(params)"><i class='material-icons right'>edit</i>Editar Evento</a>
 		<!--Botao Cancelar-->
 		<a id="cancelar-btn" class="waves-effect waves-light btn-flat right" href="/main-page">Cancelar</a>
 	</div>
