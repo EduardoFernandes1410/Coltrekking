@@ -116,10 +116,16 @@ app.get("/get-user", function(req, res) {
 
 //*****Criar Evento*****//
 app.post("/criar-evento", function(req, res) {
-	console.log(req.body);
-
 	criarEventoDB(req.body, function(status) {
 		status ? console.log("Evento criado com sucesso") : console.log("Evento nao foi criado");
+		res.send(status);
+	});
+});
+
+//*****Editar Evento*****//
+app.post("/editar-evento", function(req, res) {
+	editarEventoDB(req.body, function(status) {
+		status ? console.log("Evento editado com sucesso") : console.log("Evento nao foi editado");
 		res.send(status);
 	});
 });
@@ -157,6 +163,14 @@ app.post("/confirmar-evento", function(req, res) {
 app.post("/cancelar-evento", function(req, res) {	
 	cancelarEventoDB(req.body, function(status) {
 		status ? console.log("Cancelamento realizado com sucesso") : console.log("Erro ao cancelar a inscrição");
+		res.send(status);
+	});
+});
+
+//*****Excluir Evento*****//
+app.post("/excluir-evento", function(req, res) {
+	excluirEventoDB(req.body, function(status) {
+		status ? console.log("Evento excluido com sucesso") : console.log("Erro ao excluir o evento");
 		res.send(status);
 	});
 });
@@ -218,6 +232,18 @@ function pegaInfoUsuarioLogado(req, callback) {
 //*****Adiciona Evento ao DB*****//
 function criarEventoDB(data, callback) {
 	connection.query('INSERT INTO evento SET ?', data, function(err, rows, fields) {
+		if(!err) {
+			callback(true);
+		} else {
+			console.log(err);
+			callback(false);
+		}
+	});
+}
+
+//*****Editar Evento no DB*****//
+function editarEventoDB(data, callback) {
+	connection.query('UPDATE evento SET ? WHERE ID = ?', [data, data.ID], function(err, rows, fields) {
 		if(!err) {
 			callback(true);
 		} else {
@@ -342,6 +368,24 @@ function cancelarEventoDB(post, callback) {
 		} else {
 			console.log('Error while performing Query');
 			console.log(err);
+			callback(false);
+		}
+	});
+}
+
+//*****Excluir Evento*****//
+function excluirEventoDB(post, callback) {	
+	connection.query('DELETE FROM `evento` WHERE ID = ?', post.ID, function(err, rows, fields) {
+		if(!err) {
+			connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ?', post.ID, function(err, rows, fields) {
+				if(!err) {
+					callback(true);
+				} else {
+					console.log('Error while performing Query');
+					callback(false);
+				}
+			});			
+		} else {
 			callback(false);
 		}
 	});
