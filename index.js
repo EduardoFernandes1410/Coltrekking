@@ -167,6 +167,14 @@ app.post("/cancelar-evento", function(req, res) {
 	});
 });
 
+//*****Finalizar Evento*****//
+app.post("/finalizar-evento", function(req, res) {
+	finalizarEventoDB(req.body, function(status) {
+		status ? console.log("Evento finalizado com sucesso") : console.log("Erro ao finalizar o evento");
+		res.send(status);
+	});
+});
+
 //*****Excluir Evento*****//
 app.post("/excluir-evento", function(req, res) {
 	excluirEventoDB(req.body, function(status) {
@@ -372,6 +380,23 @@ function cancelarEventoDB(post, callback) {
 			callback(false);
 		}
 	});
+}
+
+//*****Finalizar Evento*****//
+function finalizarEventoDB(post, callback) {
+	var controle = true;
+	
+	post.pessoas.forEach(function(elem) {
+		connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? WHERE ID = ?', [post.fatork, elem], function(err, rows, fields) {
+			if(!err) {
+				console.log("Foi um");
+			} else {
+				controle = false;
+			}
+		});
+	});
+	
+	callback(true);
 }
 
 //*****Excluir Evento*****//

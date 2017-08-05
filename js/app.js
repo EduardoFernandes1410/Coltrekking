@@ -175,6 +175,17 @@
 			});
 		}
 		
+		//POST /finalizar-evento
+		eventosService.finalizarEvento = function(data, callback) {			
+			$http.post('/finalizar-evento', data).then(function successCallback(response) {
+				//Sucesso
+				var answer = response.data;
+				callback(answer);
+			}, function errorCallback(response) {
+
+			});
+		}
+		
 		//POST /excluir-evento
 		eventosService.excluirEvento = function(data, callback) {
 			var post = {ID: data};
@@ -567,6 +578,30 @@
 					return element.ID == evento.ID;
 				});				
 			}
+		}
+		
+		//Finalizar evento
+		$scope.finalizarEvento = function(params) {
+			//Pega as pessoas marcadas
+			var pessoas = $("input[name='pessoas[]']:checked").toArray();
+			var pessoasArray = [];
+						
+			pessoas.forEach(elem => pessoasArray.push(elem.value));
+			
+			var dataPost = {
+				fatork: (params.Fatork * params.Kilometragem),
+				pessoas: pessoasArray
+			};
+			
+			//Chama POST Finalizar Evento
+			eventosService.finalizarEvento(dataPost, function(answer) {
+				//Emite alerta sobre o status da operacao
+				if(answer) {
+					Materialize.toast("Evento finalizado com sucesso!", 3000);
+				} else {
+					Materialize.toast("Erro ao finalizar o evento!", 3000);
+				}
+			});
 		}
 		
 		//Excluir Evento

@@ -208,9 +208,8 @@ nav .tabs {
 .checkboxConfirmados {
   display: inline-block; }
 
-.fatorK-wrapper {
-  display: block !important;
-  float: left !important; }
+#btn-finalizar-evento {
+  color: #ff6e40; }
 
 /*****FORMS*****/
 #cancelar-btn {

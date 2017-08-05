@@ -275,25 +275,40 @@
 									</div>
 									
 									<!-- Lista Finalizadora -->
-									<div ng-attr-id="{{'lista-finalizadora' + evento.ID}}" class="modal modal-fixed-footer">
+									<div ng-attr-id="{{'lista-finalizadora' + evento.ID}}" class="modal" id="modal-finalizar">
 										<div class="modal-content">
 											<p class="modal-header">Finalizar Evento</p>
 											
-											<div class="row">
-												<!-- Checkbox dos Presentes -->
-												<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m4 l3" ng-if="!confirmado.ListaEspera">
-													<input type="checkbox" class="filled-in" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
-													<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}}</label>
-												</p>
-											</div>
-											
-											<div class="row">
-												<!-- Fator K -->
-												<div class="input-field fatorK-wrapper col s12 m6 l4">
-													<input id="fatorK-finalizar" type="number">
-													<label for="fatorK-finalizar">Fator K</label>
+											<form>
+												<div class="row">
+													<!-- Checkbox dos Presentes -->
+													<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m4 l3" ng-if="!confirmado.ListaEspera">
+														<input type="checkbox" name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
+														<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}}</label>
+													</p>
 												</div>
-											</div>
+												
+												<div class="row">
+													<!-- Kilometragem -->
+													<div class="input-field col s12 m6">
+														<input id="km-finalizar" type="number" name="kilometragem" ng-model="finalizar.Kilometragem">
+														<label for="km-finalizar">Kilometragem</label>
+													</div>
+												
+													<!-- Fator K -->
+													<div class="input-field col s12 m6">
+														<input id="fatorK-finalizar" type="number" name="fatork" ng-model="finalizar.Fatork">
+														<label for="fatorK-finalizar">Fator K</label>
+													</div>
+												</div>
+											</form>
+										</div>
+										
+										<div class="modal-footer">
+											<!--Botao Cancelar-->
+											<a href="#!" class="modal-action modal-close waves-effect waves-orange btn-flat">Cancelar</a>
+											<!--Botao Submit Finalizar-->
+											<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" ng-click="finalizarEvento(finalizar)">Aplicar</a>
 										</div>
 									</div>
 								</div>
