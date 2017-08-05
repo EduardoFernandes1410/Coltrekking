@@ -500,7 +500,8 @@
 		$scope.confirmarEvento = function(evento) {
 			var data = {
 				evento: evento.ID,
-				usuario: $rootScope.usuario.ID
+				usuario: $rootScope.usuario.ID,
+				dataInscricao: new Date().toUTCString()
 			}
 			
 			//Chama POST Confirmar Evento

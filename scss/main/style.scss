@@ -308,7 +308,14 @@ nav {
 				}
 				
 				th:nth-child(2) {
-					width: 60%;
+					width: 50%;
+				}
+				
+				//No caso de mobile
+				@media screen and (max-width: 600px) {
+					th:nth-child(2) {
+						width: 80% !important;
+					}
 				}
 			}
 		}
@@ -320,6 +327,16 @@ nav {
 			}
 		}
 	}
+}
+
+/*****MODAL FINALIZADOR*****/
+.checkboxConfirmados {
+	display: inline-block;
+}
+
+.fatorK-wrapper {
+	display: block !important;
+	float: left !important;
 }
 
 /*****FORMS*****/

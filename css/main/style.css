@@ -195,10 +195,22 @@ nav .tabs {
   width: 20%; }
 
 .modal-content table thead tr th:nth-child(2) {
-  width: 60%; }
+  width: 50%; }
+
+@media screen and (max-width: 600px) {
+  .modal-content table thead tr th:nth-child(2) {
+    width: 80% !important; } }
 
 .modal-content table tbody .espera {
   background-color: #ffebee !important; }
+
+/*****MODAL FINALIZADOR*****/
+.checkboxConfirmados {
+  display: inline-block; }
+
+.fatorK-wrapper {
+  display: block !important;
+  float: left !important; }
 
 /*****FORMS*****/
 #cancelar-btn {

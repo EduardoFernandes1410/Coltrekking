@@ -197,7 +197,7 @@
 											
 											<ul ng-if="usuario.Admin" ng-attr-id="{{'menu-card' + evento.ID}}" class="dropdown-content">
 												<li><a ng-attr-href="{{'#!/create-event?id=' + evento.ID + '&nome=' + evento.Nome + '&tipo=' + evento.Tipo + '&tipoTrekking=' + evento.TipoTrekking + '&dataInicio=' + evento.DataInicio + '&dataFim=' + evento.DataFim + '&local=' + evento.Local + '&dificuldade=' + evento.Dificuldade + '&numeroMax=' + evento.NumeroMax + '&dataInscricao=' + evento.DataInscricao}}">Editar evento</a></li>
-												<li><a href="#!" class="finalizador" onclick="return false;">Finalizar evento</a></li>
+												<li><a href="#!" class="finalizador" onclick="return false;" ng-click="finalizarEvento(evento.ID)" ng-attr-href="{{'#lista-finalizadora' + evento.ID}}">Finalizar evento</a></li>
 												<li class="divider"></li>
 												<li><a href="#!" class="excluidor" onclick="return false;" ng-click="excluirEvento(evento.ID)">Excluir evento</a></li>
 											</ul>
@@ -254,7 +254,7 @@
 													<tr>
 														<th>Posição</th>
 														<th>Nome</th>
-														<th>Fator K</th>
+														<th class="hide-on-med-and-down">Data da Inscrição</th>
 													</tr>
 												</thead>
 
@@ -263,7 +263,7 @@
 													<tr ng-repeat="pessoa in evento.Confirmados" ng-class="{espera: pessoa.ListaEspera}">
 														<td>{{pessoa.Colocacao}}º</td>
 														<td>{{pessoa.Nome}}</td>
-														<td>{{pessoa.FatorK}}</td>
+														<td class="hide-on-med-and-down">{{pessoa.DataInscricao}}</td>
 													</tr>
 												</tbody>
 											</table>
@@ -271,6 +271,29 @@
 										
 										<div class="modal-footer">
 											<button type="button" class="modal-action modal-close waves-effect waves-orange btn-flat">Fechar</button>
+										</div>
+									</div>
+									
+									<!-- Lista Finalizadora -->
+									<div ng-attr-id="{{'lista-finalizadora' + evento.ID}}" class="modal modal-fixed-footer">
+										<div class="modal-content">
+											<p class="modal-header">Finalizar Evento</p>
+											
+											<div class="row">
+												<!-- Checkbox dos Presentes -->
+												<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m4 l3" ng-if="!confirmado.ListaEspera">
+													<input type="checkbox" class="filled-in" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
+													<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}}</label>
+												</p>
+											</div>
+											
+											<div class="row">
+												<!-- Fator K -->
+												<div class="input-field fatorK-wrapper col s12 m6 l4">
+													<input id="fatorK-finalizar" type="number">
+													<label for="fatorK-finalizar">Fator K</label>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>

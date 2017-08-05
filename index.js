@@ -269,7 +269,7 @@ function getEventos(callback) {
 //*****Get Confirmados*****//
 function getConfirmados(data, callback) {
 	//Get os IDs dos confirmados com INNER JOIN
-	connection.query('SELECT ID, Nome, FatorK, `pessoa-evento`.ListaEspera, `pessoa-evento`.Colocacao FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ?', data, function(err, rows, fields) {
+	connection.query('SELECT ID, Nome, FatorK, `pessoa-evento`.ListaEspera, `pessoa-evento`.Colocacao, `pessoa-evento`.DataInscricao FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ?', data, function(err, rows, fields) {
 		if(!err) {
 			console.log(rows);
 			callback(rows);
@@ -310,7 +310,8 @@ function confirmarEventoDB(data, callback) {
 					IDPessoa: data.usuario,
 					IDEvento: data.evento,
 					Colocacao: (rows.length + 1),
-					ListaEspera: 0			
+					ListaEspera: 0,
+					DataInscricao: data.dataInscricao
 				}
 				
 				//Verifica se o cara nao esta inscrito
