@@ -386,17 +386,30 @@ function cancelarEventoDB(post, callback) {
 function finalizarEventoDB(post, callback) {
 	var controle = true;
 	
-	post.pessoas.forEach(function(elem) {
-		connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? WHERE ID = ?', [post.fatork, elem], function(err, rows, fields) {
+	var promessa = new Promise(function(resolve, reject) {
+		post.pessoas.forEach(function(elem, index, array) {
+			connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? WHERE ID = ?', [post.fatork, elem], function(err, rows, fields) {
+				if(!err) {
+					//Se for o ultimo, resolve a promessa
+					if(index == (array.length - 1)) {
+						resolve();
+					}
+				} else {
+					controle = false;
+				}
+			});
+		});		
+	});
+	
+	promessa.then(function() {
+		connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', post.eventoID, function(err, rows, fields) {
 			if(!err) {
-				console.log("Foi um");
+				callback(controle);
 			} else {
 				controle = false;
 			}
 		});
 	});
-	
-	callback(true);
 }
 
 //*****Excluir Evento*****//

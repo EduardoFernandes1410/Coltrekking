@@ -168,14 +168,14 @@
 									<!-- Scroll Spy -->
 									<ul class="section table-of-contents">
 										<li ng-repeat="evento in eventos.eventos">
-											<a ng-attr-href="{{'#' + evento.ID}}">{{evento.Nome}}</a>
+											<a ng-attr-href="{{'#' + evento.ID}}" ng-if="!evento.Finalizado">{{evento.Nome}}</a>
 										</li>
 									</ul>
 								</div>
 								
 								<!--Cria os cards de evento-->
 								<div class="container col s12 l7" ng-repeat="evento in eventos.eventos">
-									<div class="card card-evento section scrollspy" ng-attr-id="{{evento.ID}}">
+									<div class="card card-evento section scrollspy" ng-attr-id="{{evento.ID}}" ng-if="!evento.Finalizado">
 										<!--Cabecalho-->
 										<div class="card-image">
 											<!--Imagem-->
@@ -308,7 +308,7 @@
 											<!--Botao Cancelar-->
 											<a href="#!" class="modal-action modal-close waves-effect waves-orange btn-flat">Cancelar</a>
 											<!--Botao Submit Finalizar-->
-											<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" ng-click="finalizarEvento(finalizar)">Aplicar</a>
+											<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" ng-click="finalizarEvento(finalizar, evento.ID)">Aplicar</a>
 										</div>
 									</div>
 								</div>
