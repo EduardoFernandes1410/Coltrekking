@@ -183,7 +183,7 @@
 											<!--Nome-->
 											<span class="card-title">{{evento.Nome}}</span>
 											<!--FAB Confirmar-->
-											<a ng-disabled="!evento.Disponivel" ng-click="confirmarEvento(this.evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">add</i></a>
+											<a id="btn-confirmar" ng-disabled="!evento.Disponivel" ng-click="confirmarEvento(this.evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">add</i></a>
 											<!--FAB Cancelar-->
 											<a ng-click="cancelarEvento(this.evento)" ng-show="estaConfirmado(evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">remove</i></a>
 										</div>

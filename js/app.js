@@ -509,6 +509,8 @@
 		
 		//Confirmar em Evento
 		$scope.confirmarEvento = function(evento) {
+			$("#btn-confirmar").attr("disabled", true);
+			
 			var data = {
 				evento: evento.ID,
 				usuario: $rootScope.usuario.ID
@@ -516,10 +518,13 @@
 			
 			//Chama POST Confirmar Evento
 			eventosService.confirmarEvento(data, function(answer) {
+				//Reabilita o botao de se inscrever
+				$("#btn-confirmar").attr("disabled", false);
+				
 				//Emite alerta sobre o status da operacao e redireciona
 				if(answer) {
 					Materialize.toast("Inscrição em evento realizada com sucesso!", 3000);
-					
+										
 					//Atualiza lista de confirmados
 					$scope.postConfirmado(evento);
 					$scope.confirmadosPorMim();

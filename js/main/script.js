@@ -18,7 +18,6 @@ $(document).ready(function() {
 	}, 500);
 });
 
-
 /**********FORMULARIO**********/
 //Redimensiona a Textarea
 function resize() {
