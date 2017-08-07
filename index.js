@@ -98,8 +98,6 @@ app.post("/post-user", function(req, res) {
 
 //*****Redireciona para pagina principal*****//
 app.get("/main-page", function(req, res) {
-	console.log("PEDIU PRA IR PRA MAIN PAGE");
-	console.log(req.session.loginSucesso);
 	if(req.session.loginSucesso) {
 		res.sendFile(path.join(__dirname, index));
 	}
@@ -319,7 +317,7 @@ function confirmarEventoDB(data, callback) {
 					IDEvento: data.evento,
 					Colocacao: (rows.length + 1),
 					ListaEspera: 0,
-					DataInscricao: data.dataInscricao
+					dataInscricao: new Date().toUTCString()
 				}
 				
 				//Verifica se o cara nao esta inscrito
