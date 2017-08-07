@@ -320,6 +320,7 @@ function confirmarEventoDB(data, callback) {
 					dataInscricao: new Date().toUTCString()
 				}
 				
+				console.log("****************************************************************");
 				console.log(new Date().toUTCString());
 				
 				//Verifica se o cara nao esta inscrito
