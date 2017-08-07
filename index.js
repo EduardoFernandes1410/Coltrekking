@@ -319,10 +319,7 @@ function confirmarEventoDB(data, callback) {
 					ListaEspera: 0,
 					dataInscricao: new Date().toUTCString()
 				}
-				
-				console.log("****************************************************************");
-				console.log(new Date().toUTCString());
-				
+								
 				//Verifica se o cara nao esta inscrito
 				estaInscrito(post, function(status) {
 					//Se nao esta inscrito
