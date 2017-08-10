@@ -2,12 +2,12 @@
 	var app = angular.module('main', ['ngRoute']);
 
 //**********Middleware**********//
-	app.run(['$rootScope', '$location', 'LoginService', function($rootScope, $location, Login) {
+	app.run(['$rootScope', '$location', 'HTTPService', function($rootScope, $location, httpService) {
 		$rootScope.$on('$routeChangeStart', function(event, next, current) {
 			var admin;
 			
 			//Pega permissao de admin de usuario logado
-			Login.getUsuario(function(usuario) {
+			httpService.get('/get-user', function(usuario) {
 				this.admin = usuario.Admin;
 
 				//Se nao estiver logado
@@ -56,179 +56,42 @@
 	});
 
 //**********Servicos**********//
-	//GET /login
-	app.factory('LoginService', function($http) {
-		var loginService = {};
-		var usuario;
-
-		loginService.getUsuario = function(callback) {
-			$http.get('/get-user').then(function successCallback(response) {
+	//HTTPService
+	app.factory('HTTPService', function($http) {
+		var httpService = {};
+		
+		//GET
+		httpService.get = function(urlGet, callback) {
+			$http.get(urlGet).then(function successCallback(response) {
 				//Sucesso
-				usuario = response.data;
-				callback(usuario);
+				callback(response.data);
 			}, function errorCallback(response) {
 				//Erro
-				usuario = null;
-				callback(usuario);
-			});
-		}
-
-		return loginService;
-	});
-
-	//Criar e editar eventos
-	app.factory('CriarEventoService', function($http) {
-		var criarEventoService = {};
-
-		//POST /criar-evento
-		criarEventoService.postCriarEvento = function(data, callback) {
-			$http.post('/criar-evento', data).then(function successCallback(response) {
-				//Sucesso
-				var answer = response.data;
-				callback(answer);
-			}, function errorCallback(response) {
-
+				callback(null);
 			});
 		}
 		
-		//POST /editar-evento
-		criarEventoService.postEditarEvento = function(data, callback) {
-			$http.post('/editar-evento', data).then(function successCallback(response) {
+		//POST
+		httpService.post = function(urlPost, data, callback) {
+			$http.post(urlPost, data).then(function successCallback(response) {
 				//Sucesso
-				var answer = response.data;
-				callback(answer);
+				callback(response.data);
 			}, function errorCallback(response) {
-
-			});
-		}
-
-		return criarEventoService;
-	});
-
-
-	//Tudo relacionado a eventos
-	app.factory('EventosService', function($http) {
-		var eventosService = {};
-
-		//GET /eventos
-		eventosService.getEventos = function(callback) {
-			$http.get('/eventos').then(function successCallback(response) {
-				//Sucesso
-				var answer = response.data;
-				callback(answer);
-			}, function errorCallback(callback) {
 				//Erro
-				var answer = null;
-				callback(answer);
+				callback(null);
 			});
 		}
 		
-		//POST /confirmar-evento
-		eventosService.confirmarEvento = function(data, callback) {
-			$http.post('/confirmar-evento', data).then(function successCallback(response) {
-				//Sucesso
-				var answer = response.data;
-				callback(answer);
-			}, function errorCallback(response) {
-
-			});
-		}
-		
-		//POST /cancelar-evento
-		eventosService.cancelarEvento = function(data, callback) {
-			$http.post('/cancelar-evento', data).then(function successCallback(response) {
-				//Sucesso
-				var answer = response.data;
-				callback(answer);
-			}, function errorCallback(response) {
-
-			});
-		}
-
-		//POST /confirmados
-		eventosService.getConfirmados = function(data, callback) {
-			var post = {IDEvento: data};
-			
-			$http.post('/confirmados', post).then(function successCallback(response) {
-				//Sucesso
-				var answer = response.data;
-				callback(answer);
-			}, function errorCallback(callback) {
-				//Erro
-				var answer = null;
-				callback(answer);
-			});
-		}
-		
-		//POST /confirmados-por-mim
-		eventosService.getConfirmadosPorMim = function(data, callback) {
-			var post = {usuarioID: data};
-			
-			$http.post('/confirmados-por-mim', post).then(function successCallback(response) {
-				//Sucesso
-				var answer = response.data;
-				callback(answer);
-			}, function errorCallback(callback) {
-				//Erro
-				var answer = null;
-				callback(answer);
-			});
-		}
-		
-		//POST /finalizar-evento
-		eventosService.finalizarEvento = function(data, callback) {			
-			$http.post('/finalizar-evento', data).then(function successCallback(response) {
-				//Sucesso
-				var answer = response.data;
-				callback(answer);
-			}, function errorCallback(response) {
-
-			});
-		}
-		
-		//POST /excluir-evento
-		eventosService.excluirEvento = function(data, callback) {
-			var post = {ID: data};
-			
-			$http.post('/excluir-evento', post).then(function successCallback(response) {
-				//Sucesso
-				var answer = response.data;
-				callback(answer);
-			}, function errorCallback(response) {
-
-			});
-		}
-
-		return eventosService;
-	});
-
-
-	//GET /ranking
-	app.factory('RankingService', function($http) {
-		var rankingService = {};
-
-		rankingService.getRanking = function(callback) {
-			$http.get('/ranking').then(function successCallback(response) {
-				//Sucesso
-				var answer = response.data;
-				callback(answer);
-			}, function errorCallback(callback) {
-				//Erro
-				var answer = null;
-				callback(answer);
-			});
-		}
-
-		return rankingService;
+		return httpService;
 	});
 
 //**********Controles**********//
 	//Login Controller
-	app.controller('LoginController', ['LoginService', '$rootScope', function(loginService, $rootScope) {
+	app.controller('LoginController', ['HTTPService', '$rootScope', function(httpService, $rootScope) {
 		var usuarioLogado;
 
-		//Chama LoginService
-		loginService.getUsuario(function(answer) {
+		//Chama Login
+		httpService.get('/get-user', function(answer) {
 			if(answer != null) {
 				this.usuarioLogado = answer;
 				//Salva no rootScope para uso posterior
@@ -245,7 +108,7 @@
 
 
 	//CriarEventos Controller
-	app.controller('CriarEventoController', ['CriarEventoService', '$timeout', '$scope', '$location', '$compile', function(criarEventoService, $timeout, $scope, $location, $compile) {
+	app.controller('CriarEventoController', ['HTTPService', '$timeout', '$scope', '$location', '$compile', function(httpService, $timeout, $scope, $location, $compile) {
 		//Modo Edicao
 		$scope.modoEdicao = !jQuery.isEmptyObject($location.search());
 		
@@ -368,7 +231,7 @@
 			params = arrumaParametros(params);
 			
 			//Chama o POST Criar Evento
-			criarEventoService.postCriarEvento(params, function(answer) {
+			httpService.post('/criar-evento', params, function(answer) {
 				//Emite alerta sobre o status da operacao e redireciona
 				if(answer) {
 					Materialize.toast("Evento criado com sucesso!", 3000);
@@ -381,15 +244,13 @@
 		
 		//Submit o formulario de CRIAR EVENTO
 		$scope.editarEvento = function(params) {
-			console.log("PARAMETROS");
-			console.log(params);
 			//Arruma os parametros
 			params = arrumaParametros(params);			
 			//Pega o ID do evento
 			params.ID = $location.search().id;
 						
 			//Chama o POST Criar Evento
-			criarEventoService.postEditarEvento(params, function(answer) {
+			httpService.post('/editar-evento', params, function(answer) {
 				//Emite alerta sobre o status da operacao e redireciona
 				if(answer) {
 					Materialize.toast("Evento editado com sucesso!", 3000);
@@ -403,11 +264,11 @@
 
 
 	//Eventos Controller
-	app.controller('EventosController', ['EventosService', '$timeout', '$rootScope', '$scope', '$interval',  function(eventosService, $timeout, $rootScope, $scope, $interval) {
+	app.controller('EventosController', ['HTTPService', '$timeout', '$rootScope', '$scope', '$interval',  function(httpService, $timeout, $rootScope, $scope, $interval) {
 		var eventos;
 
 		//Chama EventosService
-		eventosService.getEventos(function(answer) {
+		httpService.get('/eventos', function(answer) {
 			if(answer != false) {
 				this.eventos = answer;
 				
@@ -502,7 +363,11 @@
 		
 		//POST Confirmados em Eventos
 		$scope.postConfirmado = function(evento) {
-			eventosService.getConfirmados(evento.ID, function(answer) {
+			var data = {
+				IDEvento: evento.ID
+			}
+			
+			httpService.post('/confirmados', data, function(answer) {
 				evento.Confirmados = answer;
 			});
 		}
@@ -517,7 +382,7 @@
 			}
 			
 			//Chama POST Confirmar Evento
-			eventosService.confirmarEvento(data, function(answer) {
+			httpService.post('/confirmar-evento', data, function(answer) {
 				//Reabilita o botao de se inscrever
 				$("#btn-confirmar").attr("disabled", false);
 				
@@ -543,7 +408,7 @@
 			}
 			
 			//Chama POST Confirmar Evento
-			eventosService.cancelarEvento(data, function(answer) {
+			httpService.post('/cancelar-evento', data, function(answer) {
 				//Emite alerta sobre o status da operacao e redireciona
 				if(answer) {
 					Materialize.toast("Cancelamento em evento realizado com sucesso!", 3000);
@@ -559,9 +424,11 @@
 		
 		//POST Eventos Confirmados
 		$scope.confirmadosPorMim = function() {
-			var usuarioID = $rootScope.usuario.ID;
+			var data = {
+				usuarioID: $rootScope.usuario.ID
+			}
 			
-			eventosService.getConfirmadosPorMim(usuarioID, function(answer) {
+			httpService.post('/confirmados-por-mim', data, function(answer) {
 				$rootScope.eventosConfirmados = answer;
 				
 				//Seta margin top do scroll spy em funcao da altura do card (Pessima solucao)
@@ -569,7 +436,7 @@
 					var altura = $('#card-confirmados').height() + 36;
 					
 					$('.table-of-contents').css("margin-top", altura + "px");
-				}, 100);
+				}, 300);
 			});
 		}
 		
@@ -599,7 +466,7 @@
 			};
 			
 			//Chama POST Finalizar Evento
-			eventosService.finalizarEvento(dataPost, function(answer) {
+			httpService.post('/finalizar-evento', dataPost, function(answer) {
 				//Emite alerta sobre o status da operacao
 				if(answer) {
 					Materialize.toast("Evento finalizado com sucesso!", 3000);
@@ -611,8 +478,12 @@
 		
 		//Excluir Evento
 		$scope.excluirEvento = function(eventoID) {
+			var data = {
+				ID: eventoID
+			}
+			
 			//Chama POST Excluir Evento
-			eventosService.excluirEvento(eventoID, function(answer) {
+			httpService.post('/excluir-evento', data, function(answer) {
 				//Emite alerta sobre o status da operacao
 				if(answer) {
 					Materialize.toast("Evento excluído com sucesso!", 3000);
@@ -625,17 +496,17 @@
 
 
 	//Ranking Controller
-	app.controller('RankingController', ['RankingService', '$rootScope', function(rankingService, $rootScope) {
+	app.controller('RankingController', ['HTTPService', '$rootScope', function(httpService, $rootScope) {
 		var ranking;
 
 		//Quando EventosController ja acabou
 		$rootScope.$on('dataEventos', function(event) {
 			//Chama RankingService
-			rankingService.getRanking(function(answer) {
+			httpService.get('/ranking', function(answer) {
 				if(answer != null) {
 					$rootScope.ranking = answer;
 				}
-			}.bind(this));			
+			}.bind(this));
 		});		
 	}]);
 })();
