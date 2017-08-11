@@ -57,6 +57,14 @@ function verificaTipo() {
 		$("#tipoTrekking").attr("disabled", true);
 		$("#tipoTrekking").material_select();
 	}
+	
+	//Se for acampa, permitir inserir data fim
+	if($("#tipo").find(":selected").val() == 3) {
+		$("#dataFim").attr("disabled", false);
+	}
+	else {
+		$("#dataFim").attr("disabled", true);
+	}
 }
 
 /**********LOG OUT**********/

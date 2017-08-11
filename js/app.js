@@ -24,9 +24,7 @@
 					if(next.templateUrl == "../html/create/event.html") {
 						$location.path('/create-event');
 					}
-				}
-				//Se nao for admin
-				else {
+				} else {
 					event.preventDefault();
 					$location.path('/');
 				}
@@ -108,7 +106,7 @@
 
 
 	//CriarEventos Controller
-	app.controller('CriarEventoController', ['HTTPService', '$timeout', '$scope', '$location', '$compile', function(httpService, $timeout, $scope, $location, $compile) {
+	app.controller('CriarEventoController', ['HTTPService', '$timeout', '$scope', '$location', '$window', '$rootScope', function(httpService, $timeout, $scope, $location, $window, $rootScope) {
 		//Modo Edicao
 		$scope.modoEdicao = !jQuery.isEmptyObject($location.search());
 		
@@ -187,6 +185,10 @@
 						$("#dificuldade").val($scope.eventoAttr.dificuldade);
 						$("#dificuldade").prop('disabled', false);
 					}
+					
+					if($scope.eventoAttr.tipo == "3") {
+						$("#dataFim").attr("disabled", false);
+					}
 
 					$("#dataInicio").val($scope.eventoAttr.dataInicio);
 					$("#dataFim").val($scope.eventoAttr.dataFim);
@@ -234,8 +236,11 @@
 			httpService.post('/criar-evento', params, function(answer) {
 				//Emite alerta sobre o status da operacao e redireciona
 				if(answer) {
-					Materialize.toast("Evento criado com sucesso!", 3000);
+					Materialize.toast("Evento criado com sucesso!", 2000);
 					$location.path('/');
+					
+					//Recarrega os eventos
+					$rootScope.$broadcast('RecarregarEventos', true);
 				} else {
 					Materialize.toast("Erro ao criar o evento!", 3000);
 				}
@@ -253,8 +258,11 @@
 			httpService.post('/editar-evento', params, function(answer) {
 				//Emite alerta sobre o status da operacao e redireciona
 				if(answer) {
-					Materialize.toast("Evento editado com sucesso!", 3000);
+					Materialize.toast("Evento editado com sucesso!", 2000);
 					$location.path('/main-page');
+					
+					//Recarrega os eventos
+					$rootScope.$broadcast('RecarregarEventos', true);
 				} else {
 					Materialize.toast("Erro ao editar o evento!", 3000);
 				}
@@ -264,102 +272,102 @@
 
 
 	//Eventos Controller
-	app.controller('EventosController', ['HTTPService', '$timeout', '$rootScope', '$scope', '$interval',  function(httpService, $timeout, $rootScope, $scope, $interval) {
-		var eventos;
-
-		//Chama EventosService
-		httpService.get('/eventos', function(answer) {
-			if(answer != false) {
-				this.eventos = answer;
-				
-				//Para cada evento
-				this.eventos.forEach(function(element) {
-					//Seta strings e capa
-					switch(element.Tipo) {
-						case 1:
-							element.TipoString = "Preleção";
-							element.Capa = "../rsc/event_images/prelecao-crop.jpg";
-						break;
-						case 2:
-							element.TipoString = "Trekking";
-							
-							switch(element.TipoTrekking) {
-								case "Ping-Pong":
-									element.Capa = "../rsc/event_images/ping-pong-crop.jpg";
-								break;
-								case "Circuito":
-									element.Capa = "../rsc/event_images/circuito.jpg";
-								break;
-								case "Travessia":
-									element.Capa = "../rsc/event_images/travessia.jpg";
-								break;
-							}
-						break;
-						case 3:
-							element.TipoString = "Acampamento";
-							element.Capa = "../rsc/event_images/camping-crop.jpg";
-						break;
-					}
+	app.controller('EventosController', ['HTTPService', '$timeout', '$rootScope', '$scope', '$interval', '$window', '$location',  function(httpService, $timeout, $rootScope, $scope, $interval, $window, $location) {
+		//Chama /eventos
+		$scope.eventosGetter = function() {
+			httpService.get('/eventos', function(answer) {
+				if(answer != false) {
+					$scope.eventos = answer;
 					
-					//Seta Countdown
-					var data = element.DataInscricao;
-					var dataCountdown = new Date(data).getTime();
-					element.Disponivel = 0;
-					element.Countdown = "Disponível em 0 dias 0 horas 0 min 0 seg";
-										
-					//Inicia Countdown
-					element.Intervalo = $interval(function() {
-						var agora = new Date(new Date().toUTCString().replace(" GMT", "")).getTime();
-						var distancia = dataCountdown - agora;
-						
-						//Transforma distancia em d h m s
-						var days = Math.floor(distancia / (1000 * 60 * 60 * 24));
-						var hours = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-						var minutes = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
-						var seconds = Math.floor((distancia % (1000 * 60)) / 1000);
-						
-						//Transforma distancia em string
-						element.Countdown = "Disponível em " + days + " dias " + hours + " horas " + minutes + " min " + seconds + " seg ";
-						
-						//Confere se acabou o tempo
-						if(distancia <= 0) {
-							element.Disponivel = 1;
-							$interval.cancel(element.Intervalo);
+					//Para cada evento
+					$scope.eventos.forEach(function(element) {
+						//Seta strings e capa
+						switch(element.Tipo) {
+							case 1:
+								element.TipoString = "Preleção";
+								element.Capa = "../rsc/event_images/prelecao-crop.jpg";
+							break;
+							case 2:
+								element.TipoString = "Trekking";
+								
+								switch(element.TipoTrekking) {
+									case "Ping-Pong":
+										element.Capa = "../rsc/event_images/ping-pong-crop.jpg";
+									break;
+									case "Circuito":
+										element.Capa = "../rsc/event_images/circuito.jpg";
+									break;
+									case "Travessia":
+										element.Capa = "../rsc/event_images/travessia.jpg";
+									break;
+								}
+							break;
+							case 3:
+								element.TipoString = "Acampamento";
+								element.Capa = "../rsc/event_images/camping-crop.jpg";
+							break;
 						}
-					}, 1000);
-				});				
-				
-				//POST Confirmados
-				this.eventos.forEach(function(element) {
-					$scope.postConfirmado(element);
-				});
-				
-				//POST Confirmados Por Mim
-				$scope.confirmadosPorMim();
-				
-				//Inicializa Materialize stuff
-				$(document).ready(function() {
-					$('.modal').modal();
-					$('.scrollspy').scrollSpy();
+						
+						//Seta Countdown
+						var data = element.DataInscricao;
+						var dataCountdown = new Date(data).getTime();
+						element.Disponivel = 0;
+						element.Countdown = "Disponível em 0 dias 0 horas 0 min 0 seg";
+											
+						//Inicia Countdown
+						element.Intervalo = $interval(function() {
+							var agora = new Date(new Date().toUTCString().replace(" GMT", "")).getTime();
+							var distancia = dataCountdown - agora;
+							
+							//Transforma distancia em d h m s
+							var days = Math.floor(distancia / (1000 * 60 * 60 * 24));
+							var hours = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+							var minutes = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+							var seconds = Math.floor((distancia % (1000 * 60)) / 1000);
+							
+							//Transforma distancia em string
+							element.Countdown = "Disponível em " + days + " dias " + hours + " horas " + minutes + " min " + seconds + " seg ";
+							
+							//Confere se acabou o tempo
+							if(distancia <= 0) {
+								element.Disponivel = 1;
+								$interval.cancel(element.Intervalo);
+							}
+						}, 1000);
+					});				
 					
-					$('.dropdown-button').dropdown({
-						inDuration: 300,
-						outDuration: 225,
-						constrainWidth: false, // Does not change width of dropdown to that of the activator
-						hover: false, // Activate on hover
-						gutter: 0, // Spacing from edge
-						belowOrigin: true, // Displays dropdown below the button
-						alignment: 'right', // Displays dropdown with edge aligned to the left of button
-						stopPropagation: false // Stops event propagation
+					//POST Confirmados
+					$scope.eventos.forEach(function(element) {
+						$scope.postConfirmado(element);
 					});
 					
-					$('.dropdown-button').dropdown();
-				});
-				
-				//Libera caminho para RANKING
-				$rootScope.$broadcast('dataEventos', true);
-			}
-		}.bind(this));
+					//POST Confirmados Por Mim
+					$scope.confirmadosPorMim();
+					
+					//Inicializa Materialize stuff
+					$(document).ready(function() {
+						$('.modal').modal();
+						$('.scrollspy').scrollSpy();
+						
+						$('.dropdown-button').dropdown({
+							inDuration: 300,
+							outDuration: 225,
+							constrainWidth: false, // Does not change width of dropdown to that of the activator
+							hover: false, // Activate on hover
+							gutter: 0, // Spacing from edge
+							belowOrigin: true, // Displays dropdown below the button
+							alignment: 'right', // Displays dropdown with edge aligned to the left of button
+							stopPropagation: false // Stops event propagation
+						});
+						
+						$('.dropdown-button').dropdown();
+					});
+					
+					//Libera caminho para RANKING
+					$rootScope.$broadcast('dataEventos', true);
+				}
+			}.bind(this));
+		}
 		
 		//POST Confirmados em Eventos
 		$scope.postConfirmado = function(evento) {
@@ -469,7 +477,8 @@
 			httpService.post('/finalizar-evento', dataPost, function(answer) {
 				//Emite alerta sobre o status da operacao
 				if(answer) {
-					Materialize.toast("Evento finalizado com sucesso!", 3000);
+					Materialize.toast("Evento finalizado com sucesso!", 2000);					
+					$scope.eventosGetter();
 				} else {
 					Materialize.toast("Erro ao finalizar o evento!", 3000);
 				}
@@ -486,19 +495,26 @@
 			httpService.post('/excluir-evento', data, function(answer) {
 				//Emite alerta sobre o status da operacao
 				if(answer) {
-					Materialize.toast("Evento excluído com sucesso!", 3000);
+					Materialize.toast("Evento excluído com sucesso!", 2000);					
+					$scope.eventosGetter();
 				} else {
 					Materialize.toast("Erro ao excluir o evento!", 3000);
 				}
 			});
 		}
+		
+		//Inicializa
+		$scope.eventosGetter();
+		
+		//Recarrega eventos
+		$rootScope.$on("RecarregarEventos", function() {
+			$scope.eventosGetter();
+		});
 	}]);
 
 
 	//Ranking Controller
 	app.controller('RankingController', ['HTTPService', '$rootScope', function(httpService, $rootScope) {
-		var ranking;
-
 		//Quando EventosController ja acabou
 		$rootScope.$on('dataEventos', function(event) {
 			//Chama RankingService

@@ -26,12 +26,12 @@
 					
 					<!--Tipo de Trekking-->
 					<div class="input-field col s12 l4">
-						<select disabled id="tipoTrekking" name="tipotipoTrekking" onchange="verificaTipo();" ng-model="params.TipoTrekking">
+						<select disabled id="tipoTrekking" name="tipotipoTrekking" ng-model="params.TipoTrekking">
 							<option value="Ping-Pong">Ping-Pong</option>
 							<option value="Circuito">Circuito</option>
 							<option value="Travessia">Travessia</option>
 						</select>
-						<label>Tipo do Evento</label>
+						<label>Tipo do Trekking</label>
 					</div>
 
 					<!--Dificuldade-->
@@ -56,7 +56,7 @@
 
 					<!--Data Fim-->
 					<div class="input-field col s12 l4">
-						<input id="dataFim" type="text" class="datepicker" name="dataFim" ng-model="params.DataFim" ng-init="params.DataFim = eventoAttr.dataFim">
+						<input disabled id="dataFim" type="text" class="datepicker" name="dataFim" ng-model="params.DataFim" ng-init="params.DataFim = eventoAttr.dataFim">
 						<label for="dataFim" class="active">Data de Fim</label>
 					</div>
 					
