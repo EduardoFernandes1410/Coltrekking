@@ -220,8 +220,15 @@
 			params.DataInscricao += 'T' + params.HorarioInscricao + ":00";
 			params.DataInscricao = new Date(params.DataInscricao).toUTCString().replace(" GMT", "");
 			
-			//Deleta params.HorarioInscricao
+			//Seta fim da inscricao
+			params.FimInscricao = params.DataFimInscricao.split("/").reverse().join("-");
+			params.FimInscricao += 'T' + params.HorarioFimInscricao + ":00";
+			params.FimInscricao = new Date(params.FimInscricao).toUTCString().replace(" GMT", "");
+			
+			//Deleta params inuteis
 			delete params.HorarioInscricao;
+			delete params.DataFimInscricao;
+			delete params.HorarioFimInscricao;			
 			
 			//Retorna os parametros arrumados
 			return params;
@@ -273,6 +280,44 @@
 
 	//Eventos Controller
 	app.controller('EventosController', ['HTTPService', '$timeout', '$rootScope', '$scope', '$interval', '$window', '$location',  function(httpService, $timeout, $rootScope, $scope, $interval, $window, $location) {
+		//Funcao Countdown
+		$scope.funcaoCountdown = function(element, dataCountdown, controle) {
+			var agora = new Date(new Date().toUTCString().replace(" GMT", "")).getTime();
+			var distancia = dataCountdown - agora;
+			
+			//Transforma distancia em d h m s
+			var days = Math.floor(distancia / (1000 * 60 * 60 * 24));
+			var hours = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			var minutes = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
+			var seconds = Math.floor((distancia % (1000 * 60)) / 1000);
+			
+			var string = days + " dias " + hours + " horas " + minutes + " min " + seconds + " seg ";
+			
+			//Transforma distancia em string
+			if(controle) {
+				element.Countdown = string;
+			} else {
+				element.CountdownDisponibilidade = string;
+			}
+			
+			//Confere se acabou o tempo
+			if(distancia <= 0) {
+				if(controle) {
+					element.Disponivel = 1;
+					//Inicia countdown de disponibilidade
+					element.IntervaloDisponibilidade = $interval(function() {
+						$scope.funcaoCountdown(element, element.DataCountdownDisponibilidade, 0);
+					}, 1000);
+					//Desliga este intervalo
+					$interval.cancel(element.Intervalo);
+				} else {
+					element.Disponivel = 2;
+					//Desliga o intervalo
+					$interval.cancel(element.IntervaloDisponibilidade);
+				}
+			}
+		}
+		
 		//Chama /eventos
 		$scope.eventosGetter = function() {
 			httpService.get('/eventos', function(answer) {
@@ -310,31 +355,21 @@
 						
 						//Seta Countdown
 						var data = element.DataInscricao;
-						var dataCountdown = new Date(data).getTime();
+						element.DataCountdown = new Date(data).getTime();
 						element.Disponivel = 0;
 						element.Countdown = "Disponível em 0 dias 0 horas 0 min 0 seg";
-											
+						
+						
+						
+						//Seta CountdownDisponibilidade
+						var dataDisponibilidade = element.FimInscricao;
+						element.DataCountdownDisponibilidade = new Date(dataDisponibilidade).getTime();
+
 						//Inicia Countdown
 						element.Intervalo = $interval(function() {
-							var agora = new Date(new Date().toUTCString().replace(" GMT", "")).getTime();
-							var distancia = dataCountdown - agora;
-							
-							//Transforma distancia em d h m s
-							var days = Math.floor(distancia / (1000 * 60 * 60 * 24));
-							var hours = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-							var minutes = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
-							var seconds = Math.floor((distancia % (1000 * 60)) / 1000);
-							
-							//Transforma distancia em string
-							element.Countdown = "Disponível em " + days + " dias " + hours + " horas " + minutes + " min " + seconds + " seg ";
-							
-							//Confere se acabou o tempo
-							if(distancia <= 0) {
-								element.Disponivel = 1;
-								$interval.cancel(element.Intervalo);
-							}
+							$scope.funcaoCountdown(element, element.DataCountdown, 1);
 						}, 1000);
-					});				
+					});
 					
 					//POST Confirmados
 					$scope.eventos.forEach(function(element) {

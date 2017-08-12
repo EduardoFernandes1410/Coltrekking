@@ -183,9 +183,9 @@
 											<!--Nome-->
 											<span class="card-title">{{evento.Nome}}</span>
 											<!--FAB Confirmar-->
-											<a id="btn-confirmar" ng-disabled="!evento.Disponivel" ng-click="confirmarEvento(this.evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">add</i></a>
+											<a id="btn-confirmar" ng-disabled="!(evento.Disponivel == 1)" ng-click="confirmarEvento(this.evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">add</i></a>
 											<!--FAB Cancelar-->
-											<a ng-click="cancelarEvento(this.evento)" ng-show="estaConfirmado(evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">remove</i></a>
+											<a ng-click="cancelarEvento(this.evento)" ng-disabled="!(evento.Disponivel == 1)" ng-show="estaConfirmado(evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">remove</i></a>
 										</div>
 										
 										<!--Info do Evento-->
@@ -224,8 +224,7 @@
 												<i class="tiny material-icons">today</i>
 												<span> De</span> {{evento.DataInicio}}
 												<span> a</span> {{evento.DataFim}}
-											</p>
-											
+											</p>											
 											
 											<!-- Mostra apenas em !acampamento -->
 											<p ng-show="evento.Tipo != 3">
@@ -233,9 +232,25 @@
 												<span> Dia:</span> {{evento.DataInicio}}
 											</p>
 											
-											<p class="truncate">
+											<p>
 												<i class="tiny material-icons">location_on</i>
 												<span> Local:</span> {{evento.Local}}
+											</p>
+											
+											<!-- Numero de Inscritos -->
+											<p>
+												<i class="tiny material-icons">add_circle</i>
+												<span> Nº de Inscritos:</span> {{evento.Confirmados.length}}/{{evento.NumeroMax}}
+											</p>
+											
+											<!-- Countdown de Disponibilidade -->
+											<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 1">
+												Inscrições encerram em {{evento.CountdownDisponibilidade}}
+											</p>
+											
+											<!-- Inscricoes encerradas -->
+											<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 2">
+												Inscrições encerradas
 											</p>
 										</div>
 										
@@ -244,9 +259,9 @@
 											<a ng-attr-href="{{'#lista-inscritos' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
 										</div>
 										
-										<!--Card Action COUNTDOWN-->										
+										<!--Card Action COUNTDOWN-->
 										<div class="card-action" ng-show="!evento.Disponivel">
-											<a href="#" onclick="return false;">{{evento.Countdown}}</a>
+											<a onclick="return false;">Disponível em {{evento.Countdown}}</a>
 										</div>
 									</div>
 									

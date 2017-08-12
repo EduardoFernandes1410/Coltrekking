@@ -160,6 +160,13 @@ nav .tabs {
       color: #4caf50 !important; }
     .card-content .dropdown-content .excluidor {
       color: #f44336 !important; }
+  .card-content .countdownDisponibilidade {
+    margin-top: 16px !important;
+    margin-bottom: -14px !important;
+    color: #ff6e40 !important;
+    font-weight: 400 !important;
+    text-transform: uppercase !important;
+    font-size: 14px !important; }
 
 #card-confirmados {
   position: fixed;

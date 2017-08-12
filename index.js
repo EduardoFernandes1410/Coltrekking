@@ -443,14 +443,17 @@ function estaInscrito(post, callback) {
 
 //*****Esta Disponivel*****//
 function estaDisponivel(evento, callback) {
-	connection.query('SELECT DataInscricao FROM `evento` WHERE ID = ?', evento, function(err, rows, fields) {
-		if(!err) {			
+	connection.query('SELECT DataInscricao, FimInscricao FROM `evento` WHERE ID = ?', evento, function(err, rows, fields) {
+		if(!err) {
 			var dataEvento = rows[0].DataInscricao;
+			var dataFim = rows[0].FimInscricao;
 			var dataCountdown = new Date(dataEvento).getTime();
+			var dataCountdown2 = new Date(dataFim).getTime();
 			var agora = new Date(new Date().toUTCString().replace(" GMT", "")).getTime();
 			var distancia = dataCountdown - agora;
+			var distancia2 = agora - dataCountdown2;
 			
-			distancia <= 0 ? callback(true) : callback(false);
+			(distancia <= 0 && distancia2 <= 0) ? callback(true) : callback(false);
 		} else {
 			console.log('Error while performing Query');
 			console.log(err);
