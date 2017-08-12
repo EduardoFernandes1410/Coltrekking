@@ -115,13 +115,21 @@
 			$scope.eventoAttr = $location.search();
 			$scope.eventoAttr.numeroMax = parseInt($scope.eventoAttr.numeroMax);
 			$scope.eventoAttr.dataInscricao += " GMT";
+			$scope.eventoAttr.fimInscricao += " GMT";
 			
 			//Arruma a data de inscricao
 			var data = new Date($scope.eventoAttr.dataInscricao);
 			$scope.eventoAttr.dataHora = (data.getHours() >= 10 ? data.getHours() : "0" + data.getHours()) + ":" + (data.getMinutes() >= 10 ? data.getMinutes() : "0" + data.getMinutes());
 			$scope.eventoAttr.dataDia = data.getDate() >= 10 ? data.getDate() : "0" + data.getDate();
-			$scope.eventoAttr.dataDia += "/" + (data.getMonth() >= 10 ? data.getMonth() : "0" + data.getMonth());
+			$scope.eventoAttr.dataDia += "/" + ((data.getMonth() + 1) >= 10 ? (data.getMonth() + 1) : "0" + (data.getMonth() + 1));
 			$scope.eventoAttr.dataDia += "/" + data.getFullYear();
+			
+			//Arruma a data do fim da inscricao
+			var dataFim = new Date($scope.eventoAttr.fimInscricao);
+			$scope.eventoAttr.dataFimHora = (dataFim.getHours() >= 10 ? dataFim.getHours() : "0" + dataFim.getHours()) + ":" + (dataFim.getMinutes() >= 10 ? dataFim.getMinutes() : "0" + dataFim.getMinutes());
+			$scope.eventoAttr.dataFimDia = dataFim.getDate() >= 10 ? dataFim.getDate() : "0" + dataFim.getDate();
+			$scope.eventoAttr.dataFimDia += "/" + ((dataFim.getMonth()) + 1 >= 10 ? (dataFim.getMonth() + 1) : "0" + (dataFim.getMonth() + 1));
+			$scope.eventoAttr.dataFimDia += "/" + dataFim.getFullYear();
 			
 			//Seta os selects
 			$scope.params = {};
