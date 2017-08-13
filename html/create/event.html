@@ -1,4 +1,4 @@
-<div class="card" id="event-form">
+<div class="card create-form">
 	<div class="card-content">
 		<span class="card-title" id="titulo">Criar um Evento</span>
 
@@ -98,18 +98,20 @@
 				<div class="row">
 					<!--Local-->
 					<div class="input-field col s12">
-						<textarea id="local" class="materialize-textarea" name="local" onkeypress="resize();" ng-model="params.Local" ng-init="params.Local = eventoAttr.local"></textarea>
+						<textarea id="local" class="materialize-textarea" name="local" ng-model="params.Local" ng-init="params.Local = eventoAttr.local"></textarea>
 						<label for="local">Local do Evento</label>
 					</div>
 				</div>
 			</form>
 		</div>
 		
-		<!--Botao Submit CRIAR EVENTO-->
-		<a id="botaoSubmitCE" ng-if="!modoEdicao" class="waves-effect waves-light btn right deep-orange accent-2" ng-click="criarEvento(params)"><i class="material-icons right">send</i>Criar Evento</a>
-		<!--Botao Submit EDITAR EVENTO-->
-		<a id="botaoSubmitEE" ng-if="modoEdicao" class="waves-effect waves-light btn right deep-orange accent-2" ng-click="editarEvento(params)"><i class='material-icons right'>edit</i>Editar Evento</a>
-		<!--Botao Cancelar-->
-		<a id="cancelar-btn" class="waves-effect waves-light btn-flat right" href="/main-page">Cancelar</a>
+		<div class="btn-wrapper">
+			<!--Botao Cancelar-->
+			<a id="cancelar-btn" class="waves-effect waves-light btn-flat" href="/main-page">Cancelar</a>
+			<!--Botao Submit CRIAR EVENTO-->
+			<a id="botaoSubmitCE" ng-if="!modoEdicao" class="waves-effect waves-light btn deep-orange accent-2" ng-click="criarEvento(params)"><i class="material-icons right">send</i>Criar Evento</a>
+			<!--Botao Submit EDITAR EVENTO-->
+			<a id="botaoSubmitEE" ng-if="modoEdicao" class="waves-effect waves-light btn deep-orange accent-2" ng-click="editarEvento(params)"><i class='material-icons right'>edit</i>Editar Evento</a>
+		</div>
 	</div>
 </div>

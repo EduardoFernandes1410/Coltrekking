@@ -115,7 +115,6 @@ app.get("/get-user", function(req, res) {
 //*****Criar Evento*****//
 app.post("/criar-evento", function(req, res) {
 	criarEventoDB(req.body, function(status) {
-		status ? console.log("Evento criado com sucesso") : console.log("Evento nao foi criado");
 		res.send(status);
 	});
 });
@@ -123,7 +122,6 @@ app.post("/criar-evento", function(req, res) {
 //*****Editar Evento*****//
 app.post("/editar-evento", function(req, res) {
 	editarEventoDB(req.body, function(status) {
-		status ? console.log("Evento editado com sucesso") : console.log("Evento nao foi editado");
 		res.send(status);
 	});
 });
@@ -152,7 +150,6 @@ app.post("/confirmados-por-mim", function(req, res) {
 //*****Confirmar Evento*****//
 app.post("/confirmar-evento", function(req, res) {
 	confirmarEventoDB(req.body, function(status) {
-		status ? console.log("Inscrição realizada com sucesso") : console.log("Erro ao realizar a inscrição");
 		res.send(status);
 	});
 });
@@ -160,7 +157,6 @@ app.post("/confirmar-evento", function(req, res) {
 //*****Cancelar Evento*****//
 app.post("/cancelar-evento", function(req, res) {	
 	cancelarEventoDB(req.body, function(status) {
-		status ? console.log("Cancelamento realizado com sucesso") : console.log("Erro ao cancelar a inscrição");
 		res.send(status);
 	});
 });
@@ -168,7 +164,6 @@ app.post("/cancelar-evento", function(req, res) {
 //*****Finalizar Evento*****//
 app.post("/finalizar-evento", function(req, res) {
 	finalizarEventoDB(req.body, function(status) {
-		status ? console.log("Evento finalizado com sucesso") : console.log("Erro ao finalizar o evento");
 		res.send(status);
 	});
 });
@@ -176,7 +171,20 @@ app.post("/finalizar-evento", function(req, res) {
 //*****Excluir Evento*****//
 app.post("/excluir-evento", function(req, res) {
 	excluirEventoDB(req.body, function(status) {
-		status ? console.log("Evento excluido com sucesso") : console.log("Erro ao excluir o evento");
+		res.send(status);
+	});
+});
+
+//*****Criar Postagem*****//
+app.post("/criar-postagem", function(req, res) {
+	criarPostagemDB(req.body, function(status) {
+		res.send(status);
+	});
+});
+
+//*****Get Postagem*****//
+app.get("/get-postagem", function(req, res) {
+	getPostagemDB(function(status) {
 		res.send(status);
 	});
 });
@@ -277,7 +285,6 @@ function getConfirmados(data, callback) {
 	//Get os IDs dos confirmados com INNER JOIN
 	connection.query('SELECT ID, Nome, FatorK, `pessoa-evento`.ListaEspera, `pessoa-evento`.Colocacao, `pessoa-evento`.DataInscricao FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ?', data, function(err, rows, fields) {
 		if(!err) {
-			console.log(rows);
 			callback(rows);
 		} else {
 			console.log('this.sql', this.sql);
@@ -291,7 +298,6 @@ function getConfirmados(data, callback) {
 function getConfirmadosPorMim(data, callback) {
 	connection.query('SELECT ID, Nome FROM `evento` INNER JOIN `pessoa-evento` ON evento.ID = `pessoa-evento`.IDEvento WHERE `pessoa-evento`.IDPessoa = ? ORDER BY ID DESC', data, function(err, rows, fields) {
 		if(!err) {
-			console.log(rows);
 			callback(rows);
 		} else {
 			console.log('this.sql', this.sql);
@@ -428,6 +434,32 @@ function excluirEventoDB(post, callback) {
 	});
 }
 
+//*****Criar Postagem*****//
+function criarPostagemDB(data, callback) {
+	connection.query('INSERT INTO postagem SET ?', data, function(err, rows, fields) {
+		if(!err) {
+			callback(true);
+		}
+		else {
+			console.log(err);
+			callback(false);
+		}
+	});
+}
+
+//*****Get Postagem*****//
+function getPostagemDB(callback) {
+	connection.query('SELECT postagem.*, evento.Nome FROM postagem LEFT JOIN evento ON postagem.EventoID = evento.ID', function(err, rows, fields) {
+		if(!err) {
+			callback(rows);
+		}
+		else {
+			console.log(err);
+			callback(false);
+		}
+	});
+}
+
 //*****Esta Inscrito*****//
 function estaInscrito(post, callback) {	
 	connection.query('SELECT * FROM `pessoa-evento` WHERE IDPessoa = ? AND IDEvento = ?', [post.IDPessoa, post.IDEvento], function(err, rows, fields) {
@@ -493,7 +525,6 @@ function montaRanking(callback) {
 				}
 			}
 
-			console.log(rows);
 			callback(rows);
 		} else {
 			console.log('Error while performing Query (MONTA RANKING)');

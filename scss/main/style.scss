@@ -222,47 +222,83 @@ nav {
 	margin-top: 48+25px !important;
 }
 
-/*****CARDS*****/
-.card-content {
-	overflow: hidden;
-	font-size: 16px;
-	
-	span {
-		font-weight: 500;
+.modulo-wrapper {
+	margin-top: 80px;
+}
+
+/*****CARD POSTS*****/
+#news-feed {
+	.fixadas-titulo {
+		font-size: 24px;
+		font-weight: 300;
+		margin-top: 0px;
 	}
 	
-	//Menu Dropdown
-	.dropdown-button {
-		color: #000;
-		margin-top: 15px;
+	.data-post {
+		color: rgba(0,0,0,0.6);
+		font-size: 12px;
+		margin-top: -5px;
+		margin-bottom: 18px;
 	}
 	
-	.dropdown-content {
-		width: 150px !important;
-		
-		li {
-			a {
-				color: #000 !important;
-			}			
-		}
-		
-		.finalizador {
-			color: #4caf50 !important;
-		}
-		
-		.excluidor {
-			color: #f44336 !important;
-		}
+	#filtro {
+		margin-bottom: 16px;
 	}
 	
-	//Countdown Disponibilidade
-	.countdownDisponibilidade {
-		margin-top: 16px !important;
-		margin-bottom: -14px !important;
-		color: #ff6e40 !important;
-		font-weight: 400 !important;
-		text-transform: uppercase !important;
-		font-size: 14px !important;
+	#filtro-titulo {
+		margin-bottom: 0px;
+	}
+	
+	#filtro-posts {
+		color: black;
+		font-size: 14px;
+	}
+	
+	a {
+		color: #ff6e40;
+	}
+}
+
+/*****CARDS EVENTOS*****/
+#eventos {
+	.card-content {
+		font-size: 16px;
+		
+		.topico-info {
+			font-weight: 500;
+		}
+		
+		//Menu Dropdown
+		.dropdown-button {
+			color: #000;
+			margin-top: 15px;
+		}
+		
+		.dropdown-content {
+			li {
+				a {
+					color: #000 !important;
+				}			
+			}
+			
+			.finalizador {
+				color: #4caf50 !important;
+			}
+			
+			.excluidor {
+				color: #f44336 !important;
+			}
+		}
+		
+		//Countdown Disponibilidade
+		.countdownDisponibilidade {
+			margin-top: 16px !important;
+			margin-bottom: -14px !important;
+			color: #ff6e40 !important;
+			font-weight: 400 !important;
+			text-transform: uppercase !important;
+			font-size: 14px !important;
+		}
 	}
 }
 
@@ -279,7 +315,7 @@ nav {
 	}
 }
 
-#event-form {
+.create-form {
 	margin-top: -48px !important;
 }
 
@@ -352,6 +388,18 @@ nav {
 #cancelar-btn {
 	color: #ff6e40;
 	margin-right: 20px;
+}
+
+#criar-post-segunda-row {
+	margin-top: 24px;
+}
+
+#p-fixado {
+	margin-bottom: 10px;
+}
+
+.btn-wrapper {
+	text-align: right;
 }
 
 /*****RANKING*****/

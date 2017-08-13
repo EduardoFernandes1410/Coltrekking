@@ -1,5 +1,5 @@
 (function() {
-	var app = angular.module('main', ['ngRoute']);
+	var app = angular.module('main', ['ngRoute', 'ngSanitize']);
 
 //**********Middleware**********//
 	app.run(['$rootScope', '$location', 'HTTPService', function($rootScope, $location, httpService) {
@@ -43,7 +43,8 @@
 		)
 		.when("/create-news",
 			{
-				templateUrl: "../html/create/news.html"
+				templateUrl: "../html/create/news.html",
+				controller: "CriarPostsController"
 			}
 		)
 		.otherwise(
@@ -81,6 +82,23 @@
 		}
 		
 		return httpService;
+	});
+	
+	
+	//EventosService
+	app.factory('EventosService', function() {
+		var eventosService = {};		
+		var eventos;
+		
+		eventosService.get = function() {
+			return eventos;
+		}
+		
+		eventosService.set = function(data) {
+			eventos = data;
+		}
+		
+		return eventosService;
 	});
 
 //**********Controles**********//
@@ -287,7 +305,7 @@
 
 
 	//Eventos Controller
-	app.controller('EventosController', ['HTTPService', '$timeout', '$rootScope', '$scope', '$interval', '$window', '$location',  function(httpService, $timeout, $rootScope, $scope, $interval, $window, $location) {
+	app.controller('EventosController', ['HTTPService', 'EventosService', '$timeout', '$rootScope', '$scope', '$interval', '$window', '$location',  function(httpService, eventosService, $timeout, $rootScope, $scope, $interval, $window, $location) {
 		//Funcao Countdown
 		$scope.funcaoCountdown = function(element, dataCountdown, controle) {
 			var agora = new Date(new Date().toUTCString().replace(" GMT", "")).getTime();
@@ -367,8 +385,6 @@
 						element.Disponivel = 0;
 						element.Countdown = "Disponível em 0 dias 0 horas 0 min 0 seg";
 						
-						
-						
 						//Seta CountdownDisponibilidade
 						var dataDisponibilidade = element.FimInscricao;
 						element.DataCountdownDisponibilidade = new Date(dataDisponibilidade).getTime();
@@ -408,6 +424,9 @@
 					
 					//Libera caminho para RANKING
 					$rootScope.$broadcast('dataEventos', true);
+					
+					//Manda os dados pro EventosService
+					eventosService.set($scope.eventos);
 				}
 			}.bind(this));
 		}
@@ -553,6 +572,110 @@
 		$rootScope.$on("RecarregarEventos", function() {
 			$scope.eventosGetter();
 		});
+	}]);
+
+
+	//CriarPostsController
+	app.controller('CriarPostsController', ['HTTPService', 'EventosService', '$timeout', '$scope', '$location', '$rootScope', function(httpService, eventosService, $timeout, $scope, $location, $rootScope) {
+		$scope.eventos = eventosService.get();
+		
+		$timeout(function() {
+			$(document).ready(function() {
+				//Select
+				$('select').material_select();
+				
+				//Post fixado
+				$("#fixado").change(function() {
+					if(this.checked) {
+						$("#evento-atrelado").attr("disabled", true);
+						$("#evento-atrelado").material_select();
+					} else {
+						$("#evento-atrelado").attr("disabled", false);
+						$("#evento-atrelado").material_select();
+					}
+				});
+			});
+		});
+		
+		$scope.criarPostagem = function(params) {
+			var data = {
+				Texto: params.TextoPostagem.replace(/\n\r?/g, '<br />'), //Insere os break-lines
+				EventoID: params.EventoAtrelado || 0,
+				Fixado: params.Fixado || false,
+				Data: new Date().toString().substring(0, 24) //Pega data em horario local sem lixo
+			};			
+			
+			//POST /criar-postagem
+			httpService.post('/criar-postagem', data, function(answer) {
+				//Emite alerta sobre o status da operacao e redireciona
+				if(answer) {
+					Materialize.toast("Postagem criada com sucesso!", 2000);
+					$location.path('/main-page');
+					
+					//Recarrega os posts
+					$rootScope.$broadcast('RecarregarPosts', true);
+				} else {
+					Materialize.toast("Erro ao criar a postagem!", 3000);
+				}
+			});
+		}
+	}]);
+	
+	
+	app.controller('PostsController', ['HTTPService', '$timeout', '$scope', '$rootScope', '$location', function(httpService, $timeout, $scope, $rootScope, $location) {
+		//GET Postagens
+		$scope.postagemGetter = function() {
+			httpService.get('/get-postagem', function(answer) {
+				if(answer) {
+					$scope.postagem = answer.reverse();
+					$scope.postagemFixada = answer;
+					
+					$scope.postsFiltro = [];
+					$scope.postsFiltro.push({Nome: "Todos", EventoID: 0, Fixado: 0});
+					
+					//Pega so um evento
+					var filtrado = [];
+					var assistente = [].concat($scope.postagem);
+					assistente.forEach(function(elem, index, array) {
+						if(!filtrado.some(a => a.EventoID == elem.EventoID)) {
+							filtrado.push(elem);
+						}
+					});
+					$scope.postsFiltro = $scope.postsFiltro.concat(filtrado);
+					
+					//Coisas pro filtro
+					$timeout(function() {
+						$("#filtro-posts option:first-child").remove();
+						$("#filtro-posts option:first-child").attr("selected", true);
+					}, 200);
+				} else {
+					$scope.postagem = false;
+				}
+			}.bind(this));
+		}
+		
+		$timeout(function() {
+			$(document).ready(function() {
+				$("#filtro-posts").change(function() {
+					var idFiltro = $(this).find(":selected").val().replace("number:", "");
+					
+					if(idFiltro == 0) {
+						$scope.postagem = $scope.postagemFixada;
+					} else {
+						$scope.postagem = $scope.postagemFixada.filter(post => post.EventoID == idFiltro);
+					}
+					
+				});
+			});
+		});
+		
+		//Inicializa
+		$scope.postagemGetter();
+		
+		//Quando tem que recarregar
+		$rootScope.$on('RecarregarPosts', function(event) {
+			$scope.postagemGetter();
+		});		
 	}]);
 
 

@@ -12,6 +12,7 @@
 		<!--Adiciona Angular-->
 		<script src="../node_modules/angular/angular.min.js"></script>
 		<script src="../node_modules/angular-route/angular-route.min.js"></script>
+		<script src="../node_modules/angular-sanitize/angular-sanitize.min.js"></script>
 
 		<!--Adiciona o Firebase-->
 		<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
@@ -88,7 +89,7 @@
 							<div class="nav-content">
 								<ul class="tabs tabs-transparent tabs-fixed-width" ng-show="$location.path() === '/'"> <!--So aparece na Pagina Principal-->
 									<li class="tab"><a href="#news-feed">News Feed</a></li>
-									<li class="tab"><a href="#eventos" class="active">Eventos</a></li>
+									<li class="tab"><a href="#eventos">Eventos</a></li>
 									<li class="tab"><a href="#ranking">Ranking</a></li>
 								</ul>
 							</div>
@@ -136,15 +137,60 @@
 			<div ng-controller="RouteController">
 				<div ng-show="$location.path() === '/'">					
 					<!--News Feed-->
-					<div id="news-feed">
-						<p>Bem Vindo ao News Feed do Coltrekking!</p>
+					<div ng-controller="PostsController">
+						<div id="news-feed">
+							<div class="row modulo-wrapper">							
+								<!-- Posts fixados -->
+								<div class="container col hide-on-med-and-down l4 right">
+									<p class="fixadas-titulo">Publicações Fixadas</p>
+									
+									<div class="card" ng-repeat="post in postagemFixada | filter: {Fixado: 1}">
+										<div class="card-content">
+											<p class="data-post">{{post.Data}}</p>
+											
+											<!-- Corpo da postagem -->
+											<p ng-bind-html="post.Texto"></p>
+										</div>
+									</div>
+								</div>
+							
+								<div class="container col s12 l7">
+									<!-- Filtro -->
+									<div class="row" id="filtro">
+										<div class="col s5">
+											<p class="fixadas-titulo" id="filtro-titulo">Filtrar por evento: </p>
+										</div>
+										
+										<div class="col s7">
+											<label>
+												<select class="browser-default" id="filtro-posts" name="filtro-posts" ng-model="Postagens" ng-options="post.EventoID as post.Nome for post in postsFiltro | filter: {Fixado: 0}">
+												</select>
+											</label>
+										</div>
+									</div>
+									
+									<!-- Posts !fixados -->
+									<div class="row">
+										<div class="card" ng-repeat="post in postagem | filter: {Fixado: 0}">
+											<div class="card-content">
+												<span ng-if="post.Nome" class="card-title">{{post.Nome}}</span>
+												<p class="data-post">{{post.Data}}</p>
+												
+												<!-- Corpo da postagem -->
+												<p ng-bind-html="post.Texto"></p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 
 
 					<!--Eventos-->
 					<div ng-controller="EventosController">
 						<div id="eventos">
-							<div class="row">
+							<div class="row modulo-wrapper">
 								<!--Fixacoes-->
 								<div class="container col hide-on-med-and-down l4 right">
 									<!--Eventos Cadastrados-->
@@ -205,42 +251,42 @@
 											<!-- Info do Evento -->
 											<p>
 												<i class="tiny material-icons">label</i>
-												<span> Tipo:</span> {{evento.TipoString}}
+												<span class="topico-info"> Tipo:</span class="topico-info"> {{evento.TipoString}}
 											</p>
 											
 											<p ng-show="evento.Tipo == 2">
 												<i class="tiny material-icons">label_outline</i>
-												<span> Modalidade:</span> {{evento.TipoTrekking}}
+												<span class="topico-info"> Modalidade:</span class="topico-info"> {{evento.TipoTrekking}}
 											</p>
 											
 											<!--Nao mostra se for prelecao-->
 											<p ng-show="evento.Tipo != 1">
 												<i class="tiny material-icons">warning</i>
-												<span> Dificuldade:</span> {{evento.Dificuldade}}
+												<span class="topico-info"> Dificuldade:</span class="topico-info"> {{evento.Dificuldade}}
 											</p>
 											
 											<!-- Mostra apenas em acampamento -->
 											<p ng-show="evento.Tipo == 3">
 												<i class="tiny material-icons">today</i>
-												<span> De</span> {{evento.DataInicio}}
-												<span> a</span> {{evento.DataFim}}
+												<span class="topico-info"> De</span class="topico-info"> {{evento.DataInicio}}
+												<span class="topico-info"> a</span class="topico-info"> {{evento.DataFim}}
 											</p>											
 											
 											<!-- Mostra apenas em !acampamento -->
 											<p ng-show="evento.Tipo != 3">
 												<i class="tiny material-icons">today</i>
-												<span> Dia:</span> {{evento.DataInicio}}
+												<span class="topico-info"> Dia:</span class="topico-info"> {{evento.DataInicio}}
 											</p>
 											
 											<p>
 												<i class="tiny material-icons">location_on</i>
-												<span> Local:</span> {{evento.Local}}
+												<span class="topico-info"> Local:</span class="topico-info"> {{evento.Local}}
 											</p>
 											
 											<!-- Numero de Inscritos -->
 											<p>
 												<i class="tiny material-icons">add_circle</i>
-												<span> Nº de Inscritos:</span> {{evento.Confirmados.length}}/{{evento.NumeroMax}}
+												<span class="topico-info"> Nº de Inscritos:</span> {{evento.Confirmados.length}}/{{evento.NumeroMax}}
 											</p>
 											
 											<!-- Countdown de Disponibilidade -->

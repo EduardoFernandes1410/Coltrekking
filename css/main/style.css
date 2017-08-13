@@ -143,24 +143,49 @@ nav .tabs {
 #corpo {
   margin-top: 73px !important; }
 
-/*****CARDS*****/
-.card-content {
-  overflow: hidden;
+.modulo-wrapper {
+  margin-top: 80px; }
+
+/*****CARD POSTS*****/
+#news-feed .fixadas-titulo {
+  font-size: 24px;
+  font-weight: 300;
+  margin-top: 0px; }
+
+#news-feed .data-post {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 12px;
+  margin-top: -5px;
+  margin-bottom: 18px; }
+
+#news-feed #filtro {
+  margin-bottom: 16px; }
+
+#news-feed #filtro-titulo {
+  margin-bottom: 0px; }
+
+#news-feed #filtro-posts {
+  color: black;
+  font-size: 14px; }
+
+#news-feed a {
+  color: #ff6e40; }
+
+/*****CARDS EVENTOS*****/
+#eventos .card-content {
   font-size: 16px; }
-  .card-content span {
+  #eventos .card-content .topico-info {
     font-weight: 500; }
-  .card-content .dropdown-button {
+  #eventos .card-content .dropdown-button {
     color: #000;
     margin-top: 15px; }
-  .card-content .dropdown-content {
-    width: 150px !important; }
-    .card-content .dropdown-content li a {
-      color: #000 !important; }
-    .card-content .dropdown-content .finalizador {
-      color: #4caf50 !important; }
-    .card-content .dropdown-content .excluidor {
-      color: #f44336 !important; }
-  .card-content .countdownDisponibilidade {
+  #eventos .card-content .dropdown-content li a {
+    color: #000 !important; }
+  #eventos .card-content .dropdown-content .finalizador {
+    color: #4caf50 !important; }
+  #eventos .card-content .dropdown-content .excluidor {
+    color: #f44336 !important; }
+  #eventos .card-content .countdownDisponibilidade {
     margin-top: 16px !important;
     margin-bottom: -14px !important;
     color: #ff6e40 !important;
@@ -176,7 +201,7 @@ nav .tabs {
     #card-confirmados ul li {
       margin: 8px 0px 0px 0px; }
 
-#event-form {
+.create-form {
   margin-top: -48px !important; }
 
 .card-action a {
@@ -222,6 +247,15 @@ nav .tabs {
 #cancelar-btn {
   color: #ff6e40;
   margin-right: 20px; }
+
+#criar-post-segunda-row {
+  margin-top: 24px; }
+
+#p-fixado {
+  margin-bottom: 10px; }
+
+.btn-wrapper {
+  text-align: right; }
 
 /*****RANKING*****/
 #ranking {

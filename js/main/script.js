@@ -12,30 +12,14 @@ $(document).ready(function() {
 		$('.table-of-contents').css("margin-top", altura + "px");
 	});
 	
-	setTimeout(function() {		
+	setInterval(function() {		
 		var altura = $('#card-confirmados').height() + 36;		
 		$('.table-of-contents').css("margin-top", altura + "px");
 	}, 500);
 });
 
+
 /**********FORMULARIO**********/
-//Redimensiona a Textarea
-function resize() {
-	//Calculate number of lines
-	var numberOfLines = $("#local").val().split(/\r\n|\r|\n/).length;
-	//Get lineheight from CSS
-	var lineHeight = $("#local").css('line-height');
-	//Convert from px-string to number
-	lineHeight = lineHeight.replace("px", "");
-	//Calculate height for textarea
-	var textAreaHeight = numberOfLines*lineHeight;
-	//Convert from number to px-string
-	var stylingTextAreaHeight = "".concat(textAreaHeight).concat("px");
-
-	//Set textarea height to calculated height
-	$("#local").css("height",stylingTextAreaHeight);
-}
-
 //Verifica o tipo do evento inserido
 function verificaTipo() {
 	//Se for prelecao, nao permitir inserir dificuldade
