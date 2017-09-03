@@ -245,26 +245,34 @@ function pegaInfoUsuarioLogado(req, callback) {
 
 //*****Adiciona Evento ao DB*****//
 function criarEventoDB(data, callback) {
-	connection.query('INSERT INTO evento SET ?', data, function(err, rows, fields) {
-		if(!err) {
-			callback(true);
-		} else {
-			console.log(err);
-			callback(false);
-		}
-	});
+	if(req.session.usuarioLogado.Admin) {
+		connection.query('INSERT INTO evento SET ?', data, function(err, rows, fields) {
+			if(!err) {
+				callback(true);
+			} else {
+				console.log(err);
+				callback(false);
+			}
+		});
+	} else {
+		callback(false);
+	}
 }
 
 //*****Editar Evento no DB*****//
 function editarEventoDB(data, callback) {
-	connection.query('UPDATE evento SET ? WHERE ID = ?', [data, data.ID], function(err, rows, fields) {
-		if(!err) {
-			callback(true);
-		} else {
-			console.log(err);
-			callback(false);
-		}
-	});
+	if(req.session.usuarioLogado.Admin) {
+		connection.query('UPDATE evento SET ? WHERE ID = ?', [data, data.ID], function(err, rows, fields) {
+			if(!err) {
+				callback(true);
+			} else {
+				console.log(err);
+				callback(false);
+			}
+		});
+	} else {
+		callback(false);
+	}
 }
 
 //*****Get Eventos*****//
@@ -325,34 +333,39 @@ function confirmarEventoDB(data, callback) {
 					ListaEspera: 0,
 					dataInscricao: new Date().toUTCString()
 				}
+				
+				//Verifica se o cara ta logado mesmo
+				if(post.IDPessoa) {
+					//Verifica se o cara nao esta inscrito
+					estaInscrito(post, function(status) {
+						//Se nao esta inscrito
+						if(status) {
+							//GET numero maximo de pessoas no Evento
+							connection.query('SELECT NumeroMax FROM evento WHERE ID = ?', data.evento, function(err, rows, fields) {
+								var max = rows[0].NumeroMax;
 								
-				//Verifica se o cara nao esta inscrito
-				estaInscrito(post, function(status) {
-					//Se nao esta inscrito
-					if(status) {
-						//GET numero maximo de pessoas no Evento
-						connection.query('SELECT NumeroMax FROM evento WHERE ID = ?', data.evento, function(err, rows, fields) {
-							var max = rows[0].NumeroMax;
-							
-							//Se esta na lista de espera
-							(post.Colocacao > max) ? post.ListaEspera = 1 : post.ListaEspera = 0;
-							
-							//Adiciona pessoa ao evento
-							connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
-								if(!err) {
-									callback(true);
-								} else {
-									console.log('this.sql', this.sql);
-									console.log(err);
-									callback(false);
-								}
+								//Se esta na lista de espera
+								(post.Colocacao > max) ? post.ListaEspera = 1 : post.ListaEspera = 0;
+								
+								//Adiciona pessoa ao evento
+								connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
+									if(!err) {
+										callback(true);
+									} else {
+										console.log('this.sql', this.sql);
+										console.log(err);
+										callback(false);
+									}
+								});
 							});
-						});				
-					} else {
-						callback(false);
-					}					
-				});
-			});	
+						} else {
+							callback(false);
+						}
+					});
+				} else {
+					callback(false);
+				}
+			});
 		} else {
 			callback(false);
 		}
@@ -390,61 +403,73 @@ function cancelarEventoDB(post, callback) {
 function finalizarEventoDB(post, callback) {
 	var controle = true;
 	
-	var promessa = new Promise(function(resolve, reject) {
-		post.pessoas.forEach(function(elem, index, array) {
-			connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? WHERE ID = ?', [post.fatork, elem], function(err, rows, fields) {
-				if(!err) {
-					//Se for o ultimo, resolve a promessa
-					if(index == (array.length - 1)) {
-						resolve();
+	if(req.session.usuarioLogado.Admin) {
+		var promessa = new Promise(function(resolve, reject) {
+			post.pessoas.forEach(function(elem, index, array) {
+				connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? WHERE ID = ?', [post.fatork, elem], function(err, rows, fields) {
+					if(!err) {
+						//Se for o ultimo, resolve a promessa
+						if(index == (array.length - 1)) {
+							resolve();
+						}
+					} else {
+						controle = false;
 					}
+				});
+			});		
+		});
+		
+		promessa.then(function() {
+			connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', post.eventoID, function(err, rows, fields) {
+				if(!err) {
+					callback(controle);
 				} else {
 					controle = false;
 				}
 			});
-		});		
-	});
-	
-	promessa.then(function() {
-		connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', post.eventoID, function(err, rows, fields) {
-			if(!err) {
-				callback(controle);
-			} else {
-				controle = false;
-			}
 		});
-	});
+	} else {
+		callback(false);
+	}
 }
 
 //*****Excluir Evento*****//
-function excluirEventoDB(post, callback) {	
-	connection.query('DELETE FROM `evento` WHERE ID = ?', post.ID, function(err, rows, fields) {
-		if(!err) {
-			connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ?', post.ID, function(err, rows, fields) {
-				if(!err) {
-					callback(true);
-				} else {
-					console.log('Error while performing Query');
-					callback(false);
-				}
-			});			
-		} else {
-			callback(false);
-		}
-	});
+function excluirEventoDB(post, callback) {
+	if(req.session.usuarioLogado.Admin) {
+		connection.query('DELETE FROM `evento` WHERE ID = ?', post.ID, function(err, rows, fields) {
+			if(!err) {
+				connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ?', post.ID, function(err, rows, fields) {
+					if(!err) {
+						callback(true);
+					} else {
+						console.log('Error while performing Query');
+						callback(false);
+					}
+				});			
+			} else {
+				callback(false);
+			}
+		});
+	} else {
+		callback(false);
+	}
 }
 
 //*****Criar Postagem*****//
 function criarPostagemDB(data, callback) {
-	connection.query('INSERT INTO postagem SET ?', data, function(err, rows, fields) {
-		if(!err) {
-			callback(true);
-		}
-		else {
-			console.log(err);
-			callback(false);
-		}
-	});
+	if(req.session.usuarioLogado.Admin) {
+		connection.query('INSERT INTO postagem SET ?', data, function(err, rows, fields) {
+			if(!err) {
+				callback(true);
+			}
+			else {
+				console.log(err);
+				callback(false);
+			}
+		});
+	} else {
+		callback(false);
+	}
 }
 
 //*****Get Postagem*****//

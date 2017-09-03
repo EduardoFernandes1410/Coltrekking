@@ -446,7 +446,7 @@
 		
 		//Confirmar em Evento
 		$scope.confirmarEvento = function(evento) {
-			$("#btn-confirmar").attr("disabled", true);
+			$("#btn-confirmar-" + evento.ID).attr("disabled", true);
 			
 			var data = {
 				evento: evento.ID,
@@ -456,7 +456,7 @@
 			//Chama POST Confirmar Evento
 			httpService.post('/confirmar-evento', data, function(answer) {
 				//Reabilita o botao de se inscrever
-				$("#btn-confirmar").attr("disabled", false);
+				$("#btn-confirmar-" + evento.ID).attr("disabled", false);
 				
 				//Emite alerta sobre o status da operacao e redireciona
 				if(answer) {
@@ -473,6 +473,8 @@
 		
 		//Cancelar em Evento
 		$scope.cancelarEvento = function(evento) {
+			$("#btn-cancelar-" + evento.ID).attr("disabled", true);
+			
 			var data = {
 				evento: evento.ID,
 				max: evento.NumeroMax,
@@ -481,6 +483,9 @@
 			
 			//Chama POST Confirmar Evento
 			httpService.post('/cancelar-evento', data, function(answer) {
+				//Reabilita o botao de se inscrever
+				$("#btn-cancelar-" + evento.ID).attr("disabled", false);
+				
 				//Emite alerta sobre o status da operacao e redireciona
 				if(answer) {
 					Materialize.toast("Cancelamento em evento realizado com sucesso!", 3000);
@@ -503,12 +508,9 @@
 			httpService.post('/confirmados-por-mim', data, function(answer) {
 				$rootScope.eventosConfirmados = answer;
 				
-				//Seta margin top do scroll spy em funcao da altura do card (Pessima solucao)
-				setTimeout(function() {
-					var altura = $('#card-confirmados').height() + 36;
-					
-					$('.table-of-contents').css("margin-top", altura + "px");
-				}, 300);
+				//Seta margin top do scroll spy em funcao da altura do card
+				var altura = $('#card-confirmados').height() + 36;
+				$('.table-of-contents').css("margin-top", altura + "px");
 			});
 		}
 		
