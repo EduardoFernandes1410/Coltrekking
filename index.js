@@ -12,10 +12,10 @@ var app 			= express();
 //*****MySQL*****//
 var connection;
 var db_config = {
-	host	: 'us-cdbr-iron-east-03.cleardb.net',
-	user	: 'bae2902327afa9',
-	password: 'aa09eff1',
-	database: 'heroku_c4f1d12a0ffd9dd'
+	host	: 'us-cdbr-iron-east-05.cleardb.net',
+	user	: 'b8da9162116c36',
+	password: '321c299a',
+	database: 'heroku_d85ec50b8eb7067'
 };
 
 //Conecta ao Banco de Dados
