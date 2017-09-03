@@ -112,6 +112,8 @@
 				this.usuarioLogado = answer;
 				//Salva no rootScope para uso posterior
 				$rootScope.usuario = answer;
+				//Inicializa eventos
+				$rootScope.$broadcast('InicializarEventos', true);
 			}
 		}.bind(this));
 	}]);
@@ -566,7 +568,9 @@
 		}
 		
 		//Inicializa
-		$scope.eventosGetter();
+		$rootScope.$on("InicializarEventos", function() {
+			$scope.eventosGetter();
+		});
 		
 		//Recarrega eventos
 		$rootScope.$on("RecarregarEventos", function() {
@@ -622,6 +626,7 @@
 	}]);
 	
 	
+	//PostsController
 	app.controller('PostsController', ['HTTPService', '$timeout', '$scope', '$rootScope', '$location', function(httpService, $timeout, $scope, $rootScope, $location) {
 		//GET Postagens
 		$scope.postagemGetter = function() {
@@ -654,20 +659,15 @@
 			}.bind(this));
 		}
 		
-		$timeout(function() {
-			$(document).ready(function() {
-				$("#filtro-posts").change(function() {
-					var idFiltro = $(this).find(":selected").val().replace("number:", "");
+		$scope.filtrar = function() {
+			var idFiltro = $("#filtro-posts").find(":selected").val().replace("number:", "");
 					
-					if(idFiltro == 0) {
-						$scope.postagem = $scope.postagemFixada;
-					} else {
-						$scope.postagem = $scope.postagemFixada.filter(post => post.EventoID == idFiltro);
-					}
-					
-				});
-			});
-		});
+			if(idFiltro == 0) {
+				$scope.postagem = $scope.postagemFixada;
+			} else {
+				$scope.postagem = $scope.postagemFixada.filter(post => post.EventoID == idFiltro);
+			}
+		}
 		
 		//Inicializa
 		$scope.postagemGetter();
