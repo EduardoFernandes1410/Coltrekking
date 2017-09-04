@@ -20,18 +20,18 @@ var db_config = {
 
 //Conecta ao Banco de Dados
 function handleDisconnect() {
-	console.log('1. connecting to db:');
+	//console.log('1. connecting to db:');
 	connection = mysql.createConnection(db_config);
 
 	connection.connect(function(err) {
 		if(err) {
-			console.log('2. error when connecting to db:', err);
+			//console.log('2. error when connecting to db:', err);
 			setTimeout(handleDisconnect, 1000);
 		}
 	});
 
 	connection.on('error', function(err) {
-		console.log('3. db error', err);
+		//console.log('3. db error', err);
 		if(err.code === 'PROTOCOL_CONNECTION_LOST') {
 			handleDisconnect();
 		} else {
@@ -216,11 +216,11 @@ function addDB(req) {
 	//Adiciona ao DB de Pessoas
 	connection.query('INSERT IGNORE INTO pessoa SET ?', post, function(err, rows, fields) {
 		if(!err) {
-			console.log(rows);
+			// console.log(rows);
 		}
 		else {
-			console.log(err);
-			console.log('Error while performing Query (ADICIONA AO DB PESSOAS)');
+			// console.log(err);
+			// console.log('Error while performing Query (ADICIONA AO DB PESSOAS)');
 		}
 	});
 }
@@ -238,7 +238,7 @@ function pegaInfoUsuarioLogado(req, callback) {
 			//Realiza o callback
 			callback();
 		} else {
-			console.log('Error while performing Query (PEGA INFO DB)');
+			// console.log('Error while performing Query (PEGA INFO DB)');
 		}
 	});
 }
@@ -250,7 +250,7 @@ function criarEventoDB(req, data, callback) {
 			if(!err) {
 				callback(true);
 			} else {
-				console.log(err);
+				// console.log(err);
 				callback(false);
 			}
 		});
@@ -266,7 +266,7 @@ function editarEventoDB(req, data, callback) {
 			if(!err) {
 				callback(true);
 			} else {
-				console.log(err);
+				// console.log(err);
 				callback(false);
 			}
 		});
@@ -282,7 +282,7 @@ function getEventos(callback) {
 			//Retorna o inverso do array, para mostrar pela ordem de criacao
 			callback(rows.reverse());
 		} else {
-			console.log(err);
+			//console.log(err);
 			callback(false);
 		}
 	});
@@ -295,8 +295,8 @@ function getConfirmados(data, callback) {
 		if(!err) {
 			callback(rows);
 		} else {
-			console.log('this.sql', this.sql);
-			console.log(err);
+			//console.log('this.sql', this.sql);
+			//console.log(err);
 			callback(false);
 		}
 	});
@@ -308,8 +308,8 @@ function getConfirmadosPorMim(data, callback) {
 		if(!err) {
 			callback(rows);
 		} else {
-			console.log('this.sql', this.sql);
-			console.log(err);
+			//console.log('this.sql', this.sql);
+			//console.log(err);
 			callback(false);
 		}
 	});
@@ -352,8 +352,8 @@ function confirmarEventoDB(data, callback) {
 									if(!err) {
 										callback(true);
 									} else {
-										console.log('this.sql', this.sql);
-										console.log(err);
+										//console.log('this.sql', this.sql);
+										//console.log(err);
 										callback(false);
 									}
 								});
@@ -393,8 +393,8 @@ function cancelarEventoDB(post, callback) {
 					callback(true);
 				});
 			} else {
-				console.log('Error while performing Query');
-				console.log(err);
+				//console.log('Error while performing Query');
+				//console.log(err);
 				callback(false);
 			}
 		});
@@ -446,7 +446,6 @@ function excluirEventoDB(req, post, callback) {
 					if(!err) {
 						callback(true);
 					} else {
-						console.log('Error while performing Query');
 						callback(false);
 					}
 				});			
@@ -467,7 +466,7 @@ function criarPostagemDB(req, data, callback) {
 				callback(true);
 			}
 			else {
-				console.log(err);
+				//console.log(err);
 				callback(false);
 			}
 		});
@@ -483,7 +482,7 @@ function getPostagemDB(callback) {
 			callback(rows);
 		}
 		else {
-			console.log(err);
+			//console.log(err);
 			callback(false);
 		}
 	});
@@ -496,7 +495,7 @@ function estaInscrito(post, callback) {
 			//Se esta ou nao inscrito
 			rows.length == 0 ? callback(true) : callback(false);
 		} else {
-			console.log('Error while performing Query');
+			//console.log('Error while performing Query');
 			callback(false);
 		}
 	});
@@ -516,8 +515,8 @@ function estaDisponivel(evento, callback) {
 			
 			(distancia <= 0 && distancia2 <= 0) ? callback(true) : callback(false);
 		} else {
-			console.log('Error while performing Query');
-			console.log(err);
+			//console.log('Error while performing Query');
+			//console.log(err);
 			callback(false);
 		}
 	});
@@ -527,9 +526,9 @@ function estaDisponivel(evento, callback) {
 function printTabela(tabela) {
 	connection.query('SELECT * FROM ??', [tabela], function(err, rows, fields) {
 		if(!err) {
-			console.log(rows);
+			//console.log(rows);
 		} else {
-			console.log('Error while performing Query (PRINTA TABELA)');
+			//console.log('Error while performing Query (PRINTA TABELA)');
 		}
 	});
 }
@@ -556,8 +555,8 @@ function montaRanking(callback) {
 
 			callback(rows);
 		} else {
-			console.log('Error while performing Query (MONTA RANKING)');
-			console.log(err);
+			//console.log('Error while performing Query (MONTA RANKING)');
+			//console.log(err);
 		}
 	});
 }
@@ -566,5 +565,5 @@ function montaRanking(callback) {
 var port = process.env.PORT || 3000;
 
 app.listen(port, function() {
-	console.log("Ouvindo na porta " + port);
+	//console.log("Ouvindo na porta " + port);
 });
