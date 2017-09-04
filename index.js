@@ -20,18 +20,18 @@ var db_config = {
 
 //Conecta ao Banco de Dados
 function handleDisconnect() {
-	//console.log('1. connecting to db:');
+	console.log('1. connecting to db:');
 	connection = mysql.createConnection(db_config);
 
 	connection.connect(function(err) {
 		if(err) {
-			//console.log('2. error when connecting to db:', err);
+			console.log('2. error when connecting to db:', err);
 			setTimeout(handleDisconnect, 1000);
 		}
 	});
 
 	connection.on('error', function(err) {
-		//console.log('3. db error', err);
+		console.log('3. db error', err);
 		if(err.code === 'PROTOCOL_CONNECTION_LOST') {
 			handleDisconnect();
 		} else {
@@ -323,49 +323,44 @@ function confirmarEventoDB(data, callback) {
 	estaDisponivel(data.evento, function(status) {
 		//Se esta disponivel
 		if(status) {
-			//Pega o numero de inscritos no evento
-			connection.query('SELECT * FROM `pessoa-evento` WHERE IDEvento = ?', data.evento, function(err, rows, fields) {
-				//Seta o post
-				post = {
-					IDPessoa: data.usuario,
-					IDEvento: data.evento,
-					Colocacao: (rows.length + 1),
-					ListaEspera: 0,
-					dataInscricao: new Date().toUTCString()
-				}
-				
-				//Verifica se o cara ta logado mesmo
-				if(post.IDPessoa) {
-					//Verifica se o cara nao esta inscrito
-					estaInscrito(post, function(status) {
-						//Se nao esta inscrito
-						if(status) {
-							//GET numero maximo de pessoas no Evento
-							connection.query('SELECT NumeroMax FROM evento WHERE ID = ?', data.evento, function(err, rows, fields) {
-								var max = rows[0].NumeroMax;
-								
-								//Se esta na lista de espera
-								(post.Colocacao > max) ? post.ListaEspera = 1 : post.ListaEspera = 0;
-								
-								//Adiciona pessoa ao evento
-								connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
-									if(!err) {
-										callback(true);
-									} else {
-										//console.log('this.sql', this.sql);
-										//console.log(err);
-										callback(false);
-									}
-								});
+			//Verifica se o cara ta logado mesmo
+			if(data.usuario) {
+				//Verifica se o cara nao ja esta inscrito
+				estaInscrito(data, function(status) {
+					//Se nao esta inscrito
+					if(status) {
+						//Pega o numero de inscritos no evento
+						connection.query('SELECT * FROM `pessoa-evento` INNER JOIN `evento` ON `evento`.ID = `pessoa-evento`.IDEvento WHERE IDEvento = ?', data.evento, function(err, rows, fields) {
+							var max = (rows[0]) ? rows[0].NumeroMax : 1;
+							var espera = ((rows.length + 1) > max) ? 1 : 0;
+							
+							//Seta o post
+							post = {
+								IDPessoa: data.usuario,
+								IDEvento: data.evento,
+								Colocacao: (rows.length + 1),
+								ListaEspera: espera,
+								dataInscricao: new Date().toUTCString()
+							}
+							
+							//Adiciona pessoa ao evento
+							connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
+								if(!err) {
+									callback(true);
+								} else {
+									//console.log('this.sql', this.sql);
+									//console.log(err);
+									callback(false);
+								}
 							});
-						} else {
-							callback(false);
-						}
-					});
-				} else {
-					callback(false);
-				}
-			});
+						});
+					} else {
+						callback(false);
+					}
+				});
+			} else {
+				callback(false);
+			}
 		} else {
 			callback(false);
 		}
@@ -490,7 +485,7 @@ function getPostagemDB(callback) {
 
 //*****Esta Inscrito*****//
 function estaInscrito(post, callback) {	
-	connection.query('SELECT * FROM `pessoa-evento` WHERE IDPessoa = ? AND IDEvento = ?', [post.IDPessoa, post.IDEvento], function(err, rows, fields) {
+	connection.query('SELECT * FROM `pessoa-evento` WHERE IDPessoa = ? AND IDEvento = ?', [post.usuario, post.evento], function(err, rows, fields) {
 		if(!err) {
 			//Se esta ou nao inscrito
 			rows.length == 0 ? callback(true) : callback(false);
