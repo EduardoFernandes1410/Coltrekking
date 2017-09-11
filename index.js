@@ -10,38 +10,31 @@ var session			= require('express-session');
 var app 			= express();
 
 //*****MySQL*****//
-var connection;
-var db_config = {
+var pool = mysql.createPool({
+	connectionLimit : 300,
 	host	: 'us-cdbr-iron-east-05.cleardb.net',
 	user	: 'b8da9162116c36',
 	password: '321c299a',
-	database: 'heroku_d85ec50b8eb7067'
-};
+	database: 'heroku_d85ec50b8eb7067',
+	debug	:  false
+});
 
-//Conecta ao Banco de Dados
-function handleDisconnect() {
-	console.log('1. connecting to db:');
-	connection = mysql.createConnection(db_config);
-
-	connection.connect(function(err) {
+// Conecta ao DB
+function handleDatabase(req, res, call) {
+	pool.getConnection(function(err, connection){
 		if(err) {
-			console.log('2. error when connecting to db:', err);
-			setTimeout(handleDisconnect, 1000);
+			res.json({"code": 100, "status": "Error in connection database"});
+			return false;
 		}
-	});
+		
+		call(req, res, connection);
 
-	connection.on('error', function(err) {
-		console.log('3. db error', err);
-		if(err.code === 'PROTOCOL_CONNECTION_LOST') {
-			handleDisconnect();
-		} else {
-			throw err;
-		}
+		connection.on('error', function(err) {      
+			//res.json({"code": 100, "status": "Error in query"});
+			return false;
+		});
 	});
 }
-
-//Inicia DB
-handleDisconnect();
 
 //*****DEPENDENCIAS*****//
 //Utilizar o BodyParser
@@ -85,15 +78,18 @@ app.post("/post-user", function(req, res) {
 	req.session.usuarioLogado = req.body;
 
 	//Adiciona usuario ao DB
-	addDB(req);	
+	handleDatabase(req, res, function(req, res, connection) {
+		addDB(req, connection);
+	});
 	req.session.loginSucesso = true;
 
-	//Pega info como fatork, posicao, etc
-	pegaInfoUsuarioLogado(req, function callback() {
-		//Depois de fazer login, manda pagina a ser redirecionado
-		res.send("/main-page");
+	handleDatabase(req, res, function(req, res, connection) {
+		//Pega info como fatork, posicao, etc
+		pegaInfoUsuarioLogado(req, connection, function() {
+			//Depois de fazer login, manda pagina a ser redirecionado
+			res.send("/main-page");
+		});
 	});
-
 });
 
 //*****Redireciona para pagina principal*****//
@@ -114,85 +110,109 @@ app.get("/get-user", function(req, res) {
 
 //*****Criar Evento*****//
 app.post("/criar-evento", function(req, res) {
-	criarEventoDB(req, req.body, function(status) {
-		res.send(status);
+	handleDatabase(req, res, function(req, res, connection) {
+		criarEventoDB(req, req.body, connection, function(status) {
+			res.send(status);
+		});
 	});
 });
 
 //*****Editar Evento*****//
 app.post("/editar-evento", function(req, res) {
-	editarEventoDB(req, req.body, function(status) {
-		res.send(status);
+	handleDatabase(req, res, function(req, res, connection) {
+		editarEventoDB(req, req.body, connection, function(status) {
+			res.send(status);
+		});
 	});
 });
 
 //******Get Eventos*****//
 app.get("/eventos", function(req, res) {
-	getEventos(function(rows) {
-		res.send(rows);
-	})
+	handleDatabase(req, res, function(req, res, connection) {
+		getEventos(connection, function(rows) {
+			res.send(rows);
+		});
+	});
 });
 
 //*****Post Confirmados*****//
 app.post("/confirmados", function(req, res) {
-	getConfirmados(req.body.IDEvento, function(rows) {
-		res.send(rows);
+	handleDatabase(req, res, function(req, res, connection) {
+		getConfirmados(req.body.IDEvento, connection, function(rows) {
+			res.send(rows);
+		});
 	});
 });
 
 //*****Post Confirmados por Mim*****//
 app.post("/confirmados-por-mim", function(req, res) {
-	getConfirmadosPorMim(req.body.usuarioID, function(rows) {
-		res.send(rows);
+	handleDatabase(req, res, function(req, res, connection) {
+		getConfirmadosPorMim(req.body.usuarioID, connection, function(rows) {
+			res.send(rows);
+		});
 	});
 });
 
 //*****Confirmar Evento*****//
 app.post("/confirmar-evento", function(req, res) {
-	confirmarEventoDB(req.body, function(status) {
-		res.send(status);
+	handleDatabase(req, res, function(req, res, connection) {
+		confirmarEventoDB(req.body, connection, function(status) {
+			res.send(status);
+		});
 	});
 });
 
 //*****Cancelar Evento*****//
-app.post("/cancelar-evento", function(req, res) {	
-	cancelarEventoDB(req.body, function(status) {
-		res.send(status);
+app.post("/cancelar-evento", function(req, res) {
+	handleDatabase(req, res, function(req, res, connection) {
+		cancelarEventoDB(req.body, connection, function(status) {
+			res.send(status);
+		});
 	});
 });
 
 //*****Finalizar Evento*****//
 app.post("/finalizar-evento", function(req, res) {
-	finalizarEventoDB(req, req.body, function(status) {
-		res.send(status);
+	handleDatabase(req, res, function(req, res, connection) {
+		finalizarEventoDB(req, req.body, connection, function(status) {
+			res.send(status);
+		});
 	});
 });
 
 //*****Excluir Evento*****//
 app.post("/excluir-evento", function(req, res) {
-	excluirEventoDB(req, req.body, function(status) {
-		res.send(status);
+	handleDatabase(req, res, function(req, res, connection) {
+		excluirEventoDB(req, req.body, connection, function(status) {
+			res.send(status);
+		});
 	});
 });
 
 //*****Criar Postagem*****//
 app.post("/criar-postagem", function(req, res) {
-	criarPostagemDB(req, req.body, function(status) {
-		res.send(status);
+	handleDatabase(req, res, function(req, res, connection) {
+		criarPostagemDB(req, req.body, connection, function(status) {
+			res.send(status);
+		});
 	});
 });
 
 //*****Get Postagem*****//
 app.get("/get-postagem", function(req, res) {
-	getPostagemDB(function(status) {
-		res.send(status);
+	handleDatabase(req, res, function(req, res, connection) {
+		getPostagemDB(connection, function(status) {
+			res.send(status);
+		});
 	});
 });
 
 //*****Ranking*****//
 app.get("/ranking", function(req, res) {
-	montaRanking(function callback(rows) {
-		res.send(rows);
+	handleDatabase(req, res, function(req, res, connection) {
+		montaRanking(connection, function callback(rows) {
+			res.send(rows);
+		});
 	});
 });
 
@@ -208,13 +228,15 @@ app.get("/logout", function(req, res) {
 
 /***************************BANCO DE DADOS*****************************/
 //*****Adicionar usuario ao DB*****//
-function addDB(req) {
+function addDB(req, connection) {
 	//Cria usuario com propriedades do req.session.usuarioLogado
 	var usuario = new Usuario(req.session.usuarioLogado.Nome, req.session.usuarioLogado.Email, req.session.usuarioLogado.Foto, req.session.usuarioLogado.ID, 0, 1, 0, 0);
 	var post = usuario;
 
 	//Adiciona ao DB de Pessoas
 	connection.query('INSERT IGNORE INTO pessoa SET ?', post, function(err, rows, fields) {
+		connection.release();
+			
 		if(!err) {
 			// console.log(rows);
 		}
@@ -226,8 +248,10 @@ function addDB(req) {
 }
 
 //*****Pega Info do Usuario Logado*****//
-function pegaInfoUsuarioLogado(req, callback) {
+function pegaInfoUsuarioLogado(req, connection, callback) {
 	connection.query('SELECT * FROM pessoa WHERE ID = ?', req.session.usuarioLogado.ID, function(err, rows, fields) {
+		connection.release();
+		
 		if(!err) {
 			//Retrieve info do DB
 			req.session.usuarioLogado.FatorK = rows[0].FatorK;
@@ -244,9 +268,11 @@ function pegaInfoUsuarioLogado(req, callback) {
 }
 
 //*****Adiciona Evento ao DB*****//
-function criarEventoDB(req, data, callback) {
+function criarEventoDB(req, data, connection, callback) {
 	if(req.session.usuarioLogado.Admin) {
 		connection.query('INSERT INTO evento SET ?', data, function(err, rows, fields) {
+			connection.release();
+		
 			if(!err) {
 				callback(true);
 			} else {
@@ -260,9 +286,11 @@ function criarEventoDB(req, data, callback) {
 }
 
 //*****Editar Evento no DB*****//
-function editarEventoDB(req, data, callback) {
+function editarEventoDB(req, data, connection, callback) {
 	if(req.session.usuarioLogado.Admin) {
 		connection.query('UPDATE evento SET ? WHERE ID = ?', [data, data.ID], function(err, rows, fields) {
+			connection.release();
+		
 			if(!err) {
 				callback(true);
 			} else {
@@ -276,8 +304,10 @@ function editarEventoDB(req, data, callback) {
 }
 
 //*****Get Eventos*****//
-function getEventos(callback) {
+function getEventos(connection, callback) {
 	connection.query('SELECT * FROM evento', function(err, rows, fields) {
+		connection.release();
+		
 		if(!err) {
 			//Retorna o inverso do array, para mostrar pela ordem de criacao
 			callback(rows.reverse());
@@ -289,9 +319,11 @@ function getEventos(callback) {
 }
 
 //*****Get Confirmados*****//
-function getConfirmados(data, callback) {
+function getConfirmados(data, connection, callback) {
 	//Get os IDs dos confirmados com INNER JOIN
 	connection.query('SELECT ID, Nome, FatorK, `pessoa-evento`.ListaEspera, `pessoa-evento`.Colocacao, `pessoa-evento`.DataInscricao FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ? ORDER BY `pessoa-evento`.Colocacao', data, function(err, rows, fields) {
+		connection.release();
+		
 		if(!err) {
 			callback(rows);
 		} else {
@@ -303,8 +335,10 @@ function getConfirmados(data, callback) {
 }
 
 //*****Get Confirmados Por Mim*****//
-function getConfirmadosPorMim(data, callback) {
+function getConfirmadosPorMim(data, connection, callback) {
 	connection.query('SELECT ID, Nome FROM `evento` INNER JOIN `pessoa-evento` ON evento.ID = `pessoa-evento`.IDEvento WHERE `pessoa-evento`.IDPessoa = ? ORDER BY ID DESC', data, function(err, rows, fields) {
+		connection.release();
+		
 		if(!err) {
 			callback(rows);
 		} else {
@@ -316,7 +350,7 @@ function getConfirmadosPorMim(data, callback) {
 }
 
 //*****Confirmar Evento DB*****//
-function confirmarEventoDB(data, callback) {
+function confirmarEventoDB(data, connection, callback) {
 	var post;
 	
 	//Verifica se evento esta disponivel para inscricao
@@ -345,6 +379,8 @@ function confirmarEventoDB(data, callback) {
 							
 							//Adiciona pessoa ao evento
 							connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
+								connection.release();
+		
 								if(!err) {
 									callback(true);
 								} else {
@@ -368,7 +404,7 @@ function confirmarEventoDB(data, callback) {
 }
 
 //*****Cancelar Evento*****//
-function cancelarEventoDB(post, callback) {
+function cancelarEventoDB(post, connection, callback) {
 	if(post.usuario) {
 		connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ? AND IDPessoa = ?', [post.evento, post.usuario], function(err, rows, fields) {
 			if(!err) {
@@ -381,7 +417,9 @@ function cancelarEventoDB(post, callback) {
 							var espera;
 							((i + 1) > post.max) ? espera = 1 : espera = 0;
 							
-							connection.query('UPDATE `pessoa-evento` SET Colocacao = ?, ListaEspera = ? WHERE IDPessoa = ? AND IDEvento = ?', [i + 1, espera, rows[i].IDPessoa, post.evento]);
+							connection.query('UPDATE `pessoa-evento` SET Colocacao = ?, ListaEspera = ? WHERE IDPessoa = ? AND IDEvento = ?', [i + 1, espera, rows[i].IDPessoa, post.evento], function(err, rows, field) {
+								connection.release();	
+							});
 						}
 					}
 					
@@ -399,7 +437,7 @@ function cancelarEventoDB(post, callback) {
 }
 
 //*****Finalizar Evento*****//
-function finalizarEventoDB(req, post, callback) {
+function finalizarEventoDB(req, post, connection, callback) {
 	var controle = true;
 	
 	if(req.session.usuarioLogado.Admin) {
@@ -420,6 +458,8 @@ function finalizarEventoDB(req, post, callback) {
 		
 		promessa.then(function() {
 			connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', post.eventoID, function(err, rows, fields) {
+				connection.release();
+				
 				if(!err) {
 					callback(controle);
 				} else {
@@ -433,11 +473,13 @@ function finalizarEventoDB(req, post, callback) {
 }
 
 //*****Excluir Evento*****//
-function excluirEventoDB(req, post, callback) {
+function excluirEventoDB(req, post, connection, callback) {
 	if(req.session.usuarioLogado.Admin) {
 		connection.query('DELETE FROM `evento` WHERE ID = ?', post.ID, function(err, rows, fields) {
 			if(!err) {
 				connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ?', post.ID, function(err, rows, fields) {
+					connection.release();
+		
 					if(!err) {
 						callback(true);
 					} else {
@@ -454,9 +496,11 @@ function excluirEventoDB(req, post, callback) {
 }
 
 //*****Criar Postagem*****//
-function criarPostagemDB(req, data, callback) {
+function criarPostagemDB(req, data, connection, callback) {
 	if(req.session.usuarioLogado.Admin) {
 		connection.query('INSERT INTO postagem SET ?', data, function(err, rows, fields) {
+			connection.release();
+		
 			if(!err) {
 				callback(true);
 			}
@@ -471,8 +515,10 @@ function criarPostagemDB(req, data, callback) {
 }
 
 //*****Get Postagem*****//
-function getPostagemDB(callback) {
+function getPostagemDB(connection, callback) {
 	connection.query('SELECT postagem.*, evento.Nome FROM postagem LEFT JOIN evento ON postagem.EventoID = evento.ID', function(err, rows, fields) {
+		connection.release();
+		
 		if(!err) {
 			callback(rows);
 		}
@@ -484,8 +530,10 @@ function getPostagemDB(callback) {
 }
 
 //*****Esta Inscrito*****//
-function estaInscrito(post, callback) {	
+function estaInscrito(post, connection, callback) {	
 	connection.query('SELECT * FROM `pessoa-evento` WHERE IDPessoa = ? AND IDEvento = ?', [post.usuario, post.evento], function(err, rows, fields) {
+		connection.release();
+		
 		if(!err) {
 			//Se esta ou nao inscrito
 			rows.length == 0 ? callback(true) : callback(false);
@@ -497,8 +545,10 @@ function estaInscrito(post, callback) {
 }
 
 //*****Esta Disponivel*****//
-function estaDisponivel(evento, callback) {
+function estaDisponivel(evento, connection, callback) {
 	connection.query('SELECT DataInscricao, FimInscricao FROM `evento` WHERE ID = ?', evento, function(err, rows, fields) {
+		connection.release();
+		
 		if(!err) {
 			var dataEvento = rows[0].DataInscricao;
 			var dataFim = rows[0].FimInscricao;
@@ -518,8 +568,10 @@ function estaDisponivel(evento, callback) {
 }
 
 //*****Printa Tabela*****//
-function printTabela(tabela) {
+function printTabela(connection, tabela) {
 	connection.query('SELECT * FROM ??', [tabela], function(err, rows, fields) {
+		connection.release();
+		
 		if(!err) {
 			//console.log(rows);
 		} else {
@@ -529,26 +581,42 @@ function printTabela(tabela) {
 }
 
 //*****Monta Ranking*****//
-function montaRanking(callback) {
+function montaRanking(connection, callback) {
 	connection.query('SELECT ID, Nome, FatorK FROM pessoa ORDER BY FatorK DESC', function(err, rows, fields) {
 		if(!err) {
 			//Atualiza a posicao no ranking
-			for(var i = 0; i < rows.length; i++) {
-				if(i == 0) {
-					connection.query('UPDATE pessoa SET Posicao = 1 WHERE ID = ?', rows[0].ID);
-					rows[0].Posicao = 1;
-				} else {
-					if(rows[i].FatorK == rows[i - 1].FatorK) {
-						connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [rows[i - 1].Posicao, rows[i].ID]);
-						rows[i].Posicao = rows[i - 1].Posicao;
+			var promessa = new Promise(function(resolve, release) {
+				for(var i = 0; i < rows.length; i++) {
+					if(i == 0) {
+						connection.query('UPDATE pessoa SET Posicao = 1 WHERE ID = ?', rows[0].ID);
+						rows[0].Posicao = 1;
 					} else {
-						connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [(i + 1), rows[i].ID]);
-						rows[i].Posicao = i + 1;
+						if(rows[i].FatorK == rows[i - 1].FatorK) {
+							connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [rows[i - 1].Posicao, rows[i].ID], function(err, rows, fields) {
+								if(i == (rows.length - 1)) {
+									resolve();
+								}
+							});
+							
+							rows[i].Posicao = rows[i - 1].Posicao;
+						} else {
+							connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [(i + 1), rows[i].ID], function(err, rows, fields) {
+								if(i == (rows.length - 1)) {
+									resolve();
+								}
+							});
+							
+							rows[i].Posicao = i + 1;
+						}
 					}
 				}
-			}
 
-			callback(rows);
+				callback(rows);
+			});
+			
+			promessa.then(function() {
+				connection.release();
+			});
 		} else {
 			//console.log('Error while performing Query (MONTA RANKING)');
 			//console.log(err);
