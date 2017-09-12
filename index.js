@@ -354,13 +354,13 @@ function confirmarEventoDB(data, connection, callback) {
 	var post;
 	
 	//Verifica se evento esta disponivel para inscricao
-	estaDisponivel(data.evento, function(status) {
+	estaDisponivel(data.evento, connection, function(status) {
 		//Se esta disponivel
 		if(status) {
 			//Verifica se o cara ta logado mesmo
 			if(data.usuario) {
 				//Verifica se o cara nao ja esta inscrito
-				estaInscrito(data, function(status) {
+				estaInscrito(data, connection, function(status) {
 					//Se nao esta inscrito
 					if(status) {
 						//Pega o numero de inscritos no evento
