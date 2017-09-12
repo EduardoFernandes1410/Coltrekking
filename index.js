@@ -532,7 +532,6 @@ function getPostagemDB(connection, callback) {
 //*****Esta Inscrito*****//
 function estaInscrito(post, connection, callback) {	
 	connection.query('SELECT * FROM `pessoa-evento` WHERE IDPessoa = ? AND IDEvento = ?', [post.usuario, post.evento], function(err, rows, fields) {
-		connection.release();
 		
 		if(!err) {
 			//Se esta ou nao inscrito
@@ -547,7 +546,6 @@ function estaInscrito(post, connection, callback) {
 //*****Esta Disponivel*****//
 function estaDisponivel(evento, connection, callback) {
 	connection.query('SELECT DataInscricao, FimInscricao FROM `evento` WHERE ID = ?', evento, function(err, rows, fields) {
-		connection.release();
 		
 		if(!err) {
 			var dataEvento = rows[0].DataInscricao;
