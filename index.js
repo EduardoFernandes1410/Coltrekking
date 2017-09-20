@@ -19,6 +19,15 @@ var pool = mysql.createPool({
 	debug	:  false
 });
 
+// var pool = mysql.createPool({
+// 	connectionLimit : 300,
+// 	host	: 'jdbc:mysql://mysql142076-coltrekking.jelasticlw.com.br',
+// 	user	: 'coltrekker',
+// 	password: 'coltrekking123',
+// 	database: 'coltrekking',
+// 	debug	:  false
+// });
+
 // Conecta ao DB
 function handleDatabase(req, res, call) {
 	pool.getConnection(function(err, connection){
@@ -85,9 +94,13 @@ app.post("/post-user", function(req, res) {
 
 	handleDatabase(req, res, function(req, res, connection) {
 		//Pega info como fatork, posicao, etc
-		pegaInfoUsuarioLogado(req, connection, function() {
-			//Depois de fazer login, manda pagina a ser redirecionado
-			res.send("/main-page");
+		pegaInfoUsuarioLogado(req, connection, function(status) {
+			if (status) {
+				//Depois de fazer login, manda pagina a ser redirecionado
+				res.send("/main-page");
+			} else {
+				res.send(false);
+			}
 		});
 	});
 });
@@ -231,10 +244,9 @@ app.get("/logout", function(req, res) {
 function addDB(req, connection) {
 	//Cria usuario com propriedades do req.session.usuarioLogado
 	var usuario = new Usuario(req.session.usuarioLogado.Nome, req.session.usuarioLogado.Email, req.session.usuarioLogado.Foto, req.session.usuarioLogado.ID, 0, 1, 0, 0);
-	var post = usuario;
 
 	//Adiciona ao DB de Pessoas
-	connection.query('INSERT IGNORE INTO pessoa SET ?', post, function(err, rows, fields) {
+	connection.query('INSERT IGNORE INTO pessoa SET ?', usuario, function(err, rows, fields) {
 		connection.release();
 			
 		if(!err) {
@@ -254,14 +266,20 @@ function pegaInfoUsuarioLogado(req, connection, callback) {
 		
 		if(!err) {
 			//Retrieve info do DB
-			req.session.usuarioLogado.FatorK = rows[0].FatorK;
-			req.session.usuarioLogado.Posicao = rows[0].Posicao;
-			req.session.usuarioLogado.ListaNegra = rows[0].ListaNegra;
-			req.session.usuarioLogado.Admin = rows[0].Admin;
+			try {
+				req.session.usuarioLogado.FatorK = rows[0].FatorK;
+				req.session.usuarioLogado.Posicao = rows[0].Posicao;
+				req.session.usuarioLogado.ListaNegra = rows[0].ListaNegra;
+				req.session.usuarioLogado.Admin = rows[0].Admin;
+			} catch(err) {
+				console.log(err.message);
+				callback(false);
+			}
 			
 			//Realiza o callback
-			callback();
+			callback(true);
 		} else {
+			callback(false);
 			// console.log('Error while performing Query (PEGA INFO DB)');
 		}
 	});
@@ -379,10 +397,17 @@ function confirmarEventoDB(data, connection, callback) {
 							
 							//Adiciona pessoa ao evento
 							connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
-								connection.release();
-		
 								if(!err) {
-									callback(true);
+									//Atualiza posicao do ranking
+									var data = {
+										evento: post.IDEvento,
+										usuario: post.IDPessoa
+									};
+									
+									reordenaConfirmados(data, connection, function(status) {
+										connection.release();
+										callback(status);
+									});
 								} else {
 									//console.log('this.sql', this.sql);
 									//console.log(err);
@@ -409,21 +434,9 @@ function cancelarEventoDB(post, connection, callback) {
 		connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ? AND IDPessoa = ?', [post.evento, post.usuario], function(err, rows, fields) {
 			if(!err) {
 				//Atualiza posicao do ranking
-				connection.query('SELECT * FROM `pessoa-evento` WHERE IDEvento = ? ORDER BY Colocacao ASC', [post.evento, post.usuario], function(err, rows, fields) {
-					if(!err) {
-						//Atualiza a posicao no ranking
-						for(var i = 0; i < rows.length; i++) {
-							//Verifica se esta na lista de espera
-							var espera;
-							((i + 1) > post.max) ? espera = 1 : espera = 0;
-							
-							connection.query('UPDATE `pessoa-evento` SET Colocacao = ?, ListaEspera = ? WHERE IDPessoa = ? AND IDEvento = ?', [i + 1, espera, rows[i].IDPessoa, post.evento], function(err, rows, field) {
-								connection.release();	
-							});
-						}
-					}
-					
-					callback(true);
+				reordenaConfirmados(post, connection, function(status) {
+					connection.release();
+					callback(status);
 				});
 			} else {
 				//console.log('Error while performing Query');
@@ -565,6 +578,36 @@ function estaDisponivel(evento, connection, callback) {
 	});
 }
 
+//*****Reordena Confirmados*****//
+function reordenaConfirmados(post, connection, callback) {
+	//Atualiza posicoes do ranking
+	connection.query('SELECT * FROM `pessoa-evento` WHERE IDEvento = ? ORDER BY Colocacao ASC', [post.evento, post.usuario], function(err, rows, fields) {
+		var iteracao = rows.length;
+		
+		if(!err) {
+			if(iteracao == 0) {
+				callback(false);
+			} else {
+				//Atualiza a posicao no ranking
+				for(var i = 0; i < rows.length; i++) {
+					//Verifica se esta na lista de espera
+					var espera;
+					((i + 1) > post.max) ? espera = 1 : espera = 0;
+					
+					connection.query('UPDATE `pessoa-evento` SET Colocacao = ?, ListaEspera = ? WHERE IDPessoa = ? AND IDEvento = ?', [i + 1, espera, rows[i].IDPessoa, post.evento]);
+					
+					if(i == (iteracao - 1)) {
+						callback(true);
+					}
+				}
+			}
+			
+		} else {
+			callback(false);
+		}
+	});
+}
+
 //*****Printa Tabela*****//
 function printTabela(connection, tabela) {
 	connection.query('SELECT * FROM ??', [tabela], function(err, rows, fields) {
@@ -581,6 +624,8 @@ function printTabela(connection, tabela) {
 //*****Monta Ranking*****//
 function montaRanking(connection, callback) {
 	connection.query('SELECT ID, Nome, FatorK FROM pessoa ORDER BY FatorK DESC', function(err, rows, fields) {
+		var iteracao = rows.length;
+		
 		if(!err) {
 			//Atualiza a posicao no ranking
 			var promessa = new Promise(function(resolve, release) {
@@ -590,19 +635,18 @@ function montaRanking(connection, callback) {
 						rows[0].Posicao = 1;
 					} else {
 						if(rows[i].FatorK == rows[i - 1].FatorK) {
-							connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [rows[i - 1].Posicao, rows[i].ID], function(err, rows, fields) {
-								if(i == (rows.length - 1)) {
-									resolve();
-								}
-							});
-							
+							connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [rows[i - 1].Posicao, rows[i].ID]);
 							rows[i].Posicao = rows[i - 1].Posicao;
+							
+							if(i == (iteracao - 1)) {
+								resolve();
+							}
 						} else {
-							connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [(i + 1), rows[i].ID], function(err, rows, fields) {
-								if(i == (rows.length - 1)) {
-									resolve();
-								}
-							});
+							connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [(i + 1), rows[i].ID]);
+							
+							if(i == (iteracao - 1)) {
+								resolve();
+							}
 							
 							rows[i].Posicao = i + 1;
 						}

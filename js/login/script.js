@@ -42,8 +42,12 @@ function initApp() {
 			url = "/post-user";
 			xmlhttp.onreadystatechange = function() {
 				if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-					/*Redireciona para logged.html*/
-					window.location = xmlhttp.responseText;
+					if(xmlhttp.responseText) {
+						/*Redireciona para logged.html*/
+						window.location = xmlhttp.responseText;
+					} else {
+						alert("Erro ao realizar o login! Tente novamente");
+					}
 				}
 			};
 			xmlhttp.open("POST", url, true);
@@ -68,7 +72,7 @@ function initApp() {
 		var errorCode = error.code;
 		//Erro de ja ter cadastrado com outro provider
 		if(errorCode == 'auth/account-exists-with-different-credential') {
-			alert("Ja tem cadastro");
+			alert("O email usado na sua conta já foi cadastrado no site. Tente entrar com a outra rede social.");
 		}
 
 		var errorMessage = error.message;
