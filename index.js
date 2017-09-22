@@ -118,110 +118,158 @@ app.get("/get-user", function(req, res) {
 
 //*****Criar Evento*****//
 app.post("/criar-evento", function(req, res) {
-	handleDatabase(req, res, function(req, res, connection) {
-		criarEventoDB(req, req.body, connection, function(status) {
-			res.send(status);
+	if(!req.session.usuarioLogado) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			criarEventoDB(req, req.body, connection, function(status) {
+				res.send(status);
+			});
 		});
-	});
+	}
 });
 
 //*****Editar Evento*****//
 app.post("/editar-evento", function(req, res) {
-	handleDatabase(req, res, function(req, res, connection) {
-		editarEventoDB(req, req.body, connection, function(status) {
-			res.send(status);
+	if(!req.session.usuarioLogado) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			editarEventoDB(req, req.body, connection, function(status) {
+				res.send(status);
+			});
 		});
-	});
+	}
 });
 
 //******Get Eventos*****//
 app.get("/eventos", function(req, res) {
-	handleDatabase(req, res, function(req, res, connection) {
-		getEventos(connection, function(rows) {
-			res.send(rows);
+	if(!req.session.usuarioLogado) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			getEventos(connection, function(rows) {
+				res.send(rows);
+			});
 		});
-	});
+	}
 });
 
 //*****Post Confirmados*****//
 app.post("/confirmados", function(req, res) {
-	handleDatabase(req, res, function(req, res, connection) {
-		getConfirmados(req.body.IDEvento, connection, function(rows) {
-			res.send(rows);
+	if(!req.session.usuarioLogado) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			getConfirmados(req.body.IDEvento, connection, function(rows) {
+				res.send(rows);
+			});
 		});
-	});
+	}
 });
 
 //*****Post Confirmados por Mim*****//
 app.post("/confirmados-por-mim", function(req, res) {
-	handleDatabase(req, res, function(req, res, connection) {
-		getConfirmadosPorMim(req.body.usuarioID, connection, function(rows) {
-			res.send(rows);
+	if(!req.session.usuarioLogado) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			getConfirmadosPorMim(req.body.usuarioID, connection, function(rows) {
+				res.send(rows);
+			});
 		});
-	});
+	}
 });
 
 //*****Confirmar Evento*****//
 app.post("/confirmar-evento", function(req, res) {
-	handleDatabase(req, res, function(req, res, connection) {
-		confirmarEventoDB(req.body, connection, function(status) {
-			res.send(status);
+	if(!req.session.usuarioLogado) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			confirmarEventoDB(req.body, connection, function(status) {
+				res.send(status);
+			});
 		});
-	});
+	}
 });
 
 //*****Cancelar Evento*****//
 app.post("/cancelar-evento", function(req, res) {
-	handleDatabase(req, res, function(req, res, connection) {
-		cancelarEventoDB(req.body, connection, function(status) {
-			res.send(status);
+	if(!req.session.usuarioLogado) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			cancelarEventoDB(req.body, connection, function(status) {
+				res.send(status);
+			});
 		});
-	});
+	}
 });
 
 //*****Finalizar Evento*****//
 app.post("/finalizar-evento", function(req, res) {
-	handleDatabase(req, res, function(req, res, connection) {
-		finalizarEventoDB(req, req.body, connection, function(status) {
-			res.send(status);
+	if(!req.session.usuarioLogado) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			finalizarEventoDB(req, req.body, connection, function(status) {
+				res.send(status);
+			});
 		});
-	});
+	}
 });
 
 //*****Excluir Evento*****//
 app.post("/excluir-evento", function(req, res) {
-	handleDatabase(req, res, function(req, res, connection) {
-		excluirEventoDB(req, req.body, connection, function(status) {
-			res.send(status);
+	if(!req.session.usuarioLogado) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			excluirEventoDB(req, req.body, connection, function(status) {
+				res.send(status);
+			});
 		});
-	});
+	}
 });
 
 //*****Criar Postagem*****//
 app.post("/criar-postagem", function(req, res) {
-	handleDatabase(req, res, function(req, res, connection) {
-		criarPostagemDB(req, req.body, connection, function(status) {
-			res.send(status);
+	if(!req.session.usuarioLogado) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			criarPostagemDB(req, req.body, connection, function(status) {
+				res.send(status);
+			});
 		});
-	});
+	}
 });
 
 //*****Get Postagem*****//
 app.get("/get-postagem", function(req, res) {
-	handleDatabase(req, res, function(req, res, connection) {
-		getPostagemDB(connection, function(status) {
-			res.send(status);
+	if(!req.session.usuarioLogado) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			getPostagemDB(connection, function(status) {
+				res.send(status);
+			});
 		});
-	});
+	}
 });
 
 //*****Ranking*****//
 app.get("/ranking", function(req, res) {
-	handleDatabase(req, res, function(req, res, connection) {
-		montaRanking(connection, function callback(rows) {
-			res.send(rows);
+	if(!req.session.usuarioLogado) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			montaRanking(connection, function callback(rows) {
+				res.send(rows);
+			});
 		});
-	});
+	}
 });
 
 //*****Log Out*****//

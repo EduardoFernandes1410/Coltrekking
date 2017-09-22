@@ -3,7 +3,6 @@ var facebookProvider = new firebase.auth.FacebookAuthProvider();
 
 var user;
 var url;
-var xmlhttp = new XMLHttpRequest();
 var usuarioInfo = new Object();
 
 /***Quando a pagina carrega***/
@@ -14,8 +13,9 @@ window.onload = function() {
 /***Google Sign In***/
 function googleSignIn() {
 	//Altera botao de login
-	document.getElementById('loginGoogle').disabled = true;
-	document.getElementById('loginGoogle').value = "Carregando...";
+	$('#loginFacebook').attr('disabled', true);
+	$('#loginGoogle').attr('onClick', 'return false');
+	$('#loginGoogle').html('<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>');
 	
 	// firebase.auth().signInWithRedirect(googleProvider);
 	signIn(googleProvider);
@@ -23,6 +23,11 @@ function googleSignIn() {
 
 /***Facebook Sign In***/
 function facebookSignIn() {
+	//Altera botao de login
+	$('#loginGoogle').attr('disabled', true);
+	$('#loginFacebook').attr('onClick', 'return false');
+	$('#loginFacebook').html('<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>');
+	
 	facebookProvider.addScope('email');
 	signIn(facebookProvider);
 }
@@ -36,6 +41,11 @@ function signIn(provedor) {
 		//Info do usuario logado
 		user = result.user;
 	}).catch(function(error) {
+		//Reativa os botoes
+		$('.botao-login').attr('disabled', false);
+		$('#loginGoogle').html('<i class="material-icons left"><img src="../../rsc/login/icones/google.png"></i>Entrar com o Google');
+		$('#loginFacebook').html('<i class="material-icons left"><img src="../../rsc/login/icones/facebook-box.png"></i>Entrar com o Facebook');
+		
 		var errorCode = error.code;
 		//Erro de ja ter cadastrado com outro provider
 		if(errorCode == 'auth/account-exists-with-different-credential') {
