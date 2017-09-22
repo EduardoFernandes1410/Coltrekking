@@ -19,15 +19,6 @@ var pool = mysql.createPool({
 	debug	:  false
 });
 
-// var pool = mysql.createPool({
-// 	connectionLimit : 300,
-// 	host	: 'jdbc:mysql://mysql142076-coltrekking.jelasticlw.com.br',
-// 	user	: 'coltrekker',
-// 	password: 'coltrekking123',
-// 	database: 'coltrekking',
-// 	debug	:  false
-// });
-
 // Conecta ao DB
 function handleDatabase(req, res, call) {
 	pool.getConnection(function(err, connection){
@@ -84,25 +75,29 @@ app.get("/", function(req, res) {
 
 //*****Posta usuario logado*****//
 app.post("/post-user", function(req, res) {
-	req.session.usuarioLogado = req.body;
+	if(!req.body) {
+		res.send(false);
+	} else {
+		req.session.usuarioLogado = req.body;
 
-	//Adiciona usuario ao DB
-	handleDatabase(req, res, function(req, res, connection) {
-		addDB(req, connection);
-	});
-	req.session.loginSucesso = true;
-
-	handleDatabase(req, res, function(req, res, connection) {
-		//Pega info como fatork, posicao, etc
-		pegaInfoUsuarioLogado(req, connection, function(status) {
-			if (status) {
-				//Depois de fazer login, manda pagina a ser redirecionado
-				res.send("/main-page");
-			} else {
-				res.send(false);
-			}
+		//Adiciona usuario ao DB
+		handleDatabase(req, res, function(req, res, connection) {
+			addDB(req, connection);
 		});
-	});
+		req.session.loginSucesso = true;
+
+		handleDatabase(req, res, function(req, res, connection) {
+			//Pega info como fatork, posicao, etc
+			pegaInfoUsuarioLogado(req, connection, function(status) {
+				if (status) {
+					//Depois de fazer login, manda pagina a ser redirecionado
+					res.send("/main-page");
+				} else {
+					res.send(false);
+				}
+			});
+		});
+	}
 });
 
 //*****Redireciona para pagina principal*****//

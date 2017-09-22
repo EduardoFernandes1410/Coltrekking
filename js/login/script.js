@@ -13,17 +13,40 @@ window.onload = function() {
 
 /***Google Sign In***/
 function googleSignIn() {
-	firebase.auth().signInWithRedirect(googleProvider);
-	
 	//Altera botao de login
 	document.getElementById('loginGoogle').disabled = true;
-	document.getElementById('loginGoogle').value = "Redirecting...";
+	document.getElementById('loginGoogle').value = "Carregando...";
+	
+	// firebase.auth().signInWithRedirect(googleProvider);
+	signIn(googleProvider);
 }
 
 /***Facebook Sign In***/
 function facebookSignIn() {
 	facebookProvider.addScope('email');
-	firebase.auth().signInWithRedirect(facebookProvider);
+	signIn(facebookProvider);
+}
+
+/**Sign In com Popup***/
+function signIn(provedor) {
+	firebase.auth().signInWithPopup(provedor).then(result => {
+		if(result.credential) {
+			var token = result.credential.accessToken;
+		}
+		//Info do usuario logado
+		user = result.user;
+	}).catch(function(error) {
+		var errorCode = error.code;
+		//Erro de ja ter cadastrado com outro provider
+		if(errorCode == 'auth/account-exists-with-different-credential') {
+			alert("O email usado na sua conta já foi cadastrado no site. Tente entrar com a outra rede social.");
+		}
+
+		// Informacoes do erro
+		var errorMessage = error.message;
+		var email = error.email;
+		var credential = error.credential;
+	});
 }
 
 /***Inicializar App***/
@@ -39,20 +62,18 @@ function initApp() {
 			usuarioInfo.ID = user.uid;
 
 			/*Manda usuarioInfo para server*/
-			url = "/post-user";
-			xmlhttp.onreadystatechange = function() {
-				if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-					if(xmlhttp.responseText) {
-						/*Redireciona para logged.html*/
-						window.location = xmlhttp.responseText;
-					} else {
-						alert("Erro ao realizar o login! Tente novamente");
-					}
+			url = "/post-user";			
+			$.ajax({
+				type: "POST",
+				url: url,
+				data: usuarioInfo,
+				success: function(answer) {
+					window.location = answer;
+				},
+				error: function(answer, status) {
+					alert("Erro ao realizar o login! Tente novamente");
 				}
-			};
-			xmlhttp.open("POST", url, true);
-			xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-			xmlhttp.send(JSON.stringify(usuarioInfo));				
+			});
 		}
 		else {					
 			console.log("Nao tem user");
@@ -60,26 +81,25 @@ function initApp() {
 	});
 
 	/*Pega resultado de redirecionamento*/
-	firebase.auth().getRedirectResult().then(function(result) {
-		if(result.credential) {
-			var token = result.credential.accessToken;
-		}
-		//Info do usuario logado
-		user = result.user;
+	// firebase.auth().getRedirectResult().then(function(result) {
+	// 	if(result.credential) {
+	// 		var token = result.credential.accessToken;
+	// 	}
+	// 	//Info do usuario logado
+	// 	user = result.user;
+	// }).catch(function(error) {
+	// 	//Aqui cuida dos erros
+	// 	var errorCode = error.code;
+	// 	//Erro de ja ter cadastrado com outro provider
+	// 	if(errorCode == 'auth/account-exists-with-different-credential') {
+	// 		alert("O email usado na sua conta já foi cadastrado no site. Tente entrar com a outra rede social.");
+	// 	}
 
-	}).catch(function(error) {
-		//Aqui cuida dos erros
-		var errorCode = error.code;
-		//Erro de ja ter cadastrado com outro provider
-		if(errorCode == 'auth/account-exists-with-different-credential') {
-			alert("O email usado na sua conta já foi cadastrado no site. Tente entrar com a outra rede social.");
-		}
+	// 	var errorMessage = error.message;
 
-		var errorMessage = error.message;
-
-		//O email do usuario logado
-		var email = error.email;
-		//Tipo de credencial do FireBase usada
-		var credential = error.credential;
-	});
+	// 	//O email do usuario logado
+	// 	var email = error.email;
+	// 	//Tipo de credencial do FireBase usada
+	// 	var credential = error.credential;
+	// });
 }
