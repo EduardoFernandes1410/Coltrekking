@@ -13,9 +13,9 @@ window.onload = function() {
 /***Google Sign In***/
 function googleSignIn() {
 	//Altera botao de login
-	$('#loginFacebook').attr('disabled', true);
-	$('#loginGoogle').attr('onClick', 'return false');
-	$('#loginGoogle').html('<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>');
+	$('#loginFacebook, #loginFacebookMobile').attr('disabled', true);
+	$('#loginGoogle, #loginGoogleMobile').attr('onClick', 'return false');
+	$('#loginGoogle, #loginGoogleMobile').html('<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>');
 	
 	// firebase.auth().signInWithRedirect(googleProvider);
 	signIn(googleProvider);
@@ -24,9 +24,9 @@ function googleSignIn() {
 /***Facebook Sign In***/
 function facebookSignIn() {
 	//Altera botao de login
-	$('#loginGoogle').attr('disabled', true);
-	$('#loginFacebook').attr('onClick', 'return false');
-	$('#loginFacebook').html('<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>');
+	$('#loginGoogle, #loginGoogleMobile').attr('disabled', true);
+	$('#loginFacebook, #loginFacebookMobile').attr('onClick', 'return false');
+	$('#loginFacebook, #loginFacebookMobile').html('<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>');
 	
 	facebookProvider.addScope('email');
 	signIn(facebookProvider);
@@ -45,6 +45,8 @@ function signIn(provedor) {
 		$('.botao-login').attr('disabled', false);
 		$('#loginGoogle').html('<i class="material-icons left"><img src="../../rsc/login/icones/google.png"></i>Entrar com o Google');
 		$('#loginFacebook').html('<i class="material-icons left"><img src="../../rsc/login/icones/facebook-box.png"></i>Entrar com o Facebook');
+		$('#loginGoogleMobile').html('Entrar c/ Google');
+		$('#loginFacebookMobile').html('Entrar c/ Facebook');
 		
 		var errorCode = error.code;
 		//Erro de ja ter cadastrado com outro provider
