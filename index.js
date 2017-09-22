@@ -582,23 +582,25 @@ function estaDisponivel(evento, connection, callback) {
 function reordenaConfirmados(post, connection, callback) {
 	//Atualiza posicoes do ranking
 	connection.query('SELECT * FROM `pessoa-evento` WHERE IDEvento = ? ORDER BY Colocacao ASC', [post.evento, post.usuario], function(err, rows, fields) {
-		var iteracao = rows.length;
-		
+		var numRows = rows.length;
 		if(!err) {
-			if(iteracao == 0) {
+			if(numRows == 0) {
 				callback(false);
 			} else {
+				var iteracao = 0;
 				//Atualiza a posicao no ranking
-				for(var i = 0; i < rows.length; i++) {
+				for(var i = 0; i < numRows; i++) {
 					//Verifica se esta na lista de espera
 					var espera;
 					((i + 1) > post.max) ? espera = 1 : espera = 0;
 					
-					connection.query('UPDATE `pessoa-evento` SET Colocacao = ?, ListaEspera = ? WHERE IDPessoa = ? AND IDEvento = ?', [i + 1, espera, rows[i].IDPessoa, post.evento]);
-					
-					if(i == (iteracao - 1)) {
-						callback(true);
-					}
+					connection.query('UPDATE `pessoa-evento` SET Colocacao = ?, ListaEspera = ? WHERE IDPessoa = ? AND IDEvento = ?', [i + 1, espera, rows[i].IDPessoa, post.evento], function(err, rows, fields) {
+						iteracao++;
+
+						if(iteracao == numRows) {
+							callback(true);
+						}
+					});					
 				}
 			}
 			
@@ -624,9 +626,10 @@ function printTabela(connection, tabela) {
 //*****Monta Ranking*****//
 function montaRanking(connection, callback) {
 	connection.query('SELECT ID, Nome, FatorK FROM pessoa ORDER BY FatorK DESC', function(err, rows, fields) {
-		var iteracao = rows.length;
+		var numRows = rows.length;
 		
 		if(!err) {
+			var iteracao = 0;
 			//Atualiza a posicao no ranking
 			var promessa = new Promise(function(resolve, release) {
 				for(var i = 0; i < rows.length; i++) {
@@ -635,19 +638,22 @@ function montaRanking(connection, callback) {
 						rows[0].Posicao = 1;
 					} else {
 						if(rows[i].FatorK == rows[i - 1].FatorK) {
-							connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [rows[i - 1].Posicao, rows[i].ID]);
+							connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [rows[i - 1].Posicao, rows[i].ID], function(err, rows, fields) {
+								iteracao++;
+
+								if(iteracao == numRows) {
+									resolve();
+								}
+							});
 							rows[i].Posicao = rows[i - 1].Posicao;
-							
-							if(i == (iteracao - 1)) {
-								resolve();
-							}
 						} else {
-							connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [(i + 1), rows[i].ID]);
-							
-							if(i == (iteracao - 1)) {
-								resolve();
-							}
-							
+							connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [(i + 1), rows[i].ID], function(err, rows, fields) {
+								iteracao++;
+
+								if(iteracao == numRows) {
+									resolve();
+								}
+							});
 							rows[i].Posicao = i + 1;
 						}
 					}
