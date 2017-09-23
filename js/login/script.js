@@ -56,12 +56,12 @@ function signIn(provedor) {
 		
 		//Erro de ja ter cadastrado com outro provider
 		if(errorCode == 'auth/account-exists-with-different-credential') {
-			if(confirm("O email usado na sua conta já foi cadastrado no site. Deseja entrar com a outra rede social?")) {
 			//Pega as credenciais desse email
-				firebase.auth().fetchProvidersForEmail(email).then(providers => {
+			firebase.auth().fetchProvidersForEmail(email).then(providers => {
+				if(confirm("O email usado na sua conta já foi cadastrado no site. Deseja entrar com a outra rede social? (Você deve permitir os popups)")) {
 					providers[0] == "google.com" ? googleSignIn() : facebookSignIn();
-				});
-			}
+				}
+			});
 		}
 	});
 }
