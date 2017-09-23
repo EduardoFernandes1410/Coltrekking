@@ -639,11 +639,11 @@ function reordenaConfirmados(post, connection, callback) {
 					
 					connection.query('UPDATE `pessoa-evento` SET Colocacao = ?, ListaEspera = ? WHERE IDPessoa = ? AND IDEvento = ?', [i + 1, espera, rows[i].IDPessoa, post.evento], function(err, rows, fields) {
 						iteracao++;
-
+						
 						if(iteracao == numRows) {
 							callback(true);
 						}
-					});					
+					});
 				}
 			}
 			

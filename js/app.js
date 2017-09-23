@@ -294,7 +294,7 @@
 				//Emite alerta sobre o status da operacao e redireciona
 				if(answer) {
 					Materialize.toast("Evento editado com sucesso!", 2000);
-					$location.path('/main-page');
+					$location.url($location.path('/main-page'));
 					
 					//Recarrega os eventos
 					$rootScope.$broadcast('RecarregarEventos', true);

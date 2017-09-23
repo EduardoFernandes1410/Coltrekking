@@ -4,10 +4,16 @@ var facebookProvider = new firebase.auth.FacebookAuthProvider();
 var user;
 var url;
 var usuarioInfo = new Object();
+window.provedor = "";
 
 /***Quando a pagina carrega***/
 window.onload = function() {
 	initApp();
+}
+
+/***Sign In com Provedor Correto (apos erro)***/
+function signInProvedor() {
+	window.provedor == "google" ? googleSignIn() : facebookSignIn();
 }
 
 /***Google Sign In***/
@@ -17,7 +23,6 @@ function googleSignIn() {
 	$('#loginGoogle, #loginGoogleMobile').attr('onClick', 'return false');
 	$('#loginGoogle, #loginGoogleMobile').html('<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>');
 	
-	// firebase.auth().signInWithRedirect(googleProvider);
 	signIn(googleProvider);
 }
 
@@ -58,9 +63,9 @@ function signIn(provedor) {
 		if(errorCode == 'auth/account-exists-with-different-credential') {
 			//Pega as credenciais desse email
 			firebase.auth().fetchProvidersForEmail(email).then(providers => {
-				if(confirm("O email usado na sua conta já foi cadastrado no site. Deseja entrar com a outra rede social? (Você deve permitir os popups)")) {
-					providers[0] == "google.com" ? googleSignIn() : facebookSignIn();
-				}
+				window.provedor = (providers[0] == "google.com" ? "google" : "facebook");
+				//Abre o modal
+				$('#modal-provedor').modal('open');
 			});
 		}
 	});
