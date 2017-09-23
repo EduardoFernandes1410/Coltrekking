@@ -48,16 +48,21 @@ function signIn(provedor) {
 		$('#loginGoogleMobile').html('Entrar c/ Google');
 		$('#loginFacebookMobile').html('Entrar c/ Facebook');
 		
-		var errorCode = error.code;
-		//Erro de ja ter cadastrado com outro provider
-		if(errorCode == 'auth/account-exists-with-different-credential') {
-			alert("O email usado na sua conta já foi cadastrado no site. Tente entrar com a outra rede social.");
-		}
-
 		// Informacoes do erro
+		var errorCode = error.code;
 		var errorMessage = error.message;
 		var email = error.email;
 		var credential = error.credential;
+		
+		//Erro de ja ter cadastrado com outro provider
+		if(errorCode == 'auth/account-exists-with-different-credential') {
+			if(confirm("O email usado na sua conta já foi cadastrado no site. Deseja entrar com a outra rede social?")) {
+			//Pega as credenciais desse email
+				firebase.auth().fetchProvidersForEmail(email).then(providers => {
+					providers[0] == "google.com" ? googleSignIn() : facebookSignIn();
+				});
+			}
+		}
 	});
 }
 
@@ -91,27 +96,4 @@ function initApp() {
 			console.log("Nao tem user");
 		}					
 	});
-
-	/*Pega resultado de redirecionamento*/
-	// firebase.auth().getRedirectResult().then(function(result) {
-	// 	if(result.credential) {
-	// 		var token = result.credential.accessToken;
-	// 	}
-	// 	//Info do usuario logado
-	// 	user = result.user;
-	// }).catch(function(error) {
-	// 	//Aqui cuida dos erros
-	// 	var errorCode = error.code;
-	// 	//Erro de ja ter cadastrado com outro provider
-	// 	if(errorCode == 'auth/account-exists-with-different-credential') {
-	// 		alert("O email usado na sua conta já foi cadastrado no site. Tente entrar com a outra rede social.");
-	// 	}
-
-	// 	var errorMessage = error.message;
-
-	// 	//O email do usuario logado
-	// 	var email = error.email;
-	// 	//Tipo de credencial do FireBase usada
-	// 	var credential = error.credential;
-	// });
 }
