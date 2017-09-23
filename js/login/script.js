@@ -47,11 +47,7 @@ function signIn(provedor) {
 		user = result.user;
 	}).catch(function(error) {
 		//Reativa os botoes
-		$('.botao-login').attr('disabled', false);
-		$('#loginGoogle').html('<i class="material-icons left"><img src="../../rsc/login/icones/google.png"></i>Entrar com o Google');
-		$('#loginFacebook').html('<i class="material-icons left"><img src="../../rsc/login/icones/facebook-box.png"></i>Entrar com o Facebook');
-		$('#loginGoogleMobile').html('Entrar c/ Google');
-		$('#loginFacebookMobile').html('Entrar c/ Facebook');
+		reativarBotoes();
 		
 		// Informacoes do erro
 		var errorCode = error.code;
@@ -93,6 +89,8 @@ function initApp() {
 					window.location = answer;
 				},
 				error: function(answer, status) {
+					reativarBotoes();
+					console.log(answer.responseText);
 					alert("Erro ao realizar o login! Tente novamente");
 				}
 			});
@@ -101,4 +99,13 @@ function initApp() {
 			console.log("Nao tem user");
 		}					
 	});
+}
+
+/***Reativar botoes***/
+function reativarBotoes() {
+	$('.botao-login').attr('disabled', false);
+	$('#loginGoogle').html('<i class="material-icons left"><img src="../../rsc/login/icones/google.png"></i>Entrar com o Google');
+	$('#loginFacebook').html('<i class="material-icons left"><img src="../../rsc/login/icones/facebook-box.png"></i>Entrar com o Facebook');
+	$('#loginGoogleMobile').html('Entrar c/ Google');
+	$('#loginFacebookMobile').html('Entrar c/ Facebook');
 }

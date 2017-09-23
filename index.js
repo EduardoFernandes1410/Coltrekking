@@ -75,8 +75,9 @@ app.get("/", function(req, res) {
 
 //*****Posta usuario logado*****//
 app.post("/post-user", function(req, res) {
-	if(!req.body) {
-		res.send(false);
+	if(!req.body.ID) {
+		res.status(500);
+		res.send("Problema com o firebase");
 	} else {
 		req.session.usuarioLogado = req.body;
 
@@ -93,7 +94,8 @@ app.post("/post-user", function(req, res) {
 					//Depois de fazer login, manda pagina a ser redirecionado
 					res.send("/main-page");
 				} else {
-					res.send(false);
+					res.status(500);
+					res.send("Algo inesperado aconteceu");
 				}
 			});
 		});
