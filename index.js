@@ -120,7 +120,7 @@ app.get("/get-user", function(req, res) {
 
 //*****Criar Evento*****//
 app.post("/criar-evento", function(req, res) {
-	if(!req.session.usuarioLogado) {
+	if(!req.session.usuarioLogado.ID) {
 		res.send(false);
 	} else {
 		handleDatabase(req, res, function(req, res, connection) {
@@ -133,7 +133,7 @@ app.post("/criar-evento", function(req, res) {
 
 //*****Editar Evento*****//
 app.post("/editar-evento", function(req, res) {
-	if(!req.session.usuarioLogado) {
+	if(!req.session.usuarioLogado.ID) {
 		res.send(false);
 	} else {
 		handleDatabase(req, res, function(req, res, connection) {
@@ -146,7 +146,7 @@ app.post("/editar-evento", function(req, res) {
 
 //******Get Eventos*****//
 app.get("/eventos", function(req, res) {
-	if(!req.session.usuarioLogado) {
+	if(!req.session.usuarioLogado.ID) {
 		res.send(false);
 	} else {
 		handleDatabase(req, res, function(req, res, connection) {
@@ -159,7 +159,7 @@ app.get("/eventos", function(req, res) {
 
 //*****Post Confirmados*****//
 app.post("/confirmados", function(req, res) {
-	if(!req.session.usuarioLogado) {
+	if(!req.session.usuarioLogado.ID) {
 		res.send(false);
 	} else {
 		handleDatabase(req, res, function(req, res, connection) {
@@ -172,7 +172,7 @@ app.post("/confirmados", function(req, res) {
 
 //*****Post Confirmados por Mim*****//
 app.post("/confirmados-por-mim", function(req, res) {
-	if(!req.session.usuarioLogado) {
+	if(!req.session.usuarioLogado.ID) {
 		res.send(false);
 	} else {
 		handleDatabase(req, res, function(req, res, connection) {
@@ -185,7 +185,7 @@ app.post("/confirmados-por-mim", function(req, res) {
 
 //*****Confirmar Evento*****//
 app.post("/confirmar-evento", function(req, res) {
-	if(!req.session.usuarioLogado) {
+	if(!req.session.usuarioLogado.ID) {
 		res.send(false);
 	} else {
 		handleDatabase(req, res, function(req, res, connection) {
@@ -198,7 +198,7 @@ app.post("/confirmar-evento", function(req, res) {
 
 //*****Cancelar Evento*****//
 app.post("/cancelar-evento", function(req, res) {
-	if(!req.session.usuarioLogado) {
+	if(!req.session.usuarioLogado.ID) {
 		res.send(false);
 	} else {
 		handleDatabase(req, res, function(req, res, connection) {
@@ -211,7 +211,7 @@ app.post("/cancelar-evento", function(req, res) {
 
 //*****Finalizar Evento*****//
 app.post("/finalizar-evento", function(req, res) {
-	if(!req.session.usuarioLogado) {
+	if(!req.session.usuarioLogado.ID) {
 		res.send(false);
 	} else {
 		handleDatabase(req, res, function(req, res, connection) {
@@ -224,7 +224,7 @@ app.post("/finalizar-evento", function(req, res) {
 
 //*****Excluir Evento*****//
 app.post("/excluir-evento", function(req, res) {
-	if(!req.session.usuarioLogado) {
+	if(!req.session.usuarioLogado.ID) {
 		res.send(false);
 	} else {
 		handleDatabase(req, res, function(req, res, connection) {
@@ -237,7 +237,7 @@ app.post("/excluir-evento", function(req, res) {
 
 //*****Criar Postagem*****//
 app.post("/criar-postagem", function(req, res) {
-	if(!req.session.usuarioLogado) {
+	if(!req.session.usuarioLogado.ID) {
 		res.send(false);
 	} else {
 		handleDatabase(req, res, function(req, res, connection) {
@@ -250,7 +250,7 @@ app.post("/criar-postagem", function(req, res) {
 
 //*****Get Postagem*****//
 app.get("/get-postagem", function(req, res) {
-	if(!req.session.usuarioLogado) {
+	if(!req.session.usuarioLogado.ID) {
 		res.send(false);
 	} else {
 		handleDatabase(req, res, function(req, res, connection) {
@@ -263,7 +263,7 @@ app.get("/get-postagem", function(req, res) {
 
 //*****Ranking*****//
 app.get("/ranking", function(req, res) {
-	if(!req.session.usuarioLogado) {
+	if(!req.session.usuarioLogado.ID) {
 		res.send(false);
 	} else {
 		handleDatabase(req, res, function(req, res, connection) {
