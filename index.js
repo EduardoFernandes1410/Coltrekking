@@ -75,7 +75,7 @@ app.get("/", function(req, res) {
 
 //*****Posta usuario logado*****//
 app.post("/post-user", function(req, res) {
-	if(!req.body.ID) {
+	if(!req.body.ID || req.body.ID.length < 5) {
 		res.status(500);
 		res.send("Problema com o firebase");
 	} else {
@@ -83,22 +83,29 @@ app.post("/post-user", function(req, res) {
 
 		//Adiciona usuario ao DB
 		handleDatabase(req, res, function(req, res, connection) {
-			addDB(req, connection);
-		});
-		req.session.loginSucesso = true;
-
-		handleDatabase(req, res, function(req, res, connection) {
-			//Pega info como fatork, posicao, etc
-			pegaInfoUsuarioLogado(req, connection, function(status) {
-				if (status) {
-					//Depois de fazer login, manda pagina a ser redirecionado
-					res.send("/main-page");
+			addDB(req, connection, function(status) {
+				if(status) {
+					req.session.loginSucesso = true;
+					
+					handleDatabase(req, res, function(req, res, connection) {
+						//Pega info como fatork, posicao, etc
+						pegaInfoUsuarioLogado(req, connection, function(status) {
+							if (status) {
+								//Depois de fazer login, manda pagina a ser redirecionado
+								res.send("/main-page");
+							} else {
+								res.status(500);
+								res.send("Algo inesperado aconteceu");
+							}
+						});
+					});
 				} else {
 					res.status(500);
-					res.send("Algo inesperado aconteceu");
+					res.send("Problema com o firebase");
 				}
 			});
 		});
+
 	}
 });
 
@@ -286,7 +293,7 @@ app.get("/logout", function(req, res) {
 
 /***************************BANCO DE DADOS*****************************/
 //*****Adicionar usuario ao DB*****//
-function addDB(req, connection) {
+function addDB(req, connection, callback) {
 	//Cria usuario com propriedades do req.session.usuarioLogado
 	var usuario = new Usuario(req.session.usuarioLogado.Nome, req.session.usuarioLogado.Email, req.session.usuarioLogado.Foto, req.session.usuarioLogado.ID, 0, 1, 0, 0);
 
@@ -296,10 +303,12 @@ function addDB(req, connection) {
 			
 		if(!err) {
 			// console.log(rows);
+			callback(true);
 		}
 		else {
 			// console.log(err);
 			// console.log('Error while performing Query (ADICIONA AO DB PESSOAS)');
+			callback(false);
 		}
 	});
 }
