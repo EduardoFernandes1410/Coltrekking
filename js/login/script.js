@@ -8,6 +8,12 @@ window.provedor = "";
 
 /***Quando a pagina carrega***/
 window.onload = function() {
+	//Verifica browser do cara (da problema com o do facebook)
+	alert((function isFacebookApp() {
+	    var ua = navigator.userAgent || navigator.vendor || window.opera;
+		return (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1);
+	})());
+	
 	initApp();
 }
 
