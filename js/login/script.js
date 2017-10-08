@@ -9,10 +9,14 @@ window.provedor = "";
 /***Quando a pagina carrega***/
 window.onload = function() {
 	//Verifica browser do cara (da problema com o do facebook)
-	alert((function isFacebookApp() {
+	function isFacebookApp() {
 	    var ua = navigator.userAgent || navigator.vendor || window.opera;
 		return (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1);
-	})());
+	}
+	
+	if(isFacebookApp()) {
+		alert("Atenção, o site Coltrekking pode apresentar problemas ao ser acessado pelo navegador do Facebook. É altamente recomendado utilizar outro navegador (de preferência do Google Chrome)");
+	} 
 	
 	initApp();
 }
