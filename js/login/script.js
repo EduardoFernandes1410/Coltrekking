@@ -15,7 +15,7 @@ window.onload = function() {
 	}
 	
 	if(isFacebookApp()) {
-		alert("Atenção, o site Coltrekking pode apresentar problemas ao ser acessado pelo navegador do Facebook. É altamente recomendado utilizar outro navegador (de preferência do Google Chrome)");
+		alert("Atenção! O site Coltrekking pode apresentar problemas ao ser acessado pelo navegador do Facebook. É altamente recomendado utilizar outro navegador (de preferência o Google Chrome).");
 	} 
 	
 	initApp();
