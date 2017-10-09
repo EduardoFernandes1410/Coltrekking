@@ -446,8 +446,8 @@ function confirmarEventoDB(data, connection, callback) {
 								IDEvento: data.evento,
 								Colocacao: (rows.length + 1),
 								ListaEspera: espera,
-								dataInscricao: new Date().toUTCString()
-							}
+								DataInscricao: new Date().toUTCString()
+							};
 							
 							//Adiciona pessoa ao evento
 							connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
@@ -455,6 +455,7 @@ function confirmarEventoDB(data, connection, callback) {
 									//Atualiza posicao do ranking
 									var data = {
 										evento: post.IDEvento,
+										max: max,
 										usuario: post.IDPessoa
 									};
 									
