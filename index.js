@@ -7,7 +7,7 @@ var express			= require('express');
 var mysql			= require('mysql');
 var bodyParser		= require('body-parser');
 var session			= require('express-session');
-var config			= require('./config')
+var aws				= require('aws-sdk');
 var app 			= express();
 
 //*****DEPENDENCIAS*****//
@@ -24,7 +24,14 @@ app.use(express.static('./', {
 }));
 
 //*****MySQL*****//
-var pool = mysql.createPool(config);
+var pool = mysql.createPool({
+	connectionLimit : 300,
+	host	: process.env.DB_HOST,
+	user	: process.env.DB_USER,
+	password: process.env.DB_PASSWORD,
+	database: process.env.DB_DATABASE,
+	debug	: false
+});
 
 // Conecta ao DB
 function handleDatabase(req, res, call) {

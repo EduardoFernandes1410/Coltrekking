@@ -8,6 +8,7 @@
     "angular": "^1.6.4",
     "angular-route": "^1.6.4",
     "angular-sanitize": "^1.6.5",
+    "aws-sdk": "^2.131.0",
     "body-parser": "*",
     "express": "^4.10.6",
     "express-session": "*",
