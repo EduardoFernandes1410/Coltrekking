@@ -7,17 +7,24 @@ var express			= require('express');
 var mysql			= require('mysql');
 var bodyParser		= require('body-parser');
 var session			= require('express-session');
+var config			= require('./config')
 var app 			= express();
 
+//*****DEPENDENCIAS*****//
+//Utilizar o BodyParser
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+//Utilizar o express-session
+app.use(session({secret: 'S3NH4'}));
+
+//Utilizar o express-static
+app.use(express.static('./', {
+	index: 'html/login/index.html'
+}));
+
 //*****MySQL*****//
-var pool = mysql.createPool({
-	connectionLimit : 300,
-	host	: 'us-cdbr-iron-east-05.cleardb.net',
-	user	: 'b8da9162116c36',
-	password: '321c299a',
-	database: 'heroku_d85ec50b8eb7067',
-	debug	:  false
-});
+var pool = mysql.createPool(config);
 
 // Conecta ao DB
 function handleDatabase(req, res, call) {
@@ -35,19 +42,6 @@ function handleDatabase(req, res, call) {
 		});
 	});
 }
-
-//*****DEPENDENCIAS*****//
-//Utilizar o BodyParser
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-//Utilizar o express-session
-app.use(session({secret: 'S3NH4'}));
-
-//Utilizar o express-static
-app.use(express.static('./', {
-	index: 'html/login/index.html'
-}));
 
 /*********************************PAGINAS********************************/
 var index = '/html/index.html';
