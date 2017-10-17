@@ -516,7 +516,7 @@
 		
 		//Verifica se evento foi confirmado pelo cara
 		$scope.estaConfirmado = function(evento) {
-			if(!$rootScope.eventosConfirmados) {
+			if(!$rootScope.eventosConfirmados || $rootScope.eventosConfirmados.length == 0) {
 				return false;
 			} else {
 				return $rootScope.eventosConfirmados.some(function(element) {
@@ -608,9 +608,10 @@
 				Texto: params.TextoPostagem.replace(/\n\r?/g, '<br />'), //Insere os break-lines
 				EventoID: params.EventoAtrelado || 0,
 				Fixado: params.Fixado || false,
-				Data: new Date().toString().substring(0, 24) //Pega data em horario local sem lixo
-			};			
-			
+				Data: new Date().toString().substring(0, 24), //Pega data em horario local sem lixo
+				AdminID: $rootScope.usuario.ID
+			};
+					
 			//POST /criar-postagem
 			httpService.post('/criar-postagem', data, function(answer) {
 				//Emite alerta sobre o status da operacao e redireciona
@@ -652,9 +653,13 @@
 					
 					//Coisas pro filtro
 					$timeout(function() {
-						$("#filtro-posts option:first-child").remove();
-						$("#filtro-posts option:first-child").attr("selected", true);
+						if($("#filtro-posts option:first-child").val() == '?') {
+							$("#filtro-posts option:first-child").remove();
+							$("#filtro-posts option:first-child").attr("selected", true);
+						}
+						$scope.filtrar();
 					}, 200);
+					
 				} else {
 					$scope.postagem = false;
 				}
@@ -669,6 +674,25 @@
 			} else {
 				$scope.postagem = $scope.postagemFixada.filter(post => post.EventoID == idFiltro);
 			}
+		}
+		
+		$scope.excluirPostagem = function(id) {
+			var data = {
+				ID: id
+			};
+			
+			//POST /excluir-postagem
+			httpService.post('/excluir-postagem', data, function(answer) {
+				//Emite alerta sobre o status da operacao e redireciona
+				if(answer) {
+					Materialize.toast("Postagem excluída com sucesso!", 2000);
+					
+					//Recarrega os posts
+					$rootScope.$broadcast('RecarregarPosts', true);
+				} else {
+					Materialize.toast("Erro ao excluir a postagem!", 3000);
+				}
+			});
 		}
 		
 		//Inicializa

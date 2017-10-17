@@ -234,11 +234,44 @@ nav {
 		margin-top: 0px;
 	}
 	
+	.nome-post {
+		margin-top: 14px;
+		margin-bottom: 18px;
+		font-weight: 400;
+		color: #ff6e40;
+	}
+	
+	.chip {
+		height: 22px !important;
+		font-size: 11px !important;
+		line-height: 22px !important;
+		
+		img {
+			height: 22px !important;
+			width: 22px !important;
+		}		
+	}
+	
 	.data-post {
 		color: rgba(0,0,0,0.6);
-		font-size: 12px;
+		font-size: 11px;
+		display: inline;
+	}
+	
+	.delete-post, .delete-post-fixado {
+		float: right;
+		color: rgba(0, 0, 0, 0.6);
+		font-size: 21px;
+	}
+	
+	.delete-post-fixado {
 		margin-top: -5px;
-		margin-bottom: 18px;
+	}
+	
+	.data-post-fixado {
+		margin-top: -5px !important;
+		margin-bottom: 18px !important;
+		display: block !important;
 	}
 	
 	#filtro {

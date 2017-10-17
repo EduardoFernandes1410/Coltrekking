@@ -152,11 +152,37 @@ nav .tabs {
   font-weight: 300;
   margin-top: 0px; }
 
+#news-feed .nome-post {
+  margin-top: 14px;
+  margin-bottom: 18px;
+  font-weight: 400;
+  color: #ff6e40; }
+
+#news-feed .chip {
+  height: 22px !important;
+  font-size: 11px !important;
+  line-height: 22px !important; }
+  #news-feed .chip img {
+    height: 22px !important;
+    width: 22px !important; }
+
 #news-feed .data-post {
   color: rgba(0, 0, 0, 0.6);
-  font-size: 12px;
-  margin-top: -5px;
-  margin-bottom: 18px; }
+  font-size: 11px;
+  display: inline; }
+
+#news-feed .delete-post, #news-feed .delete-post-fixado {
+  float: right;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 21px; }
+
+#news-feed .delete-post-fixado {
+  margin-top: -5px; }
+
+#news-feed .data-post-fixado {
+  margin-top: -5px !important;
+  margin-bottom: 18px !important;
+  display: block !important; }
 
 #news-feed #filtro {
   margin-bottom: 16px; }

@@ -256,6 +256,19 @@ app.post("/criar-postagem", function(req, res) {
 	}
 });
 
+//*****Excluir Postagem*****//
+app.post("/excluir-postagem", function(req, res) {
+	if(!req.session.usuarioLogado.ID) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			excluirPostagemDB(req, req.body, connection, function(status) {
+				res.send(status);
+			});
+		});
+	}
+});
+
 //*****Get Postagem*****//
 app.get("/get-postagem", function(req, res) {
 	if(!req.session.usuarioLogado.ID) {
@@ -585,7 +598,7 @@ function criarPostagemDB(req, data, connection, callback) {
 
 //*****Get Postagem*****//
 function getPostagemDB(connection, callback) {
-	connection.query('SELECT postagem.*, evento.Nome FROM postagem LEFT JOIN evento ON postagem.EventoID = evento.ID', function(err, rows, fields) {
+	connection.query('SELECT postagem.*, evento.Nome, pessoa.Nome AS AdminNome, pessoa.Foto AS AdminFoto FROM postagem LEFT JOIN evento ON postagem.EventoID = evento.ID LEFT JOIN pessoa ON postagem.AdminID = pessoa.ID', function(err, rows, fields) {
 		connection.release();
 		
 		if(!err) {
@@ -598,10 +611,26 @@ function getPostagemDB(connection, callback) {
 	});
 }
 
+//*****Excluir Postagem*****//
+function excluirPostagemDB(req, post, connection, callback) {
+	if(req.session.usuarioLogado.Admin) {
+		connection.query('DELETE FROM `postagem` WHERE ID = ?', post.ID, function(err, rows, fields) {
+			connection.release();
+
+			if(!err) {
+				callback(true);
+			} else {
+				callback(false);
+			}
+		});
+	} else {
+		callback(false);
+	}
+}
+
 //*****Esta Inscrito*****//
 function estaInscrito(post, connection, callback) {	
 	connection.query('SELECT * FROM `pessoa-evento` WHERE IDPessoa = ? AND IDEvento = ?', [post.usuario, post.evento], function(err, rows, fields) {
-		
 		if(!err) {
 			//Se esta ou nao inscrito
 			rows.length == 0 ? callback(true) : callback(false);
@@ -615,7 +644,6 @@ function estaInscrito(post, connection, callback) {
 //*****Esta Disponivel*****//
 function estaDisponivel(evento, connection, callback) {
 	connection.query('SELECT DataInscricao, FimInscricao FROM `evento` WHERE ID = ?', evento, function(err, rows, fields) {
-		
 		if(!err) {
 			var dataEvento = rows[0].DataInscricao;
 			var dataFim = rows[0].FimInscricao;

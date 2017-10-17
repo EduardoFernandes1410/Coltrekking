@@ -146,7 +146,10 @@
 									
 									<div class="card" ng-repeat="post in postagemFixada | filter: {Fixado: 1}">
 										<div class="card-content">
-											<p class="data-post">{{post.Data}}</p>
+											<a href="#" onclick="return false;" ng-click="excluirPostagem(post.ID)">
+												<i ng-if="usuario.Admin" class="material-icons delete-post-fixado">delete</i>
+											</a>
+											<p class="data-post data-post-fixado">{{post.Data}}</p>
 											
 											<!-- Corpo da postagem -->
 											<p ng-bind-html="post.Texto"></p>
@@ -173,8 +176,16 @@
 									<div class="row">
 										<div class="card" ng-repeat="post in postagem | filter: {Fixado: 0}">
 											<div class="card-content">
-												<span ng-if="post.Nome" class="card-title">{{post.Nome}}</span>
+												<div class="chip admin-post">
+													<img ng-src="{{post.AdminFoto}}" alt="Contact Person">
+													{{post.AdminNome}}
+												</div>
 												<p class="data-post">{{post.Data}}</p>
+												<a href="#" onclick="return false;" ng-click="excluirPostagem(post.ID)">
+													<i ng-if="usuario.Admin" class="material-icons delete-post">delete</i>
+												</a>
+												
+												<span ng-if="post.Nome" class="card-title nome-post">{{post.Nome}}</span>
 												
 												<!-- Corpo da postagem -->
 												<p ng-bind-html="post.Texto"></p>
