@@ -310,7 +310,8 @@
 	app.controller('EventosController', ['HTTPService', 'EventosService', '$timeout', '$rootScope', '$scope', '$interval', '$window', '$location',  function(httpService, eventosService, $timeout, $rootScope, $scope, $interval, $window, $location) {
 		//Funcao Countdown
 		$scope.funcaoCountdown = function(element, dataCountdown, controle) {
-			var agora = new Date(new Date().toUTCString().replace(" GMT", "")).getTime();
+			var agora = $scope.horaServidor;
+			// var agora = new Date(new Date().toUTCString().replace(" GMT", "")).getTime();
 			var distancia = dataCountdown - agora;
 			
 			//Transforma distancia em d h m s
@@ -350,7 +351,15 @@
 		$scope.eventosGetter = function() {
 			httpService.get('/eventos', function(answer) {
 				if(answer != false) {
-					$scope.eventos = answer;
+					$scope.eventos = answer.eventos;
+					$scope.horaServidor = answer.hora;
+					
+					//Atualiza hora do servidor
+					if(!$scope.intervalo) {
+						$scope.intervalo = $interval(function() {
+							$scope.horaServidor += 1000;
+						}, 1000);
+					}
 					
 					//Para cada evento
 					$scope.eventos.forEach(function(element) {
