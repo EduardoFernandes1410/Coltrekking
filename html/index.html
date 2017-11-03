@@ -224,8 +224,8 @@
 									
 									<!-- Scroll Spy -->
 									<ul class="section table-of-contents">
-										<li ng-repeat="evento in eventos">
-											<a ng-attr-href="{{'#' + evento.ID}}" ng-if="!evento.Finalizado">{{evento.Nome}}</a>
+										<li ng-repeat="evento in eventos" ng-if="!evento.Finalizado">
+											<a ng-attr-href="{{'#' + evento.ID}}">{{evento.Nome}}</a>
 										</li>
 									</ul>
 								</div>
@@ -340,8 +340,8 @@
 
 												<!--Linha para cada usuario-->
 												<tbody>
-													<tr ng-repeat="pessoa in evento.Confirmados" ng-class="{espera: pessoa.ListaEspera}">
-														<td>{{pessoa.Colocacao}}º</td>
+													<tr ng-repeat="pessoa in evento.Confirmados" ng-class="{espera: $index >= evento.NumeroMax}">
+														<td>{{$index + 1}}º</td>
 														<td>{{pessoa.Nome}}</td>
 														<td class="hide-on-med-and-down">{{pessoa.DataInscricao}}</td>
 													</tr>

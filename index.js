@@ -396,7 +396,12 @@ function getEventos(connection, callback) {
 		
 		if(!err) {
 			//Retorna o inverso do array, para mostrar pela ordem de criacao
-			callback(rows.reverse());
+			var retorno = {
+				eventos: rows.reverse(),
+				hora: new Date(new Date().toUTCString().replace(" GMT", "")).getTime()
+			};
+			
+			callback(retorno);
 		} else {
 			//console.log(err);
 			callback(false);
@@ -407,7 +412,7 @@ function getEventos(connection, callback) {
 //*****Get Confirmados*****//
 function getConfirmados(data, connection, callback) {
 	//Get os IDs dos confirmados com INNER JOIN
-	connection.query('SELECT ID, Nome, FatorK, `pessoa-evento`.ListaEspera, `pessoa-evento`.Colocacao, `pessoa-evento`.DataInscricao FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ? ORDER BY `pessoa-evento`.Colocacao', data, function(err, rows, fields) {
+	connection.query('SELECT ID, Nome, FatorK, `pessoa-evento`.ListaEspera, `pessoa-evento`.Colocacao, `pessoa-evento`.DataInscricao FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ? ORDER BY `pessoa-evento`.DataHoraInscricao, `pessoa-evento`.Colocacao', data, function(err, rows, fields) {
 		connection.release();
 		
 		if(!err) {
@@ -448,41 +453,32 @@ function confirmarEventoDB(data, connection, callback) {
 				//Verifica se o cara nao ja esta inscrito
 				estaInscrito(data, connection, function(status) {
 					//Se nao esta inscrito
-					if(status) {
-						//Pega o numero de inscritos no evento
-						connection.query('SELECT * FROM `pessoa-evento` INNER JOIN `evento` ON `evento`.ID = `pessoa-evento`.IDEvento WHERE IDEvento = ?', data.evento, function(err, rows, fields) {
-							var max = (rows[0]) ? rows[0].NumeroMax : 1;
-							var espera = ((rows.length + 1) > max) ? 1 : 0;
-							
-							//Seta o post
-							post = {
-								IDPessoa: data.usuario,
-								IDEvento: data.evento,
-								Colocacao: (rows.length + 1),
-								ListaEspera: espera,
-								DataInscricao: new Date().toUTCString()
-							};
-							
-							//Adiciona pessoa ao evento
-							connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
-								if(!err) {
-									//Atualiza posicao do ranking
-									var data = {
-										evento: post.IDEvento,
-										max: max,
-										usuario: post.IDPessoa
-									};
-									
-									reordenaConfirmados(data, connection, function(status) {
-										connection.release();
-										callback(status);
-									});
-								} else {
-									//console.log('this.sql', this.sql);
-									//console.log(err);
-									callback(false);
-								}
-							});
+					if(status) {							
+						var datetime = new Date().toISOString();
+						datetime = datetime.split('T');
+						datetime[1] = datetime[1].split('.')[0];
+						datetime = datetime.join(' ');
+						
+						//Seta o post
+						post = {
+							IDPessoa: data.usuario,
+							IDEvento: data.evento,
+							Colocacao: 0,
+							ListaEspera: 0,
+							DataInscricao: new Date().toUTCString(),
+							DataHoraInscricao: datetime
+						};
+						
+						//Adiciona pessoa ao evento
+						connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
+							if(!err) {
+								connection.release();
+								callback(true);
+							} else {
+								//console.log('this.sql', this.sql);
+								//console.log(err);
+								callback(false);
+							}
 						});
 					} else {
 						callback(false);
@@ -502,11 +498,8 @@ function cancelarEventoDB(post, connection, callback) {
 	if(post.usuario) {
 		connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ? AND IDPessoa = ?', [post.evento, post.usuario], function(err, rows, fields) {
 			if(!err) {
-				//Atualiza posicao do ranking
-				reordenaConfirmados(post, connection, function(status) {
-					connection.release();
-					callback(status);
-				});
+				connection.release();
+				callback(true);
 			} else {
 				//console.log('Error while performing Query');
 				//console.log(err);
@@ -657,38 +650,6 @@ function estaDisponivel(evento, connection, callback) {
 		} else {
 			//console.log('Error while performing Query');
 			//console.log(err);
-			callback(false);
-		}
-	});
-}
-
-//*****Reordena Confirmados*****//
-function reordenaConfirmados(post, connection, callback) {
-	//Atualiza posicoes do ranking
-	connection.query('SELECT * FROM `pessoa-evento` WHERE IDEvento = ? ORDER BY Colocacao ASC', [post.evento, post.usuario], function(err, rows, fields) {
-		var numRows = rows.length;
-		if(!err) {
-			if(numRows == 0) {
-				callback(false);
-			} else {
-				var iteracao = 0;
-				//Atualiza a posicao no ranking
-				for(var i = 0; i < numRows; i++) {
-					//Verifica se esta na lista de espera
-					var espera;
-					((i + 1) > post.max) ? espera = 1 : espera = 0;
-					
-					connection.query('UPDATE `pessoa-evento` SET Colocacao = ?, ListaEspera = ? WHERE IDPessoa = ? AND IDEvento = ?', [i + 1, espera, rows[i].IDPessoa, post.evento], function(err, rows, fields) {
-						iteracao++;
-						
-						if(iteracao == numRows) {
-							callback(true);
-						}
-					});
-				}
-			}
-			
-		} else {
 			callback(false);
 		}
 	});
