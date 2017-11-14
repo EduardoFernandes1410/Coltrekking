@@ -398,7 +398,7 @@ function getEventos(connection, callback) {
 			//Retorna o inverso do array, para mostrar pela ordem de criacao
 			var retorno = {
 				eventos: rows.reverse(),
-				hora: new Date(new Date().toUTCString().replace(" GMT", "")).getTime()
+				hora: new Date(new Date().toUTCString().).getTime()
 			};
 			
 			callback(retorno);
