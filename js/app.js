@@ -311,7 +311,7 @@
 		//Funcao Countdown
 		$scope.funcaoCountdown = function(element, dataCountdown, controle) {
 			var agora = $scope.horaServidor;
-			// var agora = new Date(new Date().toUTCString().replace(" GMT", "")).getTime();
+			console.log(agora);
 			var distancia = dataCountdown - agora;
 			
 			//Transforma distancia em d h m s
