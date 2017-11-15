@@ -311,7 +311,6 @@
 		//Funcao Countdown
 		$scope.funcaoCountdown = function(element, dataCountdown, controle) {
 			var agora = $scope.horaServidor;
-			console.log(agora);
 			var distancia = dataCountdown - agora;
 			
 			//Transforma distancia em d h m s
