@@ -396,9 +396,12 @@ function getEventos(connection, callback) {
 		
 		if(!err) {
 			//Retorna o inverso do array, para mostrar pela ordem de criacao
+			let horaCorreta = new Date(new Date().toUTCString().replace(" GMT", ""));
+			horaCorreta.setHours(horaCorreta.getHours() + 2);
+			
 			var retorno = {
 				eventos: rows.reverse(),
-				hora: new Date(new Date().toUTCString().replace(" GMT", "")).getTime()
+				hora: horaCorreta.getTime()
 			};
 			
 			callback(retorno);
