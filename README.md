@@ -1,2 +1,2 @@
 # Coltrekking
-The Amazing Coltrekking Website
+The Amazing Coltrekking Website!
