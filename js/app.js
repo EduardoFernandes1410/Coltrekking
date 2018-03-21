@@ -311,7 +311,7 @@
 		//Funcao Countdown
 		$scope.funcaoCountdown = function(element, dataCountdown, controle) {
 			var agora = $scope.horaServidor;
-			var distancia = dataCountdown - agora;
+			var distancia = dataCountdown - agora - 3600000; //-36000 Milissegundo pois os eventos estavam 1 hora adiantado e nao consegui achar o problema, por isso -36000 Milissegundo  (1 hora)
 			
 			//Transforma distancia em d h m s
 			var days = Math.floor(distancia / (1000 * 60 * 60 * 24));
