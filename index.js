@@ -288,11 +288,9 @@ app.get("/ranking", function(req, res) {
 		res.send(false);
 	} else {
 		handleDatabase(req, res, function(req, res, connection) {
-			if (rows[10].FatorK != 0) {
-				montaRanking(connection, function callback(rows) {
-					res.send(rows);
-				});
-			}
+			montaRanking(connection, function callback(rows) {
+				res.send(rows);
+			});
 		});
 	}
 });
