@@ -675,6 +675,7 @@ function printTabela(connection, tabela) {
 function montaRanking(connection, callback) {
 	connection.query('SELECT ID, Nome, FatorK FROM pessoa ORDER BY FatorK DESC', function(err, rows, fields) {
 		var numRows = rows.length;
+		if (rows[10].FatorK != 0) {
 		
 		if(!err) {
 			var iteracao = 0;
@@ -717,6 +718,7 @@ function montaRanking(connection, callback) {
 			//console.log('Error while performing Query (MONTA RANKING)');
 			//console.log(err);
 		}
+	}
 	});
 }
 
