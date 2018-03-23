@@ -288,9 +288,11 @@ app.get("/ranking", function(req, res) {
 		res.send(false);
 	} else {
 		handleDatabase(req, res, function(req, res, connection) {
-			montaRanking(connection, function callback(rows) {
-				res.send(rows);
-			});
+			if (rows[10].FatorK != 0) {
+				montaRanking(connection, function callback(rows) {
+					res.send(rows);
+				});
+			}
 		});
 	}
 });
@@ -678,14 +680,14 @@ function montaRanking(connection, callback) {
 		
 		if(!err) {
 			var iteracao = 0;
-			//Atualiza a posicao no ranking (nao listar pessoas com fator k = 0 (rows[i].FatorK != 0))
+			//Atualiza a posicao no ranking
 			var promessa = new Promise(function(resolve, release) {
 				for(var i = 0; i < rows.length; i++) {
-					if(i == 0 && rows[i].FatorK != 0) {
+					if(i == 0) {
 						connection.query('UPDATE pessoa SET Posicao = 1 WHERE ID = ?', rows[0].ID);
 						rows[0].Posicao = 1;
 					} else {
-						if(rows[i].FatorK == rows[i - 1].FatorK && rows[i].FatorK != 0) {
+						if(rows[i].FatorK == rows[i - 1].FatorK) {
 							connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [rows[i - 1].Posicao, rows[i].ID], function(err, rows, fields) {
 								iteracao++;
 
@@ -694,7 +696,7 @@ function montaRanking(connection, callback) {
 								}
 							});
 							rows[i].Posicao = rows[i - 1].Posicao;
-						} if(rows[i].FatorK != 0){
+						} else {
 							connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [(i + 1), rows[i].ID], function(err, rows, fields) {
 								iteracao++;
 
