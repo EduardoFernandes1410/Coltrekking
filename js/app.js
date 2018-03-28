@@ -715,11 +715,7 @@
 
 	//Ranking Controller
 	app.controller('RankingController', ['HTTPService', '$rootScope', function(httpService, $rootScope) {
-		
-		var stringCountdownRanking = "200 dias";
-		element.CountdownRanking = stringCountdownRanking;
-
-		
+	
 		//Quando EventosController ja acabou
 		$rootScope.$on('dataEventos', function(event) {
 			//Chama RankingService
@@ -729,5 +725,10 @@
 				}
 			}.bind(this));
 		});		
+	
+		var stringCountdownRanking = "200 dias";
+		element.CountdownRanking = stringCountdownRanking;
+	
+	
 	}]);
 })();
