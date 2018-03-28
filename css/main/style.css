@@ -306,6 +306,7 @@ nav .tabs {
 
 /*****RANKING*****/
 #ranking {
-  margin-top: 80px !important; }
+  margin-top: 100px !important; }
+
   #ranking thead th {
-    padding-top: 30px !important; }
+    padding-top: 50px !important; }
