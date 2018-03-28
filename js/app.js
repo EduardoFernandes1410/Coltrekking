@@ -724,11 +724,6 @@
 					$rootScope.ranking = answer;
 				}
 			}.bind(this));
-		});		
-	
-		var stringCountdownRanking = "200 dias";
-		element.CountdownRanking = stringCountdownRanking;
-	
-	
+		});			
 	}]);
 })();
