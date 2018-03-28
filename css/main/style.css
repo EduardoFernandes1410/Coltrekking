@@ -233,6 +233,27 @@ nav .tabs {
 .card-action a {
   color: #ff6e40 !important; }
 
+
+
+/*****CARDS RANKING*****/
+#ranking .card .card-content {
+  font-size: 16px; }
+  #ranking .card .card-content .topico-info {
+    font-weight: 500; }
+  #ranking .card .card-content .countdownRanking{
+    margin-top: 16px !important;
+    margin-bottom: -14px !important;
+    color: #ff6e40 !important;
+    font-weight: 400 !important;
+    text-transform: uppercase !important;
+    font-size: 14px !important; }
+.create-form {
+  margin-top: -48px !important; }
+
+.card-action a {
+  color: #ff6e40 !important; }
+
+
 /*****SCROLL SPY*****/
 .section {
   padding-top: 0px !important;
