@@ -327,10 +327,6 @@
 			} else {
 				element.CountdownDisponibilidade = string;
 			}
-			var stringCountdownRanking = "200 dias";
-			element.CountdownRanking = stringCountdownRanking;
-
-
 			
 			//Confere se acabou o tempo
 			if(distancia <= 0) {
@@ -719,6 +715,11 @@
 
 	//Ranking Controller
 	app.controller('RankingController', ['HTTPService', '$rootScope', function(httpService, $rootScope) {
+		
+		var stringCountdownRanking = "200 dias";
+		element.CountdownRanking = stringCountdownRanking;
+
+		
 		//Quando EventosController ja acabou
 		$rootScope.$on('dataEventos', function(event) {
 			//Chama RankingService
