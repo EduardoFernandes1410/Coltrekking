@@ -327,6 +327,10 @@
 			} else {
 				element.CountdownDisponibilidade = string;
 			}
+			var stringCountdownRanking = "200 dias";
+			element.CountdownRanking = stringCountdownRanking;
+
+
 			
 			//Confere se acabou o tempo
 			if(distancia <= 0) {
