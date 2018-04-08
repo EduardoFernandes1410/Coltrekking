@@ -200,17 +200,6 @@
 
 					<!--Eventos-->
 					<div ng-controller="EventosController">
-
-
-						<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 1">
-							<div id="eventos-abertos">
-						</p>
-
-						<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 2">
-							<div id="eventos">
-						</p>
-
-
 							<div class="row modulo-wrapper">
 								<!--Fixacoes-->
 								<div class="container col hide-on-med-and-down l4 right">
@@ -270,6 +259,18 @@
 											</ul>
 											
 											<!-- Info do Evento -->
+
+											<!--Se eventos estao abertos mostrar em destaque-->
+											<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 1">
+												<div id="eventos-abertos">
+											</p>
+						
+											<!--Se eventos estao encerrados nao mostrar em destaque-->
+											<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 2">
+												<div id="eventos">
+											</p>
+
+
 											<p>
 												<i class="tiny material-icons">label</i>
 												<span class="topico-info"> Tipo:</span class="topico-info"> {{evento.TipoString}}
