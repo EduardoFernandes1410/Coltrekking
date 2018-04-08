@@ -109,7 +109,7 @@ nav .tabs {
   nav .button-collapse {
     margin-top: 4px !important; } }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 625px) {
   nav form .material-icons {
     margin-top: -2px; } }
 
