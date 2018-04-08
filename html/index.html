@@ -88,7 +88,8 @@
 						<div class="container nav-container">
 							<div class="nav-content">
 								<ul class="tabs tabs-transparent tabs-fixed-width" ng-show="$location.path() === '/'"> <!--So aparece na Pagina Principal-->
-									<li class="tab"><a href="#eventos">Eventos</a></li>
+									<li class="tab"><a href="#eventos">Eventos Abertos</a></li>
+									<li class="tab"><a href="#eventos">Eventos Encerrados</a></li>
 									<li class="tab"><a href="#news-feed">News Feed</a></li>
 									<li class="tab"><a href="#ranking">Ranking</a></li>
 								</ul>
@@ -433,6 +434,218 @@
 							</div>
 						</div>
 					</div>
+
+
+
+
+
+					
+					<!--Eventos Encerrados-->
+					<div ng-controller="EventosController">
+						<div id="eventos-encerrados">
+							<div class="row modulo-wrapper">
+								<!--Fixacoes-->
+								<div class="container col hide-on-med-and-down l4 right">
+									<!--Eventos Cadastrados-->
+									<div class="card" id="card-confirmados">
+										<div class="card-content">
+											<span class="card-title">Eventos Confirmados por Você</span>
+											
+											<!-- Lista de Eventos Confirmados -->
+											<ul>
+												<li ng-repeat="confirmados in eventosConfirmados">
+													<i class="tiny material-icons">label_outline</i>
+													{{confirmados.Nome}}
+												</li>
+											</ul>
+											
+											<!-- Mensagem Default -->
+											<p ng-show="eventosConfirmados.length == 0">Você não confirmou presença em evento algum</p>
+										</div>
+									</div>
+									
+									<!-- Scroll Spy -->
+									<ul class="section table-of-contents">
+										<li ng-repeat="evento in eventos" ng-if="!evento.Finalizado">
+											<a ng-attr-href="{{'#' + evento.ID}}">{{evento.Nome}}</a>
+										</li>
+									</ul>
+								</div>
+								
+								<!--Cria os cards de evento-->
+								<div class="container col s12 l7" ng-repeat="evento in eventos">
+									<div class="card card-evento section scrollspy" ng-attr-id="{{evento.ID}}" ng-if="!evento.Finalizado">
+										<!--Cabecalho-->
+										<div class="card-image">
+											<!--Imagem-->
+											<img ng-src="{{evento.Capa}}">
+											<!--Nome-->
+											<span class="card-title">{{evento.Nome}}</span>
+											<!--FAB Confirmar-->
+											<a ng-attr-id="{{'btn-confirmar-' + evento.ID}}" ng-disabled="!(evento.Disponivel == 1)" ng-click="confirmarEvento(this.evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">add</i></a>
+											<!--FAB Cancelar-->
+											<a ng-attr-id="{{'btn-cancelar-' + evento.ID}}" ng-click="cancelarEvento(this.evento)" ng-disabled="!(evento.Disponivel == 1)" ng-show="estaConfirmado(evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">remove</i></a>
+										</div>
+										
+										<!--Info do Evento-->
+										<div class="card-content">
+											<!-- Menu Card -->
+											<a ng-if="usuario.Admin" ng-attr-id="{{'dropdown-card' + evento.ID}}" class="dropdown-button right" href="#!" onclick="return false;" ng-attr-data-activates="{{'menu-card' + evento.ID}}">
+												<i class="material-icons">more_vert</i>
+											</a>
+											
+											<ul ng-if="usuario.Admin" ng-attr-id="{{'menu-card' + evento.ID}}" class="dropdown-content">
+												<li><a ng-attr-href="{{'#!/create-event?id=' + evento.ID + '&nome=' + evento.Nome + '&tipo=' + evento.Tipo + '&tipoTrekking=' + evento.TipoTrekking + '&dataInicio=' + evento.DataInicio + '&dataFim=' + evento.DataFim + '&local=' + evento.Local + '&dificuldade=' + evento.Dificuldade + '&numeroMax=' + evento.NumeroMax + '&dataInscricao=' + evento.DataInscricao + '&fimInscricao=' + evento.FimInscricao}}"">Editar evento</a></li>
+												<li><a href="#!" class="finalizador" onclick="return false;" ng-click="finalizarEvento(evento.ID)" ng-attr-href="{{'#lista-finalizadora' + evento.ID}}">Finalizar evento</a></li>
+												<li class="divider"></li>
+												<li><a href="#!" class="excluidor" onclick="return false;" ng-click="excluirEvento(evento.ID)">Excluir evento</a></li>
+											</ul>
+											
+											<!-- Info do Evento -->
+											<p>
+												<i class="tiny material-icons">label</i>
+												<span class="topico-info"> Tipo:</span class="topico-info"> {{evento.TipoString}}
+											</p>
+											
+											<p ng-show="evento.Tipo == 2">
+												<i class="tiny material-icons">label_outline</i>
+												<span class="topico-info"> Modalidade:</span class="topico-info"> {{evento.TipoTrekking}}
+											</p>
+											
+											<!--Nao mostra se for prelecao-->
+											<p ng-show="evento.Tipo != 1">
+												<i class="tiny material-icons">warning</i>
+												<span class="topico-info"> Dificuldade:</span class="topico-info"> {{evento.Dificuldade}}
+											</p>
+											
+											<!-- Mostra apenas em acampamento -->
+											<p ng-show="evento.Tipo == 3">
+												<i class="tiny material-icons">today</i>
+												<span class="topico-info"> De</span class="topico-info"> {{evento.DataInicio}}
+												<span class="topico-info"> a</span class="topico-info"> {{evento.DataFim}}
+											</p>											
+											
+											<!-- Mostra apenas em !acampamento -->
+											<p ng-show="evento.Tipo != 3">
+												<i class="tiny material-icons">today</i>
+												<span class="topico-info"> Dia:</span class="topico-info"> {{evento.DataInicio}}
+											</p>
+											
+											<p>
+												<i class="tiny material-icons">location_on</i>
+												<span class="topico-info"> Local:</span class="topico-info"> {{evento.Local}}
+											</p>
+											
+											<!-- Numero de Inscritos -->
+											<p>
+												<i class="tiny material-icons">add_circle</i>
+												<span class="topico-info"> Nº de Inscritos:</span> {{evento.Confirmados.length}}/{{evento.NumeroMax}}
+											</p>
+											
+											<!-- Countdown de Disponibilidade -->
+											<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 1">
+												Inscrições encerram em {{evento.CountdownDisponibilidade}}
+											</p>
+											
+											<!-- Inscricoes encerradas -->
+											<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 2">
+												Inscrições encerradas
+											</p>
+										</div>
+										
+										<!--Card Action LISTA DE INSCRITOS-->
+										<div class="card-action" ng-show="evento.Disponivel">
+											<a ng-attr-href="{{'#lista-inscritos' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
+										</div>
+										
+										<!--Card Action COUNTDOWN-->
+										<div class="card-action" ng-show="!evento.Disponivel">
+											<a onclick="return false;">Disponível em {{evento.Countdown}}</a>
+										</div>
+									</div>
+									
+									<!--Lista de Inscritos-->
+									<div ng-attr-id="{{'lista-inscritos' + evento.ID}}" class="modal modal-fixed-footer">
+										<div class="modal-content">
+											<p class="modal-header">{{evento.Nome}}</p>
+											
+											<!--Tabela-->
+											<table class="bordered">
+												<!--Titulos da tabela-->
+												<thead>
+													<tr>
+														<th>Posição</th>
+														<th>Nome</th>
+														<th class="hide-on-med-and-down">Data da Inscrição</th>
+													</tr>
+												</thead>
+
+												<!--Linha para cada usuario-->
+												<tbody>
+													<tr ng-repeat="pessoa in evento.Confirmados" ng-class="{espera: $index >= evento.NumeroMax}">
+														<td>{{$index + 1}}º</td>
+														<td>{{pessoa.Nome}}</td>
+														<td class="hide-on-med-and-down">{{pessoa.DataInscricao}}</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										
+										<div class="modal-footer">
+											<button type="button" class="modal-action modal-close waves-effect waves-orange btn-flat">Fechar</button>
+										</div>
+									</div>
+									
+									<!-- Lista Finalizadora -->
+									<div ng-attr-id="{{'lista-finalizadora' + evento.ID}}" class="modal" id="modal-finalizar">
+										<div class="modal-content">
+											<p class="modal-header">Finalizar Evento</p>
+											
+											<form>
+												<div class="row">
+													<!-- Checkbox dos Presentes -->
+													<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m4 l3" ng-if="!confirmado.ListaEspera">
+														<input type="checkbox" name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
+														<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}}</label>
+													</p>
+												</div>
+												
+												<div class="row">
+													<!-- Kilometragem -->
+													<div class="input-field col s12 m6">
+														<input id="km-finalizar" type="number" name="kilometragem" ng-model="finalizar.Kilometragem">
+														<label for="km-finalizar">Kilometragem</label>
+													</div>
+												
+													<!-- Fator K -->
+													<div class="input-field col s12 m6">
+														<input id="fatorK-finalizar" type="number" name="fatork" ng-model="finalizar.Fatork">
+														<label for="fatorK-finalizar">Fator K</label>
+													</div>
+												</div>
+											</form>
+										</div>
+										
+										<div class="modal-footer">
+											<!--Botao Cancelar-->
+											<a href="#!" class="modal-action modal-close waves-effect waves-orange btn-flat">Cancelar</a>
+											<!--Botao Submit Finalizar-->
+											<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" ng-click="finalizarEvento(finalizar, evento.ID)">Aplicar</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+
+
+
+
+
+
+
 				</div>
 				
 
