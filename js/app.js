@@ -715,6 +715,7 @@
 
 	//Ranking Controller
 	app.controller('RankingController', ['HTTPService', '$rootScope', function(httpService, $rootScope) {
+	
 		//Quando EventosController ja acabou
 		$rootScope.$on('dataEventos', function(event) {
 			//Chama RankingService
@@ -723,6 +724,6 @@
 					$rootScope.ranking = answer;
 				}
 			}.bind(this));
-		});		
+		});			
 	}]);
 })();
