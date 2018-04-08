@@ -236,13 +236,18 @@
 										
 										<!--Card Action COUNTDOWN-->
 										<div class="card-action" ng-show="!evento.Disponivel">
-												<aCountdownVerde onclick="return false;">Disponível em {{evento.Countdown}}</aCountdownVerde>
+											<aCountdownLaranja onclick="return false;">Disponível em {{evento.Countdown}}</aCountdownLaranja>
 										</div>
 
 										<!-- Countdown de Disponibilidade -->
 										<div class="card-action" ng-if="evento.Disponivel == 1">
-												<aCountdownLaranja onclick="return false;">Inscrições encerram em {{evento.CountdownDisponibilidade}}</aCountdownLaranja>
+											<aCountdownVerde onclick="return false;">Inscrições encerram em {{evento.CountdownDisponibilidade}}</aCountdownVerde>
 										</div>
+
+										<!-- Inscricoes encerradas -->
+										<div class="card-action" ng-if="evento.Disponivel == 2">
+											<aCountdownVermelho onclick="return false;">Encerrado</aCountdownVermelho>
+										</class>
 										
 										
 										
@@ -312,12 +317,7 @@
 												<i class="tiny material-icons">add_circle</i>
 												<span class="topico-info"> Nº de Inscritos:</span> {{evento.Confirmados.length}}/{{evento.NumeroMax}}
 											</p>
-											
-											
-											<!-- Inscricoes encerradas -->
-											<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 2">
-												Inscrições encerradas
-											</p>
+
 										</div>
 										
 										<!--Card Action LISTA DE INSCRITOS-->

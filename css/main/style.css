@@ -243,6 +243,11 @@ nav .tabs {
   font-weight: bold;
   font-size: 20px; }
 
+.card-action aCountdownVermelho {
+  color: #bf0000 !important;
+  font-weight: bold;
+  font-size: 20px; }
+
 
 /*****CARDS RANKING*****/
 #ranking .card .card-content {
