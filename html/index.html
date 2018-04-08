@@ -88,8 +88,8 @@
 						<div class="container nav-container">
 							<div class="nav-content">
 								<ul class="tabs tabs-transparent tabs-fixed-width" ng-show="$location.path() === '/'"> <!--So aparece na Pagina Principal-->
-									<li class="tab"><a href="#eventos">Eventos Abertos</a></li>
-									<li class="tab"><a href="#eventos-encerrados">Eventos Encerrados</a></li>
+									<li class="tab"><a href="#eventos-abertos">Eventos abertos</a></li>
+									<li class="tab"><a href="#eventos">Eventos Encerrados</a></li>
 									<li class="tab"><a href="#news-feed">News Feed</a></li>
 									<li class="tab"><a href="#ranking">Ranking</a></li>
 								</ul>
@@ -138,9 +138,9 @@
 			<div ng-controller="RouteController">
 				<div ng-show="$location.path() === '/'">					
 					
-					<!--Eventos-->
+					<!--Eventos Abertos-->
 					<div ng-controller="EventosController">
-						<div id="eventos">
+						<div id="eventos-abertos">
 							<div class="row modulo-wrapper">
 								<!--Fixacoes-->
 								<div class="container col hide-on-med-and-down l4 right">
@@ -339,7 +339,7 @@
 
 					<!--Eventos Encerrados-->
 					<div ng-controller="EventosController">
-						<div id="eventos-encerrados">
+						<div id="eventos"> <!--ID de eventos Encerrados eh somente "eventos"-->
 							<div class="row modulo-wrapper">
 								<!--Fixacoes-->
 								<div class="container col hide-on-med-and-down l4 right">
@@ -596,7 +596,7 @@
 							</div>
 						</div>
 					</div>
-					
+
 
 					<!--Ranking-->
 					<div ng-controller="RankingController as Ranking">
