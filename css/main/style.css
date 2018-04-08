@@ -109,7 +109,7 @@ nav .tabs {
   nav .button-collapse {
     margin-top: 4px !important; } }
 
-@media screen and (max-width: 624px) {
+@media screen and (max-width: 600px) {
   nav form .material-icons {
     margin-top: -2px; } }
 
@@ -290,7 +290,7 @@ nav .tabs {
 .modal-content table thead tr th:nth-child(2) {
   width: 50%; }
 
-@media screen and (max-width: 624px) {
+@media screen and (max-width: 600px) {
   .modal-content table thead tr th:nth-child(2) {
     width: 80% !important; } }
 
