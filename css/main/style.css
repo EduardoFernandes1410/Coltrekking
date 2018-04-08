@@ -234,7 +234,10 @@ nav .tabs {
   color: #ff6e40 !important; }
 
 .card-action aCountdownVerde {
-  color: #8BC34A !important;}
+  color: #8BC34A !important;
+  font-weight: bold;
+  font-size: 17px;
+}
 
 
 /*****CARDS RANKING*****/
