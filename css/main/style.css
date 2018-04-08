@@ -236,7 +236,8 @@ nav .tabs {
 .card-action aCountdownVerde {
   color: #8BC34A !important;
   font-weight: bold;
-  font-size: 17px;
+  font-size: 19px;
+  text-align: center;
 }
 
 
