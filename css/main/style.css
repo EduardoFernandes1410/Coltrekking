@@ -235,49 +235,6 @@ nav .tabs {
 
 
 
-
-
-/*****CARDS EVENTOS ENCERRADOS*****/
-#eventos-encerrados .card-content {
-  font-size: 16px; }
-  #eventos-encerrados .card-content .topico-info {
-    font-weight: 500; }
-  #eventos-encerrados .card-content .dropdown-button {
-    color: #000;
-    margin-top: 15px; }
-  #eventos-encerrados .card-content .dropdown-content li a {
-    color: #000 !important; }
-  #eventos-encerrados .card-content .dropdown-content .finalizador {
-    color: #4caf50 !important; }
-  #eventos-encerrados .card-content .dropdown-content .excluidor {
-    color: #f44336 !important; }
-  #eventos-encerrados .card-content .countdownDisponibilidade {
-    margin-top: 16px !important;
-    margin-bottom: -14px !important;
-    color: #ff6e40 !important;
-    font-weight: 400 !important;
-    text-transform: uppercase !important;
-    font-size: 14px !important; }
-
-    
-
-#card-confirmados {
-  position: fixed;
-  margin-right: 6%; }
-  #card-confirmados ul {
-    margin-bottom: 0px; }
-    #card-confirmados ul li {
-      margin: 8px 0px 0px 0px; }
-
-.create-form {
-  margin-top: -48px !important; }
-
-.card-action a {
-  color: #ff6e40 !important; }
-
-
-
-
 /*****CARDS RANKING*****/
 #ranking .card .card-content {
   font-size: 16px; }
