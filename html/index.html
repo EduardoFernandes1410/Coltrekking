@@ -233,6 +233,14 @@
 								<!--Cria os cards de evento-->
 								<div class="container col s12 l7" ng-repeat="evento in eventos">
 									<div class="card card-evento section scrollspy" ng-attr-id="{{evento.ID}}" ng-if="!evento.Finalizado">
+										
+										<!--Card Action COUNTDOWN-->
+										<div class="card-action" ng-show="!evento.Disponivel">
+												<a onclick="return false;">Disponível em {{evento.Countdown}}</a>
+										</div>
+										
+										
+										
 										<!--Cabecalho-->
 										<div class="card-image">
 											<!--Imagem-->
@@ -260,7 +268,7 @@
 											</ul>
 											
 											<!-- Info do Evento -->
-											
+
 											<!--Card Action COUNTDOWN-->
 											<div class="card-action" ng-show="!evento.Disponivel">
 												<a onclick="return false;">Disponível em {{evento.Countdown}}</a>
