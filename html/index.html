@@ -238,6 +238,12 @@
 										<div class="card-action" ng-show="!evento.Disponivel">
 												<aCountdownVerde onclick="return false;">Disponível em {{evento.Countdown}}</aCountdownVerde>
 										</div>
+
+										<!-- Countdown de Disponibilidade -->
+										<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 1">
+												<aCountdownVerde onclick="return false;">Evento Disponível</aCountdownVerde>
+												Inscrições encerram em {{evento.CountdownDisponibilidade}}
+										</p>
 										
 										
 										
@@ -308,10 +314,6 @@
 												<span class="topico-info"> Nº de Inscritos:</span> {{evento.Confirmados.length}}/{{evento.NumeroMax}}
 											</p>
 											
-											<!-- Countdown de Disponibilidade -->
-											<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 1">
-												Inscrições encerram em {{evento.CountdownDisponibilidade}}
-											</p>
 											
 											<!-- Inscricoes encerradas -->
 											<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 2">
