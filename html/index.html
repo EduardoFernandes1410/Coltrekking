@@ -200,7 +200,17 @@
 
 					<!--Eventos-->
 					<div ng-controller="EventosController">
-						<div id="eventos">
+
+
+						<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 1">
+							<div id="eventos-abertos">
+						</p>
+
+						<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 2">
+							<div id="eventos">
+						</p>
+
+
 							<div class="row modulo-wrapper">
 								<!--Fixacoes-->
 								<div class="container col hide-on-med-and-down l4 right">
