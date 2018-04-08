@@ -89,7 +89,7 @@
 							<div class="nav-content">
 								<ul class="tabs tabs-transparent tabs-fixed-width" ng-show="$location.path() === '/'"> <!--So aparece na Pagina Principal-->
 									<li class="tab"><a href="#eventos">Eventos Abertos</a></li>
-									<li class="tab"><a href="#eventos">Eventos Encerrados</a></li>
+									<li class="tab"><a href="#eventos-encerrados">Eventos Encerrados</a></li>
 									<li class="tab"><a href="#news-feed">News Feed</a></li>
 									<li class="tab"><a href="#ranking">Ranking</a></li>
 								</ul>
@@ -137,68 +137,7 @@
 			<!--Paginas das Abas-->
 			<div ng-controller="RouteController">
 				<div ng-show="$location.path() === '/'">					
-					<!--News Feed-->
-					<div ng-controller="PostsController">
-						<div id="news-feed">
-							<div class="row modulo-wrapper">							
-								<!-- Posts fixados -->
-								<div class="container col hide-on-med-and-down l4 right">
-									<p class="fixadas-titulo">Publicações Fixadas</p>
-									
-									<div class="card" ng-repeat="post in postagemFixada | filter: {Fixado: 1}">
-										<div class="card-content">
-											<a href="#" onclick="return false;" ng-click="excluirPostagem(post.ID)">
-												<i ng-if="usuario.Admin" class="material-icons delete-post-fixado">delete</i>
-											</a>
-											<p class="data-post data-post-fixado">{{post.Data}}</p>
-											
-											<!-- Corpo da postagem -->
-											<p ng-bind-html="post.Texto"></p>
-										</div>
-									</div>
-								</div>
-							
-								<div class="container col s12 l7">
-									<!-- Filtro -->
-									<div class="row" id="filtro">
-										<div class="col s5">
-											<p class="fixadas-titulo" id="filtro-titulo">Filtrar por evento: </p>
-										</div>
-										
-										<div class="col s7">
-											<label>
-												<select class="browser-default" id="filtro-posts" name="filtro-posts" ng-change="filtrar()" ng-model="Postagens" ng-options="post.EventoID as post.Nome for post in postsFiltro | filter: {Fixado: 0}">
-												</select>
-											</label>
-										</div>
-									</div>
-									
-									<!-- Posts !fixados -->
-									<div class="row">
-										<div class="card" ng-repeat="post in postagem | filter: {Fixado: 0}">
-											<div class="card-content">
-												<div class="chip admin-post">
-													<img ng-src="{{post.AdminFoto}}" alt="Contact Person">
-													{{post.AdminNome}}
-												</div>
-												<p class="data-post">{{post.Data}}</p>
-												<a href="#" onclick="return false;" ng-click="excluirPostagem(post.ID)">
-													<i ng-if="usuario.Admin" class="material-icons delete-post">delete</i>
-												</a>
-												
-												<span ng-if="post.Nome" class="card-title nome-post">{{post.Nome}}</span>
-												
-												<!-- Corpo da postagem -->
-												<p ng-bind-html="post.Texto"></p>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-
+					
 					<!--Eventos-->
 					<div ng-controller="EventosController">
 						<div id="eventos">
@@ -398,48 +337,6 @@
 					</div>
 
 
-					<!--Ranking-->
-					<div ng-controller="RankingController as Ranking">
-						<div id="ranking">
-							<div class="card">
-								<div class="card-content">
-
-
-									<!-- Countdown Do Ranking -->
-									<p class="countdownRanking">
-											O Ranking será zerado em {{ranking.CountdownRanking}}
-									</p>
-
-									<!--Tabela-->
-									<table class="striped">
-										<!--Titulos da tabela-->
-										<thead>
-											<tr>
-												<th>Posição</th>
-												<th>Nome</th>
-												<th>Fator K</th>
-											</tr>
-										</thead>
-
-										<!--Linha para cada usuario-->
-										<tbody>
-											<tr ng-repeat="pessoa in ranking">
-												<td>{{pessoa.Posicao}}º</td>
-												<td>{{pessoa.Nome}}</td>
-												<td>{{pessoa.FatorK}}</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-					</div>
-
-
-
-
-
-					
 					<!--Eventos Encerrados-->
 					<div ng-controller="EventosController">
 						<div id="eventos-encerrados">
@@ -639,12 +536,104 @@
 					</div>
 
 
+					<!--News Feed-->
+					<div ng-controller="PostsController">
+						<div id="news-feed">
+							<div class="row modulo-wrapper">							
+								<!-- Posts fixados -->
+								<div class="container col hide-on-med-and-down l4 right">
+									<p class="fixadas-titulo">Publicações Fixadas</p>
+									
+									<div class="card" ng-repeat="post in postagemFixada | filter: {Fixado: 1}">
+										<div class="card-content">
+											<a href="#" onclick="return false;" ng-click="excluirPostagem(post.ID)">
+												<i ng-if="usuario.Admin" class="material-icons delete-post-fixado">delete</i>
+											</a>
+											<p class="data-post data-post-fixado">{{post.Data}}</p>
+											
+											<!-- Corpo da postagem -->
+											<p ng-bind-html="post.Texto"></p>
+										</div>
+									</div>
+								</div>
+							
+								<div class="container col s12 l7">
+									<!-- Filtro -->
+									<div class="row" id="filtro">
+										<div class="col s5">
+											<p class="fixadas-titulo" id="filtro-titulo">Filtrar por evento: </p>
+										</div>
+										
+										<div class="col s7">
+											<label>
+												<select class="browser-default" id="filtro-posts" name="filtro-posts" ng-change="filtrar()" ng-model="Postagens" ng-options="post.EventoID as post.Nome for post in postsFiltro | filter: {Fixado: 0}">
+												</select>
+											</label>
+										</div>
+									</div>
+									
+									<!-- Posts !fixados -->
+									<div class="row">
+										<div class="card" ng-repeat="post in postagem | filter: {Fixado: 0}">
+											<div class="card-content">
+												<div class="chip admin-post">
+													<img ng-src="{{post.AdminFoto}}" alt="Contact Person">
+													{{post.AdminNome}}
+												</div>
+												<p class="data-post">{{post.Data}}</p>
+												<a href="#" onclick="return false;" ng-click="excluirPostagem(post.ID)">
+													<i ng-if="usuario.Admin" class="material-icons delete-post">delete</i>
+												</a>
+												
+												<span ng-if="post.Nome" class="card-title nome-post">{{post.Nome}}</span>
+												
+												<!-- Corpo da postagem -->
+												<p ng-bind-html="post.Texto"></p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+
+					<!--Ranking-->
+					<div ng-controller="RankingController as Ranking">
+						<div id="ranking">
+							<div class="card">
+								<div class="card-content">
 
 
+									<!-- Countdown Do Ranking -->
+									<p class="countdownRanking">
+											O Ranking será zerado em {{ranking.CountdownRanking}}
+									</p>
 
+									<!--Tabela-->
+									<table class="striped">
+										<!--Titulos da tabela-->
+										<thead>
+											<tr>
+												<th>Posição</th>
+												<th>Nome</th>
+												<th>Fator K</th>
+											</tr>
+										</thead>
 
-
-
+										<!--Linha para cada usuario-->
+										<tbody>
+											<tr ng-repeat="pessoa in ranking">
+												<td>{{pessoa.Posicao}}º</td>
+												<td>{{pessoa.Nome}}</td>
+												<td>{{pessoa.FatorK}}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
 
 				</div>
 				
