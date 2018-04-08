@@ -233,6 +233,9 @@ nav .tabs {
 .card-action a {
   color: #ff6e40 !important; }
 
+.card-action aCountdownCenter {
+  color: #ff6e40 !important;
+  text-align: center; }
 
 
 /*****CARDS RANKING*****/
