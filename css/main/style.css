@@ -236,8 +236,12 @@ nav .tabs {
 .card-action aCountdownVerde {
   color: #8BC34A !important;
   font-weight: bold;
-  font-size: 20px;
-}
+  font-size: 20px; }
+
+.card-action aCountdownLaranja {
+  color: #ff6e40 !important;
+  font-weight: bold;
+  font-size: 20px; }
 
 
 /*****CARDS RANKING*****/
