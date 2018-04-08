@@ -673,7 +673,7 @@ function printTabela(connection, tabela) {
 
 //*****Monta Ranking*****//
 function montaRanking(connection, callback) {
-	connection.query('SELECT ID, Nome, FatorK FROM pessoa ORDER BY FatorK DESC', function(err, rows, fields) {
+	connection.query('SELECT ID, Nome, FatorK FROM pessoa WHERE (FatorK > 0) ORDER BY FatorK DESC', function(err, rows, fields) {
 		var numRows = rows.length;
 		
 		if(!err) {
