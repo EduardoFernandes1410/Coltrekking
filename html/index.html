@@ -270,7 +270,7 @@
 
 
 											<!--Card Action COUNTDOWN-->
-											<div class="card-action" ng-show="!evento.Disponivel">
+											<div ng-show="!evento.Disponivel">
 												<aCountdownAzul onclick="return false;">Disponível em {{evento.Countdown}}</aCountdownAzul>
 											</div>
 	
@@ -281,6 +281,11 @@
 	
 											<div ng-if="evento.Disponivel == 2">
 												<aCountdownLaranja onclick="return false;">Encerrado</aCountdownLaranja>
+											</div>
+
+											<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
+											<div ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
+													<aCountdownAzul onclick="return false;">FATOR K: {{evento.fatork}} </aCountdownAzul>											
 											</div>
 
 										
@@ -324,11 +329,6 @@
 												<i class="tiny material-icons">add_circle</i>
 												<span class="topico-info"> Nº de Inscritos:</span> {{evento.Confirmados.length}}/{{evento.NumeroMax}}
 											</p>
-
-											<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
-											<div ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
-													<aCountdownAzul onclick="return false;">FATOR K: {{evento.fatork}} </aCountdownAzul>											
-											</div>
 
 										</div>
 										
