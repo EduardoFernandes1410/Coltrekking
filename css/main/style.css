@@ -243,11 +243,11 @@ aCountdownAzul {
   font-weight: bold;
   font-size: 20px; }
 
-aAzul {
-  color: #00004d !important;
+aCountdownLaranja {
+  color: #ff6e40 !important;
   font-weight: bold;
   font-size: 20px; }
-
+  
 
 /*****CARDS RANKING*****/
 #ranking .card .card-content {
