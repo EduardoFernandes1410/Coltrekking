@@ -234,19 +234,7 @@
 								<div class="container col s12 l7" ng-repeat="evento in eventos">
 									<div class="card card-evento section scrollspy" ng-attr-id="{{evento.ID}}">
 										
-										<!--Card Action COUNTDOWN-->
-										<div class="card-action" ng-show="!evento.Disponivel">
-											<aCountdownLaranja onclick="return false;">Disponível em {{evento.Countdown}}</aCountdownLaranja>
-										</div>
-
-										<!-- Countdown de Disponibilidade -->
-										<div class="card-action" ng-if="evento.Disponivel == 1">
-											<aCountdownVerde onclick="return false;">Inscrições encerram em {{evento.CountdownDisponibilidade}}</aCountdownVerde>
-										</div>
-
-										<div class="card-action" ng-if="evento.Disponivel == 2">
-											<aCountdownVermelho onclick="return false;">Encerrado</aCountdownVermelho>
-										</div>
+										
 										
 
 										
@@ -256,6 +244,25 @@
 										<div class="card-image">
 											<!--Imagem-->
 											<img ng-src="{{evento.Capa}}">
+
+
+
+
+											<!--Card Action COUNTDOWN-->
+											<div class="card-action" ng-show="!evento.Disponivel">
+												<aCountdownLaranja onclick="return false;">Disponível em {{evento.Countdown}}</aCountdownLaranja>
+											</div>
+	
+											<!-- Countdown de Disponibilidade -->
+											<div class="card-action" ng-if="evento.Disponivel == 1">
+												<aCountdownVerde onclick="return false;">Inscrições encerram em {{evento.CountdownDisponibilidade}}</aCountdownVerde>
+											</div>
+	
+											<div class="card-action" ng-if="evento.Disponivel == 2">
+												<aCountdownVermelho onclick="return false;">Encerrado</aCountdownVermelho>
+											</div>
+
+
 											<!--Nome-->
 											<span class="card-title">{{evento.Nome}}</span>
 											<!--FAB Confirmar-->
