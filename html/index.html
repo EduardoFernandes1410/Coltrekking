@@ -244,25 +244,6 @@
 										<div class="card-image">
 											<!--Imagem-->
 											<img ng-src="{{evento.Capa}}">
-
-
-
-
-											<!--Card Action COUNTDOWN-->
-											<div class="card-action" ng-show="!evento.Disponivel">
-												<aCountdownLaranja onclick="return false;">Disponível em {{evento.Countdown}}</aCountdownLaranja>
-											</div>
-	
-											<!-- Countdown de Disponibilidade -->
-											<div class="card-action" ng-if="evento.Disponivel == 1">
-												<aCountdownVerde onclick="return false;">Inscrições encerram em {{evento.CountdownDisponibilidade}}</aCountdownVerde>
-											</div>
-	
-											<div class="card-action" ng-if="evento.Disponivel == 2">
-												<aCountdownVermelho onclick="return false;">Encerrado</aCountdownVermelho>
-											</div>
-
-
 											<!--Nome-->
 											<span class="card-title">{{evento.Nome}}</span>
 											<!--FAB Confirmar-->
@@ -287,6 +268,25 @@
 											
 											<!-- Info do Evento -->
 
+
+											<!--Card Action COUNTDOWN-->
+											<div class="card-action" ng-show="!evento.Disponivel">
+												<aCountdownLaranja onclick="return false;">Disponível em {{evento.Countdown}}</aCountdownLaranja>
+											</div>
+	
+											<!-- Countdown de Disponibilidade -->
+											<div class="card-action" ng-if="evento.Disponivel == 1">
+												<aCountdownVerde onclick="return false;">Inscrições encerram em {{evento.CountdownDisponibilidade}}</aCountdownVerde>
+											</div>
+	
+											<div class="card-action" ng-if="evento.Disponivel == 2">
+												<aCountdownVermelho onclick="return false;">Encerrado</aCountdownVermelho>
+											</div>
+
+											<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
+											<div class="card-action" ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
+													<aCountdownLaranja onclick="return false;">Fator K: {{evento.fatork}}</aCountdownLaranja>											
+											</div>
 										
 
 											<p>
@@ -368,17 +368,7 @@
 										<div class="modal-footer">
 											<button type="button" class="modal-action modal-close waves-effect waves-orange btn-flat">Fechar</button>
 										</div>
-									</div>
-
-
-
-									<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
-									<div class="card-action" ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
-											<aCountdownLaranja onclick="return false;">Fator K: {{evento.fatork}}</aCountdownLaranja>											
-									</div>
-
-
-									
+									</div>									
 									
 									<!-- Lista Finalizadora -->
 									<div ng-attr-id="{{'lista-finalizadora' + evento.ID}}" class="modal" id="modal-finalizar">
