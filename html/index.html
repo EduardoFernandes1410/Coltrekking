@@ -275,16 +275,16 @@
 											</div>
 	
 											<!-- Countdown de Disponibilidade -->
-											<div class="card-action" ng-if="evento.Disponivel == 1">
+											<div ng-if="evento.Disponivel == 1">
 												<aCountdownVerde onclick="return false;">Inscrições encerram em {{evento.CountdownDisponibilidade}}</aCountdownVerde>
 											</div>
 	
-											<div class="card-action" ng-if="evento.Disponivel == 2">
+											<div ng-if="evento.Disponivel == 2">
 												<aCountdownVermelho onclick="return false;">Encerrado</aCountdownVermelho>
 											</div>
 
 											<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
-											<div class="card-action" ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
+											<div ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
 													<aCountdownLaranja onclick="return false;">Fator K: {{evento.fatork}}</aCountdownLaranja>											
 											</div>
 										

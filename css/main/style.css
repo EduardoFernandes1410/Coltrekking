@@ -233,17 +233,17 @@ nav .tabs {
 .card-action a {
   color: #ff6e40 !important; }
 
-.card-action aCountdownVerde {
+aCountdownVerde {
   color: #8BC34A !important;
   font-weight: bold;
   font-size: 20px; }
 
-.card-action aCountdownLaranja {
+aCountdownLaranja {
   color: #ff6e40 !important;
   font-weight: bold;
   font-size: 20px; }
 
-.card-action aCountdownVermelho {
+aCountdownVermelho {
   color: #FF0000 !important;
   font-weight: bold;
   font-size: 20px; }
