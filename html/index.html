@@ -280,10 +280,7 @@
 											
 											<!-- Info do Evento -->
 
-											<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
-											<div class="card-action" ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
-												<aCountdownLaranja onclick="return false;">Fator K: {{evento.fatork}}</aCountdownLaranja>											
-											</div>
+										
 
 											<p>
 												<i class="tiny material-icons">label</i>
@@ -365,6 +362,16 @@
 											<button type="button" class="modal-action modal-close waves-effect waves-orange btn-flat">Fechar</button>
 										</div>
 									</div>
+
+
+
+									<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
+									<div class="card-action" ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
+											<aCountdownLaranja onclick="return false;">Fator K: {{evento.fatork}}</aCountdownLaranja>											
+									</div>
+
+
+									
 									
 									<!-- Lista Finalizadora -->
 									<div ng-attr-id="{{'lista-finalizadora' + evento.ID}}" class="modal" id="modal-finalizar">
