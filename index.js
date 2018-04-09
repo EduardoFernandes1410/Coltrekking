@@ -544,6 +544,17 @@ function finalizarEventoDB(req, post, connection, callback) {
 					controle = false;
 				}
 			});
+
+			connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
+				connection.release();
+				
+				if(!err) {
+					callback(controle);
+				} else {
+					controle = false;
+				}
+			});
+
 		});
 	} else {
 		callback(false);
