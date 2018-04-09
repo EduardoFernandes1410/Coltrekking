@@ -245,10 +245,19 @@
 										</div>
 
 										<div class="card-action" ng-if="evento.Disponivel == 2">
-											<aCountdownVermelho onclick="return false;">ENCERRADO</aCountdownVermelho>
+											<aCountdownVermelho onclick="return false;">Encerrado</aCountdownVermelho>
+										</div>
+										
+										<!--Mostrar valor do ranking no evento, somente em eventos encerrados-->
+										<div class="card-action" ng-if="evento.Disponivel == 2">
+											<!--Nao mostra se for prelecao-->
+											<p ng-show="evento.Tipo != 1">
+												<aCountdownLaranja onclick="return false;">Fator K: {{evento.fatork}}</aCountdownLaranja>
+											</p>
+											
 										</div>
 
-		
+			
 
 
 										
