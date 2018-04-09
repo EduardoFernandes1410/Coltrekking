@@ -248,13 +248,6 @@
 											<aCountdownVermelho onclick="return false;">Encerrado</aCountdownVermelho>
 										</div>
 										
-										<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
-										<div class="card-action" ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
-											<aCountdownLaranja onclick="return false;">Fator K: {{evento.fatork}}</aCountdownLaranja>											
-										</div>
-
-			
-
 
 										
 										
@@ -286,6 +279,12 @@
 											</ul>
 											
 											<!-- Info do Evento -->
+
+											<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
+											<div class="card-action" ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
+												<aCountdownLaranja onclick="return false;">Fator K: {{evento.fatork}}</aCountdownLaranja>											
+											</div>
+
 											<p>
 												<i class="tiny material-icons">label</i>
 												<span class="topico-info"> Tipo:</span class="topico-info"> {{evento.TipoString}}
