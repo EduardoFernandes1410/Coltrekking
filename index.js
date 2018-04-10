@@ -526,23 +526,12 @@ function finalizarEventoDB(req, post, connection, callback) {
 
 
 
-				// //Pegar valor de FatorKAntigo antes de inserir o novo na tabela
-				// connection.query(
-				// 	'SELECT fatorKevento FROM `evento` WHERE ID ?', [post.eventoID],
-				// 	function(err, FatorKAntigo){
-				// 	  if(err) throw err;
-					  
-				// 	  console.log(FatorKAntigo);
-
-				// 	}            
-				//   );
-
-
-
+				//Pegar valor de FatorKAntigo antes de inserir o novo na tabela
+				connection.query('SELECT fatorKevento FROM `evento` WHERE ID = ?', [post.eventoID], function(err, FatorKAntigo){
 
 					connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
 					
-						connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? - ? WHERE ID = ?',  [post.fatork,5, elem], function(err, rows, fields) {
+						connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? - ? WHERE ID = ?',  [post.fatork,FatorKAntigo, elem], function(err, rows, fields) {
 							if(!err) {
 								//Se for o ultimo, resolve a promessa
 								if(index == (array.length - 1)) {
@@ -554,18 +543,13 @@ function finalizarEventoDB(req, post, connection, callback) {
 						});
 
 
-					connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', [post.eventoID], function(err, rows, fields) {
+						connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', [post.eventoID], function(err, rows, fields) {
+						});
 					});
-					
-
-
-
-
 				});
 				
 			});		
 		});
-		
 	
 	} else {
 		callback(false);
