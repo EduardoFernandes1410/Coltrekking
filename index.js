@@ -523,14 +523,23 @@ function finalizarEventoDB(req, post, connection, callback) {
 	if(req.session.usuarioLogado.Admin) {
 		var promessa = new Promise(function(resolve, reject) {
 			post.pessoas.forEach(function(elem, index, array) {
-				connection.query('SELECT fatorKevento FROM evento WHERE ID = ?', [post.eventoID], function(err, fatorKantigo, fields){
+
+				//Pegar valor de FatorKAntigo antes de inserir o novo na tabela
+				connection.query(
+					'SELECT FatorK FROM `evento` WHERE ID ?', [post.eventoID],
+					function(err, rows){
+					  if(err) throw err;
+					  console.log(rows);
+					  var FatorKAntigo = rows[0];
+					}            
+				  );
+
 
 
 
 					connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
 					
-						console.log(fatorKantigo);
-						connection.query('UPDATE `pessoa` SET FatorK = ? WHERE ID = ?',  [fatorKantigo,elem], function(err, rows, fields) {
+						connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? - ? WHERE ID = ?',  [post.fatork,FatorKAntigo, elem], function(err, rows, fields) {
 							if(!err) {
 								//Se for o ultimo, resolve a promessa
 								if(index == (array.length - 1)) {
@@ -545,7 +554,6 @@ function finalizarEventoDB(req, post, connection, callback) {
 					connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', [post.eventoID], function(err, rows, fields) {
 					});
 					
-				});
 
 
 
