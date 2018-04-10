@@ -522,17 +522,22 @@ function finalizarEventoDB(req, post, connection, callback) {
 		var promessa = new Promise(function(resolve, reject) {
 			post.pessoas.forEach(function(elem, index, array) {
 
-				connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ? AND WHERE Finalizado = 0', [post.fatork, post.eventoID], function(err, rows, fields) {
-					connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? WHERE ID = ?', [post.fatork, elem], function(err, rows, fields) {
-						if(!err) {
-							//Se for o ultimo, resolve a promessa
-							if(index == (array.length - 1)) {
-								resolve();
+				connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
+					
+					connection.query('UPDATE `evento` WHERE ID = ? AND Finalizado = 0', [post.eventoID], function(err, rows, fields) {
+						connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? WHERE ID = ?', [post.fatork, elem], function(err, rows, fields) {
+							if(!err) {
+								//Se for o ultimo, resolve a promessa
+								if(index == (array.length - 1)) {
+									resolve();
+								}
+							} else {
+								controle = false;
 							}
-						} else {
-							controle = false;
-						}
+						});
 					});
+
+
 					connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', [post.eventoID], function(err, rows, fields) {
 					});
 					
