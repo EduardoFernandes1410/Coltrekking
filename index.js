@@ -526,7 +526,7 @@ function finalizarEventoDB(req, post, connection, callback) {
 
 				//Pegar valor de FatorKAntigo antes de inserir o novo na tabela
 				connection.query(
-					'SELECT FatorK FROM `evento` WHERE ID ?', [post.eventoID],
+					'SELECT fatorKevento FROM `evento` WHERE ID ?', [post.eventoID],
 					function(err, rows){
 					  if(err) throw err;
 					  console.log(rows);
