@@ -535,7 +535,7 @@ function finalizarEventoDB(req, post, connection, callback) {
 		});
 		
 		promessa.then(function() {
-			connection.query('UPDATE `evento` SET Finalizado = 1 SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
+			connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
 				
 				connection.release();
 				
