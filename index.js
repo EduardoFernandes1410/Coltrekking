@@ -533,6 +533,9 @@ function finalizarEventoDB(req, post, connection, callback) {
 							controle = false;
 						}
 					});
+					connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', [post.eventoID], function(err, rows, fields) {
+					});
+					
 				});
 			});		
 		});
