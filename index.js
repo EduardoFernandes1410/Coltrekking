@@ -530,29 +530,6 @@ function finalizarEventoDB(req, post, connection, callback) {
 			//	connection.query('SELECT fatorKevento FROM `evento` WHERE ID = ?', [post.eventoID], function(err, FatorKAntigo, fields){
 
 
-
-
-
-			//THIAGO
-
-
-
-
-			var query = "SELECT fatorKevento FROM `evento` WHERE ID = 1071";
-			utils.exec(query, null, function(err, FatorKAntigo){
-				console.log("teste"+FatorKAntigo);
-			});
-
-
-
-
-
-			//THIAGO
-
-
-
-
-
 					connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
 					
 						connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? - ? WHERE ID = ?',  [post.fatork,FatorKAntigo, elem], function(err, rows, fields) {
@@ -570,12 +547,7 @@ function finalizarEventoDB(req, post, connection, callback) {
 						connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', [post.eventoID], function(err, rows, fields) {
 						});
 					});
-			//THIAGO
 
-
-
-
-			//THIAGO
 			//	});
 				
 			});		
