@@ -521,32 +521,23 @@ function finalizarEventoDB(req, post, connection, callback) {
 	if(req.session.usuarioLogado.Admin) {
 		var promessa = new Promise(function(resolve, reject) {
 			post.pessoas.forEach(function(elem, index, array) {
-				connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? WHERE ID = ?', [post.fatork, elem], function(err, rows, fields) {
-					if(!err) {
-						//Se for o ultimo, resolve a promessa
-						if(index == (array.length - 1)) {
-							resolve();
+
+				connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
+					connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? WHERE ID = ?', [post.fatork, elem], function(err, rows, fields) {
+						if(!err) {
+							//Se for o ultimo, resolve a promessa
+							if(index == (array.length - 1)) {
+								resolve();
+							}
+						} else {
+							controle = false;
 						}
-					} else {
-						controle = false;
-					}
+					});
 				});
 			});		
 		});
 		
-		promessa.then(function() {
-			connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
-				
-				connection.release();
-				
-				if(!err) {
-					callback(controle);
-				} else {
-					controle = false;
-				}
-			});
-
-		});
+	
 	} else {
 		callback(false);
 	}
