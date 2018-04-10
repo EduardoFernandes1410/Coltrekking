@@ -527,7 +527,17 @@ function finalizarEventoDB(req, post, connection, callback) {
 
 
 				//Pegar valor de FatorKAntigo antes de inserir o novo na tabela
-			//	connection.query('SELECT fatorKevento FROM `evento` WHERE ID = ?', [post.eventoID], function(err, FatorKAntigo, fields){
+				connection.query('SELECT fatorKevento FROM `evento` WHERE ID = ?', [post.eventoID], function(err, FatorKAntigo, fields){
+				connection.release();
+				if(!err) {
+					
+					var FatorKAntigo = rows;
+					
+				} else {
+					//console.log(err);
+					callback(false);
+				}
+
 
 
 					connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
@@ -548,7 +558,7 @@ function finalizarEventoDB(req, post, connection, callback) {
 						});
 					});
 
-			//	});
+				});
 				
 			});		
 		});
