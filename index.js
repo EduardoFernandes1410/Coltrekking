@@ -529,15 +529,33 @@ function finalizarEventoDB(req, post, connection, callback) {
 				//Pegar valor de FatorKAntigo antes de inserir o novo na tabela
 			//	connection.query('SELECT fatorKevento FROM `evento` WHERE ID = ?', [post.eventoID], function(err, FatorKAntigo, fields){
 
+
+
+
+
 			//THIAGO
-			
+
+
+
+
+			var query = "SELECT fatorKevento FROM `evento` WHERE ID = 1071";
+			utils.exec(query, null, function(err, FatorKAntigo){
+				console.log("teste"+FatorKAntigo);
+			});
+
+
 
 
 
 			//THIAGO
+
+
+
+
+
 					connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
 					
-						connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? - ? WHERE ID = ?',  [post.fatork,connection.query('SELECT fatorKevento FROM `evento` WHERE ID = ?', [post.eventoID], function(err, rows, fields){}), elem], function(err, rows, fields) {
+						connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? - ? WHERE ID = ?',  [post.fatork,FatorKAntigo, elem], function(err, rows, fields) {
 							if(!err) {
 								//Se for o ultimo, resolve a promessa
 								if(index == (array.length - 1)) {
