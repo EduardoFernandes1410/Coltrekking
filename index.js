@@ -530,7 +530,7 @@ function finalizarEventoDB(req, post, connection, callback) {
 					connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
 					
 
-						connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? - ? WHERE ID = ?', [post.fatork, fatorKantigo ,elem], function(err, rows, fields) {
+						connection.query('UPDATE `pessoa` SET FatorK = ? WHERE ID = ?',  [fatorKantigo,elem], function(err, rows, fields) {
 							if(!err) {
 								//Se for o ultimo, resolve a promessa
 								if(index == (array.length - 1)) {
