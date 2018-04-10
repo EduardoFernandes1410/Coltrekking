@@ -518,8 +518,8 @@ function cancelarEventoDB(post, connection, callback) {
 function finalizarEventoDB(req, post, connection, callback) {
 	var controle = true;
 	
-	var teste = connection.query('SELECT nome FROM evento Where dificuldade = "Fácil" ');
-	dd(teste);
+	var fatorKantigo = connection.query('SELECT fatorKevento FROM evento WHERE ID = ?', [post.eventoID]);
+
 	if(req.session.usuarioLogado.Admin) {
 		var promessa = new Promise(function(resolve, reject) {
 			post.pessoas.forEach(function(elem, index, array) {
@@ -527,7 +527,7 @@ function finalizarEventoDB(req, post, connection, callback) {
 				connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
 					
 
-						connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? WHERE ID = ?', [post.fatork, elem], function(err, rows, fields) {
+						connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? - fatorKantigo WHERE ID = ?', [post.fatork, elem], function(err, rows, fields) {
 							if(!err) {
 								//Se for o ultimo, resolve a promessa
 								if(index == (array.length - 1)) {
