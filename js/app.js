@@ -534,7 +534,7 @@
 		}
 		
 		//Finalizar evento
-		$scope.finalizarEvento = function(params, eventoID) {
+		$scope.finalizarEvento = function(params, eventoID, fatorKAntigo) {
 			//Pega as pessoas marcadas
 			var pessoas = $("input[name='pessoas[]']:checked").toArray();
 			var pessoasArray = [];
