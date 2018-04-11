@@ -534,7 +534,7 @@
 		}
 		
 		//Finalizar evento
-		$scope.finalizarEvento = function(params, eventoID, fatorKAntigo) {
+		$scope.finalizarEvento = function(params, eventoID) {
 			//Pega as pessoas marcadas
 			var pessoas = $("input[name='pessoas[]']:checked").toArray();
 			var pessoasArray = [];
@@ -544,7 +544,7 @@
 			var dataPost = {
 				eventoID: eventoID,
 				fatork: (params.Fatork * params.Kilometragem),
-				fatorKAntigo: fatorKAntigo,
+			//	fatorKAntigo: fatorKAntigo,
 				pessoas: pessoasArray
 			};
 			
