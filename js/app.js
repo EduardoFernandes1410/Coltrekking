@@ -544,6 +544,7 @@
 			var dataPost = {
 				eventoID: eventoID,
 				fatork: (params.Fatork * params.Kilometragem),
+				fatorKAntigo: fatorKAntigo,
 				pessoas: pessoasArray
 			};
 			
