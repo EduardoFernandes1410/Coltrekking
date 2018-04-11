@@ -65,7 +65,10 @@ function Usuario(nome, email, foto, id, fatork, posicao, listaNegra, admin) {
 	this.Posicao = posicao;
 	this.ListaNegra = listaNegra;
 	this.Admin = admin;
+	this.IDeventoParaFatorK =  ideventoParaFatorK;
+	this.FatorKdoEvento = fatorKdoEvento;
 }
+
 
 /******************************REQUISICOES*******************************/
 //*****Carrega pagina inicial*****//
@@ -351,6 +354,28 @@ function pegaInfoUsuarioLogado(req, connection, callback) {
 			// console.log('Error while performing Query (PEGA INFO DB)');
 		}
 	});
+
+	//Pega informacao do id do evento e do fatork de tal evento
+	connection.query('SELECT * FROM pessoa WHERE ID = ?', req.session.IDeventoParaFatorK, function(err, rows, fields) {
+		connection.release();
+		
+		if(!err) {
+			//Retrieve info do DB
+			try {
+				req.session.usuarioLogado.FatorKdoEvento = rows[0].FatorKdoEvento;
+			} catch(err) {
+				console.log(err.message);
+				callback(false);
+			}
+			
+			//Realiza o callback
+			callback(true);
+		} else {
+			callback(false);
+			// console.log('Error while performing Query (PEGA INFO DB)');
+		}
+	});
+
 }
 
 //*****Adiciona Evento ao DB*****//
@@ -524,26 +549,22 @@ function finalizarEventoDB(req, post, connection, callback) {
 		var promessa = new Promise(function(resolve, reject) {
 			post.pessoas.forEach(function(elem, index, array) {
 
-
-
-				//Pegar valor de FatorKAntigo antes de inserir o novo na tabela
-					connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
-					
-						connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? - ? WHERE ID = ?',  [post.fatork,FatorKAntigo, elem], function(err, rows, fields) {
-							if(!err) {
-								//Se for o ultimo, resolve a promessa
-								if(index == (array.length - 1)) {
-									resolve();
-								}
-							} else {
-								controle = false;
+				connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
+				
+					connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? - ? WHERE ID = ?',  [post.fatork, fatorKdoEvento, elem], function(err, rows, fields) {
+						if(!err) {
+							//Se for o ultimo, resolve a promessa
+							if(index == (array.length - 1)) {
+								resolve();
 							}
-						});
-
-
-						connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', [post.eventoID], function(err, rows, fields) {
-						});
+						} else {
+							controle = false;
+						}
 					});
+
+
+
+				});
 				
 			});		
 		});
