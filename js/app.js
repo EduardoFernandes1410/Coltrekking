@@ -555,7 +555,7 @@
 					Materialize.toast("Evento finalizado com sucesso!", 2000);					
 					$scope.eventosGetter();
 				} else {
-					Materialize.toast("Erro ao finalizar o evento!", 3000);
+					
 				}
 			});
 		}
