@@ -543,8 +543,7 @@
 			
 			var dataPost = {
 				eventoID: eventoID,
-				// parsefloat eh para converter texto em float
-				fatork: (parseFloat(params.Fatork) * parseFloat(params.Kilometragem)),
+				fatork: (params.Fatork * params.Kilometragem),
 				fatorKAntigo: fatorKAntigo,
 				pessoas: pessoasArray
 			};
