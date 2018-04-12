@@ -392,13 +392,13 @@
 												<div class="row">
 													<!-- Kilometragem -->
 													<div class="input-field col s12 m6">
-														<input id="km-finalizar" type="number" name="kilometragem" ng-model="finalizar.Kilometragem">
+														<input id="km-finalizar" type="number" pattern="[0-9]+([,\.][0-9]+)?" min="0" step="any" name="kilometragem" ng-model="finalizar.Kilometragem">
 														<label for="km-finalizar">Kilometragem</label>
 													</div>
 												
 													<!-- Fator K -->
 													<div class="input-field col s12 m6">
-														<input id="fatorK-finalizar" type="number" name="fatork" ng-model="finalizar.Fatork">
+														<input id="fatorK-finalizar" type="number" pattern="[0-9]+([,\.][0-9]+)?" min="0" step="any" name="fatork" ng-model="finalizar.Fatork">
 														<label for="fatorK-finalizar">Fator K</label>
 													</div>
 												</div>
