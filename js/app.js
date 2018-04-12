@@ -538,12 +538,14 @@
 			//Pega as pessoas marcadas
 			var pessoas = $("input[name='pessoas[]']:checked").toArray();
 			var pessoasArray = [];
+			var KilometragemStringtoFloat =  parseFloat(params.Kilometragem);
+			var FatorkStringtoFloat = parseFloat(params.Fatork);
 						
 			pessoas.forEach(elem => pessoasArray.push(elem.value));
 			
 			var dataPost = {
 				eventoID: eventoID,
-				fatork: (params.Fatork * params.Kilometragem),
+				fatork: (KilometragemStringtoFloat * FatorkStringtoFloat),
 				fatorKAntigo: fatorKAntigo,
 				pessoas: pessoasArray
 			};
