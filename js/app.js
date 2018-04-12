@@ -547,7 +547,6 @@
 				fatorKAntigo: fatorKAntigo,
 				pessoas: pessoasArray
 			};
-			dataPost.fatork = dataPost.fatork.replace('.',',');
 			
 			//Chama POST Finalizar Evento
 			httpService.post('/finalizar-evento', dataPost, function(answer) {
