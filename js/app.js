@@ -538,14 +538,16 @@
 			//Pega as pessoas marcadas
 			var pessoas = $("input[name='pessoas[]']:checked").toArray();
 			var pessoasArray = [];
-			var KilometragemStringtoFloat =  parseFloat(params.Kilometragem);
-			var FatorkStringtoFloat = parseFloat(params.Fatork);
+			var kilometragemParaFloat =  parseFloat(params.Kilometragem);
+			var fatorKParaFloat = parseFloat(params.Fatork);
+			var kilometramFloatSemVirgulas = parseFloat(kilometragemParaFloat.replace(',','.'));
+			var fatorKFloatSemVirgulas = parseFloat(fatorKParaFloat.replace(',','.'));
 						
 			pessoas.forEach(elem => pessoasArray.push(elem.value));
 			
 			var dataPost = {
 				eventoID: eventoID,
-				fatork: (KilometragemStringtoFloat * FatorkStringtoFloat),
+				fatork: (kilometramFloatSemVirgulas * fatorKFloatSemVirgulas),
 				fatorKAntigo: fatorKAntigo,
 				pessoas: pessoasArray
 			};
