@@ -9,6 +9,10 @@
 		<!--Adiciona jQuery-->
 		<script src="../node_modules/jquery/dist/jquery.min.js"></script>
 
+		<!--Adiciona jquery-->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
+
 		<!--Adiciona Angular-->
 		<script src="../node_modules/angular/angular.min.js"></script>
 		<script src="../node_modules/angular-route/angular-route.min.js"></script>
@@ -392,13 +396,13 @@
 												<div class="row">
 													<!-- Kilometragem -->
 													<div class="input-field col s12 m6">
-														<input id="km-finalizar" type="number" name="kilometragem" ng-model="finalizar.Kilometragem">
+														<input id="km-finalizar" type="number" step="0.00" name="kilometragem" ng-model="finalizar.Kilometragem">
 														<label for="km-finalizar">Kilometragem</label>
 													</div>
 												
 													<!-- Fator K -->
 													<div class="input-field col s12 m6">
-														<input id="fatorK-finalizar" type="number" name="fatork" ng-model="finalizar.Fatork">
+														<input id="fatorK-finalizar" type="number" step="0.00" name="fatork" ng-model="finalizar.Fatork">
 														<label for="fatorK-finalizar">Fator K</label>
 													</div>
 												</div>
