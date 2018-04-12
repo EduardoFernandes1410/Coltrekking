@@ -299,7 +299,7 @@ aCountdownLaranja {
 
 /*****MODAL FINALIZADOR*****/
 .checkboxConfirmados {
- }
+  display: block; }
 
 #btn-finalizar-evento {
   color: #ff6e40; }
