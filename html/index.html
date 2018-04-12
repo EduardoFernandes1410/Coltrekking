@@ -371,10 +371,11 @@
 										</div>
 									</div>									
 									
-									<!-- Lista Finalizadora -->
-									<div ng-attr-id="{{'lista-finalizadora' + evento.ID}}" class="modal" id="modal-finalizar">
+									<!-- Lista Finalizadora-->
+										<!-- Nao mostrar Editar Fator K caso seja prelecao-->
+									<div ng-attr-id="{{'lista-finalizadora' + evento.ID}}" ng-show="evento.Tipo != 1" class="modal" id="modal-finalizar">
 										<div class="modal-content">
-											<p class="modal-header">Finalizar Evento</p>
+											<p class="modal-header">Editar Fator K</p>
 											
 											<form>
 												<div class="row">
