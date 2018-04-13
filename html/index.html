@@ -383,10 +383,13 @@
 											
 											<form>
 												<div class="row">
-													<!-- Checkbox dos confirmados -->
-													<div class="input-field col s12 m6">
-														<input id="checkBox" type="checkbox">
-													</div>
+													<!-- Checkbox dos Presentes -->
+													<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6" ng-if="!confirmado.ListaEspera">
+														<input type="checkbox" name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
+														<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}}</label>
+													</p>
+												</div>
+												
 												<div class="row">
 													<!-- Kilometragem -->
 													<div class="input-field col s12 m6">
