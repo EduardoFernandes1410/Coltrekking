@@ -377,7 +377,7 @@
 									</div>									
 									
 									<!-- Lista Finalizadora-->
-									<div ng-attr-id="{{'lista-finalizadora'}}" class="modal" id="modal-finalizar">
+									<div ng-attr-id="{{'lista-finalizadora' + evento.ID}}" class="modal" id="modal-finalizar">
 										<div class="modal-content">
 											<p class="modal-header">Editar Fator K</p>
 											
@@ -386,7 +386,7 @@
 													<!-- Checkbox dos Presentes -->
 													<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6" ng-if="!confirmado.ListaEspera">
 														<input type="checkbox" name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
-														<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}}</label>
+														<label ng-attr-for="{{confirmado.ID}}">{{confirmado.ListaEspera}}</label>
 													</p>
 												</div>
 												
