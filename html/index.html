@@ -384,11 +384,10 @@
 											<form>
 												<div class="row">
 													<!-- Checkbox dos Presentes -->
-													<tr ng-repeat="pessoa in evento.Confirmados" ng-class="{espera: $index >= evento.NumeroMax}">
-														<td>{{$index + 1}}º</td>
-														<td>{{pessoa.Nome}}</td>
-														<td class="hide-on-med-and-down">{{pessoa.DataInscricao}}</td>
-													</tr>
+													<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6" ng-if="!confirmado.ListaEspera">
+														<input type="checkbox" name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
+														<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}}</label>
+													</p>
 												</div>
 												
 												<div class="row">
