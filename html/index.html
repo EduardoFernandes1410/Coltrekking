@@ -385,8 +385,8 @@
 												<div class="row">
 													<!-- Checkbox dos Presentes -->
 													<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6" ng-if="!confirmado.ListaEspera">
-														<input type="checkbox" name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
-														<label ng-attr-for="{{confirmado.ID}}">{{confirmado.IDEvento}}</label>
+														<input type="checkbox" name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID + confirmardo.DataInscricao}}" ng-attr-value="{{confirmado.ID}}"/>
+														<label ng-attr-for="{{confirmado.ID}}">{{confirmado.DataInscricao}}</label>
 													</p>
 												</div>
 												
