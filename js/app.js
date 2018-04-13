@@ -542,7 +542,7 @@
 			var fatorKParaFloat = parseFloat(params.Fatork.replace(',','.'));
 						
 			pessoas.forEach(elem => pessoasArray.push(elem.value));
-			console.log(pessoas);
+			
 			var dataPost = {
 				eventoID: eventoID,
 				fatork: (kilometragemParaFloat * fatorKParaFloat),
