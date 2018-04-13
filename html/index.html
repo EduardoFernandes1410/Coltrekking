@@ -382,8 +382,13 @@
 											<p class="modal-header">Editar Fator K</p>
 											
 											<form>
-												
 												<div class="row">
+													<!-- Checkbox dos Presentes -->
+													<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6" ng-if="!confirmado.ListaEspera">
+														<input type="checkbox" name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID}}"/>
+														<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}}</label>
+													</p>
+
 													<!-- Kilometragem -->
 													<div class="input-field col s12 m6">
 														<input id="km-finalizar" type="text" name="kilometragem" ng-model="finalizar.Kilometragem">
@@ -395,15 +400,6 @@
 														<input id="fatorK-finalizar" type="text" step="0.01" name="fatork" ng-model="finalizar.Fatork">
 														<label for="fatorK-finalizar">Fator K</label>
 													</div>
-
-													<div class="row">
-														<!-- Checkbox dos Presentes -->
-														<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6" ng-if="!confirmado.ListaEspera">
-															<input type="checkbox" name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID}}"/>
-															<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}}</label>
-														</p>
-													</div>
-													
 												</div>
 											</form>
 										</div>
