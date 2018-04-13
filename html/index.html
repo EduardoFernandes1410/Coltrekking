@@ -383,8 +383,11 @@
 											
 											<form>
 												<div class="row">
-													<!--FAB Cancelar-->
-													<a ng-attr-id="{{'btn-cancelar-' + evento.ID}}" ng-click="cancelarEvento(this.evento)" ng-disabled="!(evento.Disponivel == 1)" ng-show="estaConfirmado(evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">remove</i></a>
+													<!-- Checkbox dos Presentes -->
+													<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m4 l3" ng-if="!confirmado.ListaEspera">
+														<input type="checkbox" name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
+														<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}}</label>
+													</p>
 												</div>
 												
 												<div class="row">
