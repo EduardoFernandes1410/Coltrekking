@@ -389,6 +389,60 @@
 														<label ng-attr-for="{{confirmado.ID}}">{{evento.Confirmados}}</label>
 													</p>
 												</div>
+
+
+
+
+
+
+
+
+											<!--Card Action LISTA DE INSCRITOS-->
+											<div class="card-action" ng-show="evento.Disponivel">
+												<a ng-attr-href="{{'#lista-inscritos' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
+											</div>
+
+											</div>
+
+											<!--Lista de Inscritos-->
+											<div ng-attr-id="{{'lista-inscritos' + evento.ID}}" class="modal modal-fixed-footer">
+											<div class="modal-content">
+												<p class="modal-header">{{evento.Nome}}</p>
+												
+												<!--Tabela-->
+												<table class="bordered">
+													<!--Titulos da tabela-->
+													<thead>
+														<tr>
+															<th>Posição</th>
+															<th>Nome</th>
+															<th class="hide-on-med-and-down">Data da Inscrição</th>
+														</tr>
+													</thead>
+
+													<!--Linha para cada usuario-->
+													<tbody>
+														<tr ng-repeat="pessoa in evento.Confirmados" ng-class="{espera: $index >= evento.NumeroMax}">
+															<td>{{$index + 1}}º</td>
+															<td>{{pessoa.Nome}}</td>
+															<td class="hide-on-med-and-down">{{pessoa.DataInscricao}}</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+
+											<div class="modal-footer">
+												<button type="button" class="modal-action modal-close waves-effect waves-orange btn-flat">Fechar</button>
+											</div>
+											</div>	
+
+
+
+
+
+
+
+
 												
 												<div class="row">
 													<!-- Kilometragem -->
