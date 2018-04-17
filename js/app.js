@@ -579,6 +579,25 @@
 				}
 			});
 		}
+
+		//Excluir Usuario
+		$scope.excluirUsuario = function(IDPessoa) {
+			var data = {
+				ID: IDPessoa
+			}
+			
+			//Chama POST Excluir usuario
+			httpService.post('/excluir-usuario', data, function(answer) {
+				//Emite alerta sobre o status da operacao
+				if(answer) {
+					Materialize.toast("Evento excluído com sucesso!", 2000);					
+					$scope.eventosGetter();
+				} else {
+					Materialize.toast("Erro ao excluir o evento!", 3000);
+				}
+			});
+		}
+		
 		
 		//Inicializa
 		$rootScope.$on("InicializarEventos", function() {
