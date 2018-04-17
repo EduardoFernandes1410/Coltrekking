@@ -298,6 +298,10 @@ aCountdownLaranja {
   background-color: #ffebee !important; }
 
 /*****MODAL FINALIZADOR*****/
+.hidden {
+  display: none;
+}
+
 .checkboxConfirmados {
   display: inline-block; }
 
