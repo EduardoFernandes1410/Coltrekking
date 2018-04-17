@@ -581,19 +581,21 @@
 		}
 
 		//Excluir Usuario
-		$scope.excluirUsuario = function(IDPessoa) {
+		$scope.excluirUsuario = function(id) {
 			var data = {
-				ID: IDPessoa
-			}
+				ID: id
+			};
 			
-			//Chama POST Excluir usuario
+			//POST /excluir-usuario
 			httpService.post('/excluir-usuario', data, function(answer) {
-				//Emite alerta sobre o status da operacao
+				//Emite alerta sobre o status da operacao e redireciona
 				if(answer) {
-					Materialize.toast("Evento excluído com sucesso!", 2000);					
-					$scope.eventosGetter();
+					Materialize.toast("Usuario excluído com sucesso!", 2000);
+					
+					//Recarrega os posts
+					$rootScope.$broadcast('RecarregarPosts', true);
 				} else {
-					Materialize.toast("Erro ao excluir o evento!", 3000);
+					Materialize.toast("Erro ao excluir usuario!", 3000);
 				}
 			});
 		}
