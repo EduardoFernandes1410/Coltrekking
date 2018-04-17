@@ -526,19 +526,9 @@ function finalizarEventoDB(req, post, connection, callback) {
 
 				connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
 				
-					connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? - ? WHERE ID = ?',  [post.fatork, post.fatorKAntigo,elem], function(err, rows, fields) {
-						
-						if(!err) {
-							//Se for o ultimo, resolve a promessa
-							if(index == (array.length - 1)) {
-								resolve();
-							}
-						} else {
-							controle = false;
-						}
-					});
-
 					connection.query('UPDATE `pessoa-evento` SET fatorKPessoaEvento = ? - ? WHERE IDEvento = ?',  [post.fatork, post.fatorKAntigo,post.eventoID], function(err, rows, fields) {
+					});
+					connection.query('UPDATE `pessoa` SET FatorK = (SELECT SUM(FatorKPessoaEvento) FROM `pessoa-evento` WHERE IDPessoa = ?) WHERE ID = ?',  [elem,elem], function(err, rows, fields) {
 					});
 					connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', [post.eventoID], function(err, rows, fields) {
 					});
