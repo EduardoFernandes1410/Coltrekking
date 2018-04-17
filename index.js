@@ -538,9 +538,7 @@ function finalizarEventoDB(req, post, connection, callback) {
 						}
 					});
 
-					connection.query('UPDATE `pessoa-evento` SET FatorK = ? WHERE IDEvento = ?',  [post.fatork,post.eventoID], function(err, rows, fields) {
-					});
-					connection.query('INSERT INTO `pessoa` (select IDPessoa as ID, SUM(FatorK) from `pessoa-evento` group by IDPessoa);',  [post.fatork,post.eventoID], function(err, rows, fields) {
+					connection.query('UPDATE `pessoa-evento` SET fatorKPessoaEvento = ? - ? WHERE IDEvento = ?',  [post.fatork, post.fatorKAntigo,post.eventoID], function(err, rows, fields) {
 					});
 					connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', [post.eventoID], function(err, rows, fields) {
 					});
