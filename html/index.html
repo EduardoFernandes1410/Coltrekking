@@ -382,16 +382,14 @@
 											<p class="modal-header">Editar Fator K</p>
 											
 											<form>
-												<div class="exemplo-checkbox">
 													<div class="row">
 														<!-- Checkbox dos Presentes -->
 														<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6" ng-if="!confirmado.ListaEspera">
-															<input type="hidden" checked name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
+															<input type="checkbox" checked name="pessoas[]" class="hidden" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
 															<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}} <button id="btn" onclick="exibirMensagem();">Remover</button> </label>
 															
 														</p>
 													</div>
-												</div>
 												
 												<div class="row">
 													<!-- Kilometragem -->
