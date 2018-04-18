@@ -290,7 +290,7 @@
 
 											<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
 											<div ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
-													<aCountdownAzul onclick="return false;">Fator K: {{evento.fatorKevento}} </aCountdownAzul>											
+													<aCountdownAzul onclick="return false;">Pontuação: {{evento.fatorKevento}} </aCountdownAzul>											
 											</div>
 
 										
@@ -396,15 +396,15 @@
 														<label for="km-finalizar">Kilometragem</label>
 													</div>
 												
-													<!-- Fator K -->
+													<!-- Subida -->
 													<div class="input-field col s12 m5 l3">
-														<input id="fatorK-finalizar" type="text" step="0.01" name="fatork" ng-model="finalizar.Fatork">
-														<label for="fatorK-finalizar">Fator K</label>
+														<input id="subida-finalizar" type="text" step="0.01" name="subida" ng-model="finalizar.subida">
+														<label for="subida-finalizar">Subida (metros)</label>
 													</div>
 
 													<!-- Descida -->
 													<div class="input-field col s12 m5 l3">
-														<input id="descida-finalizar" type="text" step="0.01" name="fatork" ng-model="finalizar.Fatork">
+														<input id="descida-finalizar" type="text" step="0.01" name="descida" ng-model="finalizar.descida">
 														<label for="descida-finalizar">Descida (metros)</label>
 													</div>
 												</div>

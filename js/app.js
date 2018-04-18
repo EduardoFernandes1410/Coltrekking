@@ -539,13 +539,14 @@
 			var pessoas = $("input[name='pessoas[]']:checked").toArray();
 			var pessoasArray = [];
 			var kilometragemParaFloat =  parseFloat(params.Kilometragem.replace(',','.'));
-			var fatorKParaFloat = parseFloat(params.Fatork.replace(',','.'));
+			var subidaParaFloat = parseFloat(params.subida.replace(',','.'));
+			var descidaParaFloat = parseFloat(params.descida.replace(',','.'));
 						
 			pessoas.forEach(elem => pessoasArray.push(elem.value));
 			
 			var dataPost = {
 				eventoID: eventoID,
-				fatork: (kilometragemParaFloat * fatorKParaFloat),
+				fatork: (kilometragemParaFloat * (1+(subidaParaFloat+descidaParaFloat)/1000)),
 				fatorKAntigo: fatorKAntigo,
 				pessoas: pessoasArray
 			};
