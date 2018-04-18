@@ -281,6 +281,11 @@ aCountdownLaranja {
   background-color:#FAFAFA;
 }
 
+.regular-checkbox:checked + label:after {
+ color: #FAFAFA;
+ background-color:#FAFAFA;
+}
+
 /*****CARDS RANKING*****/
 #ranking .card .card-content {
   font-size: 16px; }
