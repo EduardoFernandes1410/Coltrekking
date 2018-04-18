@@ -248,6 +248,11 @@ aCountdownLaranja {
   font-weight: bold;
   font-size: 20px; }
 
+  aPontuacao {
+  color: #000000 !important;
+ }
+
+
 /*BOTAO REMOVER USUARIO*/
 .botaoExcluirUsuario {
 	background-color:#44c767;
