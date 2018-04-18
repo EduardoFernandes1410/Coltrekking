@@ -282,14 +282,6 @@ aCountdownLaranja {
     background-color: #FFFFFF;
     border: 0px solid #FFFFFF;
 }
-.demo2 .regular-checkbox:checked + label:after {
-  content: '\2714';
-  font-size: 10px;
-  position: absolute;
-  top: 0px;
-  left: 3px;
-  color: #000000;
-}
 
 /*****CARDS RANKING*****/
 #ranking .card .card-content {
