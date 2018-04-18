@@ -233,7 +233,63 @@ nav .tabs {
 .card-action a {
   color: #ff6e40 !important; }
 
+aCountdownVerde {
+  color: #8BC34A !important;
+  font-weight: bold;
+  font-size: 20px; }
 
+aCountdownAzul {
+  color: #00004d !important;
+  font-weight: bold;
+  font-size: 20px; }
+
+aCountdownLaranja {
+  color: #ff6e40 !important;
+  font-weight: bold;
+  font-size: 20px; }
+
+  aPontuacao {
+  color: #000000 !important;
+ }
+
+
+/*BOTAO REMOVER USUARIO*/
+.botaoExcluirUsuario {
+	background-color:#44c767;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	border:1px solid #FAFAFA;
+	display:inline-block;
+	cursor:pointer;
+	color:#FAFAFA;
+	font-family:Arial;
+	font-size:13px;
+	padding:0px 4px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+}
+.botaoExcluirUsuario:hover {
+	background-color:#a0d47d;
+}
+.botaoExcluirUsuario:active {
+	position:relative;
+	top:1px;
+}
+
+
+/*CHECKBOX INVISIVEL*/
+.regular-checkbox {
+}
+ 
+.regular-checkbox + label {
+
+}
+
+.nomeExcluirUsuario {
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 0px; }
 
 /*****CARDS RANKING*****/
 #ranking .card .card-content {

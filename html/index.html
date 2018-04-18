@@ -9,6 +9,7 @@
 		<!--Adiciona jQuery-->
 		<script src="../node_modules/jquery/dist/jquery.min.js"></script>
 
+
 		<!--Adiciona Angular-->
 		<script src="../node_modules/angular/angular.min.js"></script>
 		<script src="../node_modules/angular-route/angular-route.min.js"></script>
@@ -224,7 +225,7 @@
 									
 									<!-- Scroll Spy -->
 									<ul class="section table-of-contents">
-										<li ng-repeat="evento in eventos" ng-if="!evento.Finalizado">
+										<li ng-repeat="evento in eventos">
 											<a ng-attr-href="{{'#' + evento.ID}}">{{evento.Nome}}</a>
 										</li>
 									</ul>
@@ -232,7 +233,14 @@
 								
 								<!--Cria os cards de evento-->
 								<div class="container col s12 l7" ng-repeat="evento in eventos">
-									<div class="card card-evento section scrollspy" ng-attr-id="{{evento.ID}}" ng-if="!evento.Finalizado">
+									<div class="card card-evento section scrollspy" ng-attr-id="{{evento.ID}}">
+										
+										
+										
+
+										
+										
+										
 										<!--Cabecalho-->
 										<div class="card-image">
 											<!--Imagem-->
@@ -253,13 +261,42 @@
 											</a>
 											
 											<ul ng-if="usuario.Admin" ng-attr-id="{{'menu-card' + evento.ID}}" class="dropdown-content">
-												<li><a ng-attr-href="{{'#!/create-event?id=' + evento.ID + '&nome=' + evento.Nome + '&tipo=' + evento.Tipo + '&tipoTrekking=' + evento.TipoTrekking + '&dataInicio=' + evento.DataInicio + '&dataFim=' + evento.DataFim + '&local=' + evento.Local + '&dificuldade=' + evento.Dificuldade + '&numeroMax=' + evento.NumeroMax + '&dataInscricao=' + evento.DataInscricao + '&fimInscricao=' + evento.FimInscricao}}"">Editar evento</a></li>
-												<li><a href="#!" class="finalizador" onclick="return false;" ng-click="finalizarEvento(evento.ID)" ng-attr-href="{{'#lista-finalizadora' + evento.ID}}">Finalizar evento</a></li>
+												<li><a ng-attr-href="{{'#!/create-event?id=' + evento.ID + '&nome=' + evento.Nome + '&tipo=' + evento.Tipo + '&tipoTrekking=' + evento.TipoTrekking + '&dataInicio=' + evento.DataInicio + '&dataFim=' + evento.DataFim + '&local=' + evento.Local + '&dificuldade=' + evento.Dificuldade + '&numeroMax=' + evento.NumeroMax + '&dataInscricao=' + evento.DataInscricao + '&fimInscricao=' + evento.FimInscricao}}"">Editar evento</a></li>							
+
+												<!-- Nao mostrar Editar Fator K em prelecao -->
+												<div ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
+													<li><a href="#!" class="finalizador" onclick="return false;" ng-click="finalizarEvento(evento.ID)" ng-attr-href="{{'#lista-finalizadora' + evento.ID}}">Editar fator K</a></li>
+												</div>
 												<li class="divider"></li>
 												<li><a href="#!" class="excluidor" onclick="return false;" ng-click="excluirEvento(evento.ID)">Excluir evento</a></li>
 											</ul>
 											
 											<!-- Info do Evento -->
+
+
+											<!--Card Action COUNTDOWN-->
+											<div ng-show="!evento.Disponivel">
+												<aCountdownAzul onclick="return false;">Disponível em {{evento.Countdown}}</aCountdownAzul>
+											</div>
+	
+											<!-- Countdown de Disponibilidade -->
+											<div ng-if="evento.Disponivel == 1">
+												<aCountdownVerde onclick="return false;">Inscrições encerram em {{evento.CountdownDisponibilidade}}</aCountdownVerde>
+											</div>
+	
+											<div ng-if="evento.Disponivel == 2">
+												<aCountdownLaranja onclick="return false;">Encerrado</aCountdownLaranja>
+											</div>
+
+											<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
+											<div ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
+												<aCountdownAzul onclick="return false;">Fator K: {{evento.subdesc}} M </aCountdownAzul> <aPontuacao>  = [1 + (subida + decida)/1000]</aPontuacao> <br>
+												<aCountdownAzul onclick="return false;">Distância: {{evento.distancia}} KM</aCountdownAzul><br>	
+												<aCountdownLaranja onclick="return false;">Pontuação: {{evento.fatorKevento}} </aCountdownLaranja> <aPontuacao>  = [Fator K * distância]</aPontuacao> <br>											
+											</div>
+
+										
+
 											<p>
 												<i class="tiny material-icons">label</i>
 												<span class="topico-info"> Tipo:</span class="topico-info"> {{evento.TipoString}}
@@ -299,27 +336,14 @@
 												<i class="tiny material-icons">add_circle</i>
 												<span class="topico-info"> Nº de Inscritos:</span> {{evento.Confirmados.length}}/{{evento.NumeroMax}}
 											</p>
-											
-											<!-- Countdown de Disponibilidade -->
-											<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 1">
-												Inscrições encerram em {{evento.CountdownDisponibilidade}}
-											</p>
-											
-											<!-- Inscricoes encerradas -->
-											<p class="countdownDisponibilidade" ng-if="evento.Disponivel == 2">
-												Inscrições encerradas
-											</p>
+
 										</div>
 										
 										<!--Card Action LISTA DE INSCRITOS-->
 										<div class="card-action" ng-show="evento.Disponivel">
 											<a ng-attr-href="{{'#lista-inscritos' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
 										</div>
-										
-										<!--Card Action COUNTDOWN-->
-										<div class="card-action" ng-show="!evento.Disponivel">
-											<a onclick="return false;">Disponível em {{evento.Countdown}}</a>
-										</div>
+								
 									</div>
 									
 									<!--Lista de Inscritos-->
@@ -352,35 +376,42 @@
 										<div class="modal-footer">
 											<button type="button" class="modal-action modal-close waves-effect waves-orange btn-flat">Fechar</button>
 										</div>
-									</div>
+									</div>									
 									
-									<!-- Lista Finalizadora -->
+									<!-- Lista Finalizadora-->
 									<div ng-attr-id="{{'lista-finalizadora' + evento.ID}}" class="modal" id="modal-finalizar">
 										<div class="modal-content">
-											<p class="modal-header">Finalizar Evento</p>
+											<p class="modal-header">Editar Fator K</p>
 											
-											<form>
+											<form>								
+												<aCountdownLaranja>Atenção! Após remover um usuário a ação não poderá ser desfeita.</aCountdownLaranja>
 												<div class="row">
-													<!-- Checkbox dos Presentes -->
-													<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m4 l3" ng-if="!confirmado.ListaEspera">
-														<input type="checkbox" name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
-														<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}}</label>
+													<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6">																
+														<label class="nomeExcluirUsuario" ng-attr-for="{{confirmado.ID}}"><a id="btn" href="#" class="botaoExcluirUsuario" onClick="$(this).css('background-color','#FAFAFA');" ng-click="excluirUsuario(confirmado.ID, confirmado.IDEvento)">Remover</a> {{confirmado.Nome}} </label>
 													</p>
 												</div>
-												
+												<aCountdownLaranja>Cadastrar Prontução</aCountdownLaranja>
 												<div class="row">
 													<!-- Kilometragem -->
-													<div class="input-field col s12 m6">
-														<input id="km-finalizar" type="number" name="kilometragem" ng-model="finalizar.Kilometragem">
+													<div class="input-field col s12 m5 l3">
+														<input id="km-finalizar" type="text" name="kilometragem" ng-model="finalizar.Kilometragem">
 														<label for="km-finalizar">Kilometragem</label>
 													</div>
 												
-													<!-- Fator K -->
-													<div class="input-field col s12 m6">
-														<input id="fatorK-finalizar" type="number" name="fatork" ng-model="finalizar.Fatork">
-														<label for="fatorK-finalizar">Fator K</label>
+													<!-- Subida -->
+													<div class="input-field col s12 m5 l3">
+														<input id="subida-finalizar" type="text" step="0.01" name="subida" ng-model="finalizar.subida">
+														<label for="subida-finalizar">Subida (metros)</label>
+													</div>
+
+													<!-- Descida -->
+													<div class="input-field col s12 m5 l3">
+														<input id="descida-finalizar" type="text" step="0.01" name="descida" ng-model="finalizar.descida">
+														<label for="descida-finalizar">Descida (metros)</label>
 													</div>
 												</div>
+												
+												
 											</form>
 										</div>
 										
@@ -388,7 +419,11 @@
 											<!--Botao Cancelar-->
 											<a href="#!" class="modal-action modal-close waves-effect waves-orange btn-flat">Cancelar</a>
 											<!--Botao Submit Finalizar-->
-											<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" ng-click="finalizarEvento(finalizar, evento.ID)">Aplicar</a>
+											<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" onClick='parent.location="javascript:location.reload()"' ng-click="finalizarEvento(finalizar, evento.ID, evento.fatorKevento)">Aplicar</a>
+											<!-- Checkbox dos Presentes por padrao todos selecionados (invisivel) -->				
+											<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6">
+												<input type="checkbox" checked name="pessoas[]" class="regular-checkbox" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>														
+											</p>
 										</div>
 									</div>
 								</div>
@@ -416,7 +451,7 @@
 											<tr>
 												<th>Posição</th>
 												<th>Nome</th>
-												<th>Fator K</th>
+												<th>Pontuação</th>
 											</tr>
 										</thead>
 

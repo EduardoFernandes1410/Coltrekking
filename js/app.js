@@ -534,16 +534,23 @@
 		}
 		
 		//Finalizar evento
-		$scope.finalizarEvento = function(params, eventoID) {
+		$scope.finalizarEvento = function(params, eventoID, fatorKAntigo) {
 			//Pega as pessoas marcadas
 			var pessoas = $("input[name='pessoas[]']:checked").toArray();
 			var pessoasArray = [];
+			var kilometragemParaFloat =  parseFloat(params.Kilometragem.replace(',','.'));
+			var subidaParaFloat = parseFloat(params.subida.replace(',','.'));
+			var descidaParaFloat = parseFloat(params.descida.replace(',','.'));
 						
 			pessoas.forEach(elem => pessoasArray.push(elem.value));
 			
 			var dataPost = {
 				eventoID: eventoID,
-				fatork: (params.Fatork * params.Kilometragem),
+				//fatorK na verdade eh a pontucao, math.abs eh o modulo do numero
+				fatork: (kilometragemParaFloat * (1+(subidaParaFloat + Math.abs(descidaParaFloat))/1000)),
+				fatorKAntigo: fatorKAntigo,
+				subdesc: 1+(subidaParaFloat + Math.abs(descidaParaFloat))/1000,
+				distancia: kilometragemParaFloat,
 				pessoas: pessoasArray
 			};
 			
@@ -554,7 +561,7 @@
 					Materialize.toast("Evento finalizado com sucesso!", 2000);					
 					$scope.eventosGetter();
 				} else {
-					Materialize.toast("Erro ao finalizar o evento!", 3000);
+					
 				}
 			});
 		}
@@ -576,6 +583,26 @@
 				}
 			});
 		}
+
+		//Excluir Usuario
+		$scope.excluirUsuario = function(id, idevento) {
+			var data = {
+				ID: id,
+				IDEvento: idevento
+			}
+			
+			//Chama POST Excluir Usuario
+			httpService.post('/excluir-usuario', data, function(answer) {
+				//Emite alerta sobre o status da operacao
+				if(answer) {
+					Materialize.toast("Usuário excluído com sucesso!", 2000);					
+
+				} else {
+					Materialize.toast("Erro ao excluir o usuario!", 3000);
+				}
+			});
+		}
+		
 		
 		//Inicializa
 		$rootScope.$on("InicializarEventos", function() {

@@ -243,6 +243,21 @@ app.post("/excluir-evento", function(req, res) {
 	}
 });
 
+
+//*****Excluir Usuario*****//
+app.post("/excluir-usuario", function(req, res) {
+	if(!req.session.usuarioLogado.ID) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			excluirUsuarioDB(req, req.body, connection, function(status) {
+				res.send(status);
+			});
+		});
+	}
+});
+
+
 //*****Criar Postagem*****//
 app.post("/criar-postagem", function(req, res) {
 	if(!req.session.usuarioLogado.ID) {
@@ -415,7 +430,7 @@ function getEventos(connection, callback) {
 //*****Get Confirmados*****//
 function getConfirmados(data, connection, callback) {
 	//Get os IDs dos confirmados com INNER JOIN
-	connection.query('SELECT ID, Nome, FatorK, `pessoa-evento`.ListaEspera, `pessoa-evento`.Colocacao, `pessoa-evento`.DataInscricao FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ? ORDER BY `pessoa-evento`.DataHoraInscricao, `pessoa-evento`.Colocacao', data, function(err, rows, fields) {
+	connection.query('SELECT ID, Nome, FatorK, `pessoa-evento`.ListaEspera, `pessoa-evento`.IDEvento, `pessoa-evento`.Colocacao, `pessoa-evento`.DataInscricao FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ? ORDER BY `pessoa-evento`.DataHoraInscricao, `pessoa-evento`.Colocacao', data, function(err, rows, fields) {
 		connection.release();
 		
 		if(!err) {
@@ -518,33 +533,31 @@ function cancelarEventoDB(post, connection, callback) {
 function finalizarEventoDB(req, post, connection, callback) {
 	var controle = true;
 	
+	
+
 	if(req.session.usuarioLogado.Admin) {
 		var promessa = new Promise(function(resolve, reject) {
 			post.pessoas.forEach(function(elem, index, array) {
-				connection.query('UPDATE `pessoa` SET FatorK = FatorK + ? WHERE ID = ?', [post.fatork, elem], function(err, rows, fields) {
-					if(!err) {
-						//Se for o ultimo, resolve a promessa
-						if(index == (array.length - 1)) {
-							resolve();
-						}
-					} else {
-						controle = false;
-					}
+
+				connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
+				
+					connection.query('UPDATE `evento` SET subdesc = ? WHERE ID = ?',  [post.subdesc, post.eventoID], function(err, rows, fields) {
+					});
+
+					connection.query('UPDATE `evento` SET distancia = ? WHERE ID = ?',  [post.distancia, post.eventoID], function(err, rows, fields) {
+					});
+
+					connection.query('UPDATE `pessoa-evento` SET fatorKPessoaEvento = ? WHERE IDEvento = ?',  [post.fatork, post.eventoID], function(err, rows, fields) {
+					});
+					connection.query('UPDATE `pessoa` SET FatorK = (SELECT SUM(FatorKPessoaEvento) FROM `pessoa-evento` WHERE IDPessoa = ?) WHERE ID = ?',  [elem,elem], function(err, rows, fields) {
+					});
+					connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', [post.eventoID], function(err, rows, fields) {
+					});
 				});
+				
 			});		
 		});
-		
-		promessa.then(function() {
-			connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', post.eventoID, function(err, rows, fields) {
-				connection.release();
-				
-				if(!err) {
-					callback(controle);
-				} else {
-					controle = false;
-				}
-			});
-		});
+	
 	} else {
 		callback(false);
 	}
@@ -572,6 +585,26 @@ function excluirEventoDB(req, post, connection, callback) {
 		callback(false);
 	}
 }
+
+
+//*****Excluir Usuario*****//
+function excluirUsuarioDB(req, post, connection, callback) {
+	if(req.session.usuarioLogado.Admin) {
+		connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ? AND IDPessoa = ?', [post.IDEvento, post.ID], function(err, rows, fields) {
+			connection.release();
+
+			if(!err) {
+				callback(true);
+			} else {
+				callback(false);
+			}
+		});
+	} else {
+		callback(false);
+	}
+}
+
+
 
 //*****Criar Postagem*****//
 function criarPostagemDB(req, data, connection, callback) {
@@ -673,7 +706,7 @@ function printTabela(connection, tabela) {
 
 //*****Monta Ranking*****//
 function montaRanking(connection, callback) {
-	connection.query('SELECT ID, Nome, FatorK FROM pessoa ORDER BY FatorK DESC', function(err, rows, fields) {
+	connection.query('SELECT ID, Nome, FatorK FROM pessoa WHERE (FatorK > 0) ORDER BY FatorK DESC', function(err, rows, fields) {
 		var numRows = rows.length;
 		
 		if(!err) {
