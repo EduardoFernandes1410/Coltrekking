@@ -387,9 +387,10 @@
 														<!-- Checkbox dos Presentes -->
 														<aCountdownLaranja>Atenção! Após remover um usuário a ação não poderá ser desfeita.</aCountdownLaranja>
 														<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6">
-															<input type="checkbox" checked name="pessoas[]" class="regular-checkbox" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
+															<input type="checkbox" checked name="pessoas[]" class="regular-checkbox" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>														
+														</p>
+														<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6">																
 															<label ng-attr-for="{{confirmado.ID}}"><a id="btn" href="#" class="botaoExcluirUsuario" onClick="$(this).css('background-color','#FAFAFA');" ng-click="excluirUsuario(confirmado.ID, confirmado.IDEvento)">Remover</a> {{confirmado.Nome}} </label>
-															
 														</p>
 													</div>
 												
