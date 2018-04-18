@@ -251,17 +251,18 @@ aCountdownLaranja {
 /*BOTAO REMOVER USUARIO*/
 .botaoExcluirUsuario {
 	background-color:#44c767;
-	-moz-border-radius:7px;
-	-webkit-border-radius:7px;
-	border-radius:7px;
+	-moz-border-radius:28px;
+	-webkit-border-radius:28px;
+	border-radius:28px;
+	border:1px solid #3bad46;
 	display:inline-block;
 	cursor:pointer;
 	color:#ffffff;
 	font-family:Arial;
 	font-size:13px;
-	padding:1px 4px;
+	padding:0px 4px;
 	text-decoration:none;
-	text-shadow:0px 0px 0px #ffffff;
+	text-shadow:0px 1px 0px #3e8a32;
 }
 .botaoExcluirUsuario:hover {
 	background-color:#a0d47d;
