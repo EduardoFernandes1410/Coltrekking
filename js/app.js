@@ -546,7 +546,8 @@
 			
 			var dataPost = {
 				eventoID: eventoID,
-				fatork: (kilometragemParaFloat * (1+(subidaParaFloat+descidaParaFloat)/1000)),
+				//fatorK na verdade eh a pontucao, math.abs eh o modulo do numero
+				fatork: (kilometragemParaFloat * (1+(subidaParaFloat + Math.abs(descidaParaFloat))/1000)),
 				fatorKAntigo: fatorKAntigo,
 				pessoas: pessoasArray
 			};
