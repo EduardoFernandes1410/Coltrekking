@@ -248,8 +248,9 @@ aCountdownLaranja {
   font-weight: bold;
   font-size: 20px; }
 
-  input:focus {
-    background-color: yellow;
+  input {
+    background-color: white;
+    color: black;
 }
   
 
