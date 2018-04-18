@@ -595,7 +595,7 @@
 					//Recarrega os posts
 					$rootScope.$broadcast('RecarregarPosts', true);
 				} else {
-					Materialize.toast("Erro ao excluir usuario!", 3000);
+					Materialize.toast("Erro ao excluir a postagem!", 3000);
 				}
 			});
 		}

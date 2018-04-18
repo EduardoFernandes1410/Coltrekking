@@ -243,6 +243,21 @@ app.post("/excluir-evento", function(req, res) {
 	}
 });
 
+
+//*****Excluir Usuario*****//
+app.post("/excluir-usuario", function(req, res) {
+	if(!req.session.usuarioLogado.ID) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			excluirUsuarioDB(req, req.body, connection, function(status) {
+				res.send(status);
+			});
+		});
+	}
+});
+
+
 //*****Criar Postagem*****//
 app.post("/criar-postagem", function(req, res) {
 	if(!req.session.usuarioLogado.ID) {
@@ -564,6 +579,26 @@ function excluirEventoDB(req, post, connection, callback) {
 		callback(false);
 	}
 }
+
+
+//*****Excluir Usuario*****//
+function excluirUsuarioDB(req, post, connection, callback) {
+	if(req.session.usuarioLogado.Admin) {
+		connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ?', post.ID, function(err, rows, fields) {
+			connection.release();
+
+			if(!err) {
+				callback(true);
+			} else {
+				callback(false);
+			}
+		});
+	} else {
+		callback(false);
+	}
+}
+
+
 
 //*****Criar Postagem*****//
 function criarPostagemDB(req, data, connection, callback) {
