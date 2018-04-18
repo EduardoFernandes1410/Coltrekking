@@ -607,7 +607,7 @@
 		});
 
 		//Recarrega Usuarios
-		$rootScope.$on("RecarregarUsuarios", function() {
+		$rootScope.$on("RecarregarUsuarios", function(event) {
 			$scope.eventosGetter();
 		});
 		
