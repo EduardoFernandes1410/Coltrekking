@@ -582,9 +582,9 @@ function excluirEventoDB(req, post, connection, callback) {
 
 
 //*****Excluir Usuario*****//
-function excluirDB(req, post, connection, callback) {
+function excluirUsuarioDB(req, post, connection, callback) {
 	if(req.session.usuarioLogado.Admin) {
-		connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ?', post.ID, function(err, rows, fields) {
+		connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ? AND IDPessoa = ?', [post.IDEvento, post.ID], function(err, rows, fields) {
 			connection.release();
 
 			if(!err) {
