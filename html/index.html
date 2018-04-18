@@ -382,9 +382,8 @@
 											<p class="modal-header">Editar Fator K</p>
 											
 											<form>								
-
+												<aCountdownLaranja>Atenção! Após remover um usuário a ação não poderá ser desfeita.</aCountdownLaranja>
 												<div class="row">
-													<aCountdownLaranja>Atenção! Após remover um usuário a ação não poderá ser desfeita.</aCountdownLaranja>
 													<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6">																
 														<label class="nomeExcluirUsuario" ng-attr-for="{{confirmado.ID}}"><a id="btn" href="#" class="botaoExcluirUsuario" onClick="$(this).css('background-color','#FAFAFA');" ng-click="excluirUsuario(confirmado.ID, confirmado.IDEvento)">Remover</a> {{confirmado.Nome}} </label>
 													</p>
