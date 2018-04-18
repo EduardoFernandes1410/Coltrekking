@@ -588,13 +588,15 @@
 			}
 			
 			//Chama POST Excluir Usuario
-			httpService.post('/excluir-evento', data, function(answer) {
+			httpService.post('/excluir-usuario', data, function(answer) {
 				//Emite alerta sobre o status da operacao
 				if(answer) {
-					Materialize.toast("Evento excluído com sucesso!", 2000);					
+					Materialize.toast("Usuário excluído com sucesso!", 2000);					
 					$scope.eventosGetter();
+					//Recarrega os usuarios
+					//$rootScope.$broadcast('RecarregarPosts', true);
 				} else {
-					Materialize.toast("Erro ao excluir o evento!", 3000);
+					Materialize.toast("Erro ao excluir o usuario!", 3000);
 				}
 			});
 		}
