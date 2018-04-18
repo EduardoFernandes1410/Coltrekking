@@ -386,7 +386,7 @@
 														<!-- Checkbox dos Presentes -->
 														<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6">
 															<input type="checkbox" checked name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
-															<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}} <button id="btn" href="#" onclick="return false;" ng-confirm-click="Você tem certeza? A ação não poderá ser desfeita!" confirmed-click="excluirUsuario(confirmado.ID, confirmado.IDEvento)">Remover</button> </label>
+															<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}} <button id="btn" href="#" onclick="return false;" ng-click="excluirUsuario(confirmado.ID, confirmado.IDEvento)">Remover</button> </label>
 															
 														</p>
 													</div>
