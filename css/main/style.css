@@ -275,21 +275,9 @@ aCountdownLaranja {
 
 /*CHECKBOX INVISIVEL*/
 .regular-checkbox {
-  background-color: #FFFFFF;
 }
  
 .regular-checkbox + label {
-    background-color: #FFFFFF;
-    border: 0px solid #FFFFFF;
-}
-
-.regular-checkbox:checked + label:after {
-  content: '\2714';
-  font-size: 10px;
-  position: absolute;
-  top: 0px;
-  left: 3px;
-  color: #000000;
 }
 
 /*****CARDS RANKING*****/
