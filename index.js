@@ -584,22 +584,15 @@ function excluirEventoDB(req, post, connection, callback) {
 //*****Excluir Usuario*****//
 function excluirUsuarioDB(req, post, connection, callback) {
 	if(req.session.usuarioLogado.Admin) {
-		//Confirmar se realmente quer excluir usuario
-		var isConfirmed = confirm("Você tem certeza? A ação não poderá ser desfeita!");
-		if(isConfirmed){
-			connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ? AND IDPessoa = ?', [post.IDEvento, post.ID], function(err, rows, fields) {
-				connection.release();
+		connection.query('DELETE FROM `pessoa-evento` WHERE IDEvento = ? AND IDPessoa = ?', [post.IDEvento, post.ID], function(err, rows, fields) {
+			connection.release();
 
-				if(!err) {
-					callback(true);
-				} else {
-					callback(false);
-				}
-			});
-		}else{
-			return false;
-		  }
-
+			if(!err) {
+				callback(true);
+			} else {
+				callback(false);
+			}
+		});
 	} else {
 		callback(false);
 	}
