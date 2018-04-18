@@ -550,6 +550,7 @@
 				fatork: (kilometragemParaFloat * (1+(subidaParaFloat + Math.abs(descidaParaFloat))/1000)),
 				fatorKAntigo: fatorKAntigo,
 				subdesc: 1+(subidaParaFloat + Math.abs(descidaParaFloat))/1000,
+				distancia: kilometragemParaFloat,
 				pessoas: pessoasArray
 			};
 			
