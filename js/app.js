@@ -604,11 +604,6 @@
 		$rootScope.$on("InicializarEventos", function() {
 			$scope.eventosGetter();
 		});
-
-		//Recarrega Usuarios
-		$rootScope.$on("RecarregarUsuarios", function(event) {
-			$scope.eventosGetter();
-		});
 		
 		//Recarrega eventos
 		$rootScope.$on("RecarregarEventos", function() {
