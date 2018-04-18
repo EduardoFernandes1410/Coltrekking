@@ -592,9 +592,8 @@
 				//Emite alerta sobre o status da operacao
 				if(answer) {
 					Materialize.toast("Usuário excluído com sucesso!", 2000);					
-					$scope.eventosGetter();
 					//Recarrega os usuarios
-					//$rootScope.$broadcast('RecarregarPosts', true);
+					$rootScope.$broadcast('RecarregarUsuarios', true);
 				} else {
 					Materialize.toast("Erro ao excluir o usuario!", 3000);
 				}
@@ -604,6 +603,11 @@
 		
 		//Inicializa
 		$rootScope.$on("InicializarEventos", function() {
+			$scope.eventosGetter();
+		});
+
+		//Recarrega Usuarios
+		$rootScope.$on("RecarregarUsuarios", function() {
 			$scope.eventosGetter();
 		});
 		
