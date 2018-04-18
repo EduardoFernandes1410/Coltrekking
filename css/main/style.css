@@ -249,7 +249,7 @@ aCountdownLaranja {
   font-size: 20px; }
 
 /*BOTAO REMOVER USUARIO*/
-  .buttonRemover {
+  .btn {
     background: #3498db;
     background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
     background-image: -moz-linear-gradient(top, #3498db, #2980b9);
@@ -268,7 +268,7 @@ aCountdownLaranja {
     text-decoration: none;
   }
   
-  .buttonRemover:hover {
+  .btn:hover {
     background: #aacde3;
     background-image: -webkit-linear-gradient(top, #aacde3, #74afd6);
     background-image: -moz-linear-gradient(top, #aacde3, #74afd6);
@@ -277,7 +277,7 @@ aCountdownLaranja {
     background-image: linear-gradient(to bottom, #aacde3, #74afd6);
     text-decoration: none;
   }  
-  .buttonRemover:visited{
+  .btn:visited{
     background: black;
 }
 
