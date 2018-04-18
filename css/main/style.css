@@ -254,10 +254,10 @@ aCountdownLaranja {
 	-moz-border-radius:28px;
 	-webkit-border-radius:28px;
 	border-radius:28px;
-	border:1px solid #ffffff;
+	border:1px solid #FAFAFA;
 	display:inline-block;
 	cursor:pointer;
-	color:#ffffff;
+	color:#FAFAFA;
 	font-family:Arial;
 	font-size:13px;
 	padding:0px 4px;
