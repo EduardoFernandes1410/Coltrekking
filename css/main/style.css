@@ -250,27 +250,38 @@ aCountdownLaranja {
 
 /*BOTAO REMOVER USUARIO*/
 .botaoExcluirUsuario {
-	background-color:#52b36c;
-	-moz-border-radius:15px;
-	-webkit-border-radius:15px;
-	border-radius:15px;
-	border:1px solid #ffffff;
+	background-color:#44c767;
+	-moz-border-radius:7px;
+	-webkit-border-radius:7px;
+	border-radius:7px;
 	display:inline-block;
 	cursor:pointer;
 	color:#ffffff;
 	font-family:Arial;
-	font-size:22px;
-	padding:4px 9px;
+	font-size:13px;
+	padding:1px 4px;
 	text-decoration:none;
 	text-shadow:0px 0px 0px #ffffff;
 }
 .botaoExcluirUsuario:hover {
-	background-color:#79a3a3;
+	background-color:#a0d47d;
 }
 .botaoExcluirUsuario:active {
 	position:relative;
 	top:1px;
 }
+.botaoExcluirUsuario:visited {
+	background-color:transparent;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:8px;
+	padding:1px 4px;
+	text-decoration:none;
+	text-shadow:0px 0px 0px #ffffff;
+}
+
 
 
 /*****CARDS RANKING*****/
