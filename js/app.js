@@ -592,8 +592,7 @@
 				//Emite alerta sobre o status da operacao
 				if(answer) {
 					Materialize.toast("Usuário excluído com sucesso!", 2000);					
-					//Recarrega os usuarios
-					$rootScope.$broadcast('RecarregarUsuarios', true);
+
 				} else {
 					Materialize.toast("Erro ao excluir o usuario!", 3000);
 				}
