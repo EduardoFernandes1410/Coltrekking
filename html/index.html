@@ -14,6 +14,9 @@
 		<script src="../node_modules/angular/angular.min.js"></script>
 		<script src="../node_modules/angular-route/angular-route.min.js"></script>
 		<script src="../node_modules/angular-sanitize/angular-sanitize.min.js"></script>
+		
+		<!--Adiciona Botao de confirmacao-->
+		<script src="../node_modules/confirm-click/confirm-click.js"></script>
 
 		<!--Adiciona o Firebase-->
 		<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
@@ -386,7 +389,7 @@
 														<!-- Checkbox dos Presentes -->
 														<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6">
 															<input type="checkbox" checked name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
-															<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}} <button id="btn" href="#" onclick="return false;" ng-click="excluirUsuario(confirmado.ID, confirmado.IDEvento)" confirm="Você tem certeza? A ação não poderá ser desfeita!">Remover</button> </label>
+															<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}} <button id="btn" href="#" onclick="return false;" ng-click="excluirUsuario(confirmado.ID, confirmado.IDEvento)" confirm-click="Você tem certeza? A ação não poderá ser desfeita!">Remover</button> </label>
 															
 														</p>
 													</div>
