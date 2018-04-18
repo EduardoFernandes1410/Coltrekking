@@ -247,6 +247,10 @@ aCountdownLaranja {
   color: #ff6e40 !important;
   font-weight: bold;
   font-size: 20px; }
+
+  input:focus {
+    background-color: yellow;
+}
   
 
 /*****CARDS RANKING*****/
