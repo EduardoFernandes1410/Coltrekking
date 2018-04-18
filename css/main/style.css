@@ -281,6 +281,11 @@ aCountdownLaranja {
 
 }
 
+.nomeExcluirUsuario {
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 0px; }
+
 /*****CARDS RANKING*****/
 #ranking .card .card-content {
   font-size: 16px; }
