@@ -282,8 +282,7 @@ aCountdownLaranja {
 }
 
 .regular-checkbox:checked + label:after {
- color: #FAFAFA;
- background-color:#FAFAFA;
+  margin-left: 3000px;
 }
 
 /*****CARDS RANKING*****/
