@@ -386,7 +386,7 @@
 														<!-- Checkbox dos Presentes -->
 														<p ng-repeat="confirmado in evento.Confirmados" class="checkboxConfirmados col s12 m6">
 															<input type="checkbox" checked name="pessoas[]" class="filled-in" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>
-															<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}} <a id="btn" href="#" class="botaoExcluirUsuario" onclick="return false;" ng-click="excluirUsuario(confirmado.ID, confirmado.IDEvento)">Remover</a> </label>
+															<label ng-attr-for="{{confirmado.ID}}">{{confirmado.Nome}} <a id="btn" href="#" class="botaoExcluirUsuario" onClick="$(this).css('background-color','blue');" ng-click="excluirUsuario(confirmado.ID, confirmado.IDEvento)">Remover</a> </label>
 															
 														</p>
 													</div>
