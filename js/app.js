@@ -549,8 +549,7 @@
 				//fatorK na verdade eh a pontucao, math.abs eh o modulo do numero
 				fatork: (kilometragemParaFloat * (1+(subidaParaFloat + Math.abs(descidaParaFloat))/1000)),
 				fatorKAntigo: fatorKAntigo,
-				subida: subidaParaFloat,
-				descida: Math.abs(descidaParaFloat),
+				subdesc: 1+(subidaParaFloat + Math.abs(descidaParaFloat))/1000,
 				pessoas: pessoasArray
 			};
 			
