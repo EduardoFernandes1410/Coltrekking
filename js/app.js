@@ -538,9 +538,9 @@
 			//Pega as pessoas marcadas
 			var pessoas = $("input[name='pessoas[]']:checked").toArray();
 			var pessoasArray = [];
-			var kilometragemParaFloat =  parseFloat(params.Kilometragem.replace(',','.'));
-			var subidaParaFloat = parseFloat(params.subida.replace(',','.'));
-			var descidaParaFloat = parseFloat(params.descida.replace(',','.'));
+			var kilometragemParaFloat =  parseFloat(params.Kilometragem.replace(',','.')).toFixed(1);
+			var subidaParaFloat = parseFloat(params.subida.replace(',','.')).toFixed(1);
+			var descidaParaFloat = parseFloat(params.descida.replace(',','.')).toFixed(1);
 						
 			pessoas.forEach(elem => pessoasArray.push(elem.value));
 			
