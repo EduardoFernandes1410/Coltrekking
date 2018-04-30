@@ -550,7 +550,7 @@ function finalizarEventoDB(req, post, connection, callback) {
 
 				connection.query('UPDATE `pessoa-evento` SET fatorKPessoaEvento = ? WHERE IDEvento = ?',  [post.fatork, post.eventoID], function(err, rows, fields) {
 				});
-				connection.query('UPDATE `pessoa` SET FatorK = FatorK + (SELECT FatorKPessoaEvento  FROM `pessoa-evento` WHERE IDEvento = ? AND IDPessoa = ?) - ? WHERE ID = ?',  [post.eventoID, elem, elem], function(err, rows, fields) {
+				connection.query('UPDATE `pessoa` SET FatorK = FatorK + (SELECT FatorKPessoaEvento  FROM `pessoa-evento` WHERE IDEvento = ? AND IDPessoa = ?) - ? WHERE ID = ?',  [post.eventoID, elem, post.fatorKAntigo, elem], function(err, rows, fields) {
 				});
 				connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', [post.eventoID], function(err, rows, fields) {
 				});
