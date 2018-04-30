@@ -289,12 +289,20 @@
 											</div>
 
 											<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
-											<div ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
-												<aCountdownAzul onclick="return false;">Fator K: {{evento.subdesc.toFixed(1)}} </aCountdownAzul> <aPontuacao>  = 1 + (subida + decida)/1000</aPontuacao> <br>
-												<aCountdownAzul onclick="return false;">Distância: {{evento.distancia.toFixed(1)}} KM</aCountdownAzul><br>	
-												<aCountdownLaranja onclick="return false;">Pontuação: {{evento.fatorKevento.toFixed(1)}} </aCountdownLaranja> <aPontuacao>  = Fator K * distância</aPontuacao> <br>											
-											</div>
+											<p>
+												<i class="tiny material-icons">label_outline</i>
+												<span class="topico-info"> Fator K:</span class="topico-info"> {{evento.subdesc.toFixed(2)}} = 1 + (subida + decida)/1000
+											</p>
 
+											<p>
+												<i class="tiny material-icons">label</i>
+												<span class="topico-info"> Distância:</span class="topico-info"> {{evento.distancia.toFixed(2)}} KM
+											</p>
+
+											<p>
+												<i class="tiny material-icons">label_outline</i>
+												<span class="topico-info"> Pontuação:</span class="topico-info"> {{evento.fatorKevento.toFixed(2)}} = Fator K * distância
+											</p>
 										
 
 											<p>
