@@ -430,7 +430,7 @@
 											<!--Botao Submit Finalizar-->
 											<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" onClick='parent.location="javascript:location.reload()"' ng-click="finalizarEvento(finalizar, evento.ID, evento.fatorKevento)">Aplicar</a>
 											<!-- Pegar pessoas inscritas no evento e jogar na string pessoas -->				
-											<p ng-repeat="confirmado in evento.Confirmados" ng-class="{espera: $index >= evento.NumeroMax}>
+											<p ng-repeat="confirmado in evento.Confirmados" ng-class="{espera: $index >= evento.NumeroMax}">
 												<input type="text" name="pessoas[]" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>														
 											</p>
 										</div>
