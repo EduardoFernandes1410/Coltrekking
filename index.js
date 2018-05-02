@@ -549,11 +549,7 @@ function finalizarEventoDB(req, post, connection, callback) {
 
 				connection.query('UPDATE `pessoa-evento` SET fatorKPessoaEvento = ? WHERE IDEvento = ?',  [post.fatork, post.eventoID], function(err, rows, fields) {
 				});
-				// Updar somente as pessoas que tem Fator k maior que 0
-				connection.query('UPDATE `pessoa` SET FatorK = (SELECT SUM(FatorKPessoaEvento) FROM `pessoa-evento` WHERE IDPessoa = ?) WHERE ID = ? AND FatorK > 0',  [elem,elem], function(err, rows, fields) {
-				});
-				// Updar as pessoas que tem fator K = 0 e participaram do primeiro evento
-				connection.query('UPDATE `pessoa` SET FatorK = (SELECT FatorKPessoaEvento FROM `pessoa-evento` WHERE IDEvento = ? AND IDPessoa = ?) WHERE ID = ? AND FatorK = 0',  [post.eventoID,elem,elem], function(err, rows, fields) {
+				connection.query('UPDATE `pessoa` SET FatorK = (SELECT SUM(FatorKPessoaEvento) FROM `pessoa-evento` WHERE IDPessoa = ?) WHERE ID = ?',  [elem,elem], function(err, rows, fields) {
 				});
 				connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', [post.eventoID], function(err, rows, fields) {
 				});
