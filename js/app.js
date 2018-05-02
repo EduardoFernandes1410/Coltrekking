@@ -536,7 +536,7 @@
 		//Finalizar evento
 		$scope.finalizarEvento = function(params, eventoID, fatorKAntigo) {
 			//Pega as pessoas marcadas
-			var pessoas = $("input[name='pessoas[]']:checked").toArray();
+			var pessoas = $("input[name='pessoas[]']").toArray();
 			var pessoasArray = [];
 			var kilometragemParaFloat =  parseFloat(params.Kilometragem.replace(',','.'));
 			var subidaParaFloat = parseFloat(params.subida.replace(',','.'));
