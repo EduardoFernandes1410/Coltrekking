@@ -549,7 +549,7 @@ function finalizarEventoDB(req, post, connection, callback) {
 
 				connection.query('UPDATE `pessoa-evento` SET fatorKPessoaEvento = ? WHERE IDEvento = ?',  [post.fatork, post.eventoID], function(err, rows, fields) {
 				});
-				connection.query('UPDATE `pessoa` SET FatorK = 3 WHERE ID = ?',  [elem], function(err, rows, fields) {
+				connection.query('UPDATE `pessoa` SET FatorK = 2 WHERE ID = ?',  [elem], function(err, rows, fields) {
 				});
 				connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', [post.eventoID], function(err, rows, fields) {
 				});
