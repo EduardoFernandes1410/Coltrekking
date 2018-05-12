@@ -431,7 +431,7 @@
 											<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" onClick='parent.location="javascript:location.reload()"' ng-click="finalizarEvento(finalizar, evento.ID, evento.fatorKevento)">Aplicar</a>
 											<!-- Pegar pessoas inscritas no evento e jogar na string pessoas -->				
 											<div ng-repeat="confirmado in evento.Confirmados">
-												<input type="text" name="pessoas[]" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>														
+												<input type="text" class="removerIDpessoas" name="pessoas[]" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>														
 											</div>
 										</div>
 									</div>

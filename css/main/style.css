@@ -286,6 +286,11 @@ aCountdownLaranja {
 
 }
 
+.removerIDpessoas {
+  color: red;
+  font-size: 5px;
+}
+
 .nomeExcluirUsuario {
   font-size: 15px;
   font-weight: bold;
