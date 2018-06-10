@@ -26,10 +26,10 @@ app.use(express.static('./', {
 //*****MySQL*****//
 var pool = mysql.createPool({
 	connectionLimit : 300,
-	host	: process.env.DB_HOST,
-	user	: process.env.DB_USER,
-	password: process.env.DB_PASSWORD,
-	database: process.env.DB_DATABASE,
+	host	: 'sql9.freemysqlhosting.net',
+	user	: 'sql9242044',
+	password: 'mvyTtXJDEM',
+	database: 'sql9242044',
 	debug	: false
 });
 
@@ -230,6 +230,49 @@ app.post("/finalizar-evento", function(req, res) {
 	}
 });
 
+
+
+//*****Finalizar Evento Prelecao - sem cadastrar fator k*****//
+app.post("/finalizar-evento-prelecao", function(req, res) {
+	if(!req.session.usuarioLogado.ID) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			finalizarEventoPrelecaoDB(req, req.body, connection, function(status) {
+				res.send(status);
+			});
+		});
+	}
+});
+
+
+//*****Adicionar usuario na lista negra*****//
+app.post("/adicionar-lista-negra", function(req, res) {
+	if(!req.session.usuarioLogado.ID) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			adicionarListaNegraDB(req, req.body, connection, function(status) {
+				res.send(status);
+			});
+		});
+	}
+});
+
+//*****Remover usuario da lista negra*****//
+app.post("/remover-lista-negra", function(req, res) {
+	if(!req.session.usuarioLogado.ID) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			removerListaNegraDB(req, req.body, connection, function(status) {
+				res.send(status);
+			});
+		});
+	}
+});
+
+
 //*****Excluir Evento*****//
 app.post("/excluir-evento", function(req, res) {
 	if(!req.session.usuarioLogado.ID) {
@@ -372,12 +415,36 @@ function pegaInfoUsuarioLogado(req, connection, callback) {
 function criarEventoDB(req, data, connection, callback) {
 	if(req.session.usuarioLogado.Admin) {
 		connection.query('INSERT INTO evento SET ?', data, function(err, rows, fields) {
-			connection.release();
-		
 			if(!err) {
-				callback(true);
+				connection.query('UPDATE `pessoa` SET ListaNegra = 0 WHERE ListaNegra = 2', function(err, rows, fields) {
+					if(!err) {
+						connection.query('UPDATE `pessoa` SET ListaNegra = 2 WHERE ListaNegra = 1', function(err, rows, fields) {				
+							if(!err) {
+								connection.query('UPDATE `pessoa-evento` SET listaNegraEvento = 3 WHERE listaNegraEvento = 2', function(err, rows, fields) {
+									if(!err) {
+										connection.query('UPDATE `pessoa-evento` SET listaNegraEvento = 2 WHERE listaNegraEvento = 1', function(err, rows, fields) {
+											connection.release();
+		
+											if(!err) {
+												callback(true);
+											}
+											else {
+												callback(false);
+											}
+										});	
+									} else {
+										callback(false);
+									}
+								});	
+							} else {
+								callback(false);
+							}
+						});	
+					} else {
+						callback(false);
+					}
+				});			
 			} else {
-				// console.log(err);
 				callback(false);
 			}
 		});
@@ -430,7 +497,7 @@ function getEventos(connection, callback) {
 //*****Get Confirmados*****//
 function getConfirmados(data, connection, callback) {
 	//Get os IDs dos confirmados com INNER JOIN
-	connection.query('SELECT ID, Nome, FatorK, `pessoa-evento`.ListaEspera, `pessoa-evento`.IDEvento, `pessoa-evento`.Colocacao, `pessoa-evento`.DataInscricao FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ? ORDER BY `pessoa-evento`.DataHoraInscricao, `pessoa-evento`.Colocacao', data, function(err, rows, fields) {
+	connection.query('SELECT ID, Nome, FatorK, `pessoa-evento`.ListaEspera, `pessoa-evento`.IDEvento, `pessoa-evento`.Colocacao, `pessoa-evento`.DataInscricao, `pessoa-evento`.listaNegraEvento FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ? ORDER BY `pessoa-evento`.DataHoraInscricao, `pessoa-evento`.Colocacao', data, function(err, rows, fields) {
 		connection.release();
 		
 		if(!err) {
@@ -486,18 +553,24 @@ function confirmarEventoDB(data, connection, callback) {
 							DataInscricao: new Date().toUTCString(),
 							DataHoraInscricao: datetime
 						};
-						
-						//Adiciona pessoa ao evento
-						connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
-							if(!err) {
-								connection.release();
-								callback(true);
-							} else {
-								//console.log('this.sql', this.sql);
-								//console.log(err);
-								callback(false);
-							}
-						});
+
+						//verifica se o usuario nao esta na lista negra
+						if(data.blacklist == 0) {
+							//Adiciona pessoa ao evento
+							connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
+								if(!err) {
+									connection.release();
+									callback(true);
+								} else {
+									//console.log('this.sql', this.sql);
+									//console.log(err);
+									callback(false);
+								}
+							});
+						}
+						else{
+							callback(false);
+						}
 					} else {
 						callback(false);
 					}
@@ -547,7 +620,7 @@ function finalizarEventoDB(req, post, connection, callback) {
 				connection.query('UPDATE `evento` SET distancia = ? WHERE ID = ?',  [post.distancia, post.eventoID], function(err, rows, fields) {
 				});
 
-				connection.query('UPDATE `pessoa-evento` SET fatorKPessoaEvento = ? WHERE IDEvento = ?',  [post.fatork, post.eventoID], function(err, rows, fields) {
+				connection.query('UPDATE `pessoa-evento` SET fatorKPessoaEvento = ? WHERE IDEvento = ? AND listaNegraEvento = 0',  [post.fatork, post.eventoID], function(err, rows, fields) {
 				});
 				connection.query('UPDATE `pessoa` SET FatorK = (SELECT SUM(FatorKPessoaEvento) FROM `pessoa-evento` WHERE IDPessoa = ?) WHERE ID = ?',  [elem,elem], function(err, rows, fields) {
 				});
@@ -556,11 +629,103 @@ function finalizarEventoDB(req, post, connection, callback) {
 				
 			});		
 		});
+		promessa.then(function() {
+			connection.release();
+		});
 	
 	} else {
 		callback(false);
 	}
 }
+
+
+
+
+//*****Finalizar Evento Prelecao - Sem cadastrar fator k*****//
+function finalizarEventoPrelecaoDB(req, post, connection, callback) {	
+	if(req.session.usuarioLogado.Admin) {
+		connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', post.eventoID, function(err, rows, fields) {
+			connection.release();
+		
+			if(!err) {
+				callback(true);
+			}
+			else {
+				callback(false);
+			}
+		});
+	} else {
+		callback(false);
+	}
+}
+
+
+
+
+/**
+ 	Na tabela `pessoa`, quando o admin adiciona um usuario a lista negra, a coluna "ListaNegra" recebe 1.
+	Na tabela `pessoa`, quando o admin cria um evento, todos que possui 1 na "ListaNegra" recebe o numero 2
+	E todos que possuem que possui 2 na "ListaNegra" recebe 0 (saem da lista negra)
+	Usuarios que nao possuirem 0, nao poderam se inscrever em nenhum evento
+	
+	Na tabela `pessoa-evento`, o usuario terá 1 na coluna "listaNegraEvento" quando o admin adiciona-la na lista negra
+	Na tabela `pessoa-evento`, o usuario terá 2 na coluna "listaNegraEvento" quando o um evento for criado.
+	Quando a coluna "listaNegraEvento" for = 1, então a situacao do usuario eh bloqueado
+	Quando a coluna "listaNegraEvento" for = 2, então a situacao do usuario eh livre
+**/
+//*****Adicionar usuario na lista negra*****//
+function adicionarListaNegraDB(req, post, connection, callback) {	
+	if(req.session.usuarioLogado.Admin) {
+		connection.query('UPDATE `pessoa-evento` SET listaNegraEvento = 1 WHERE IDEvento = ? AND IDPessoa = ?', [post.IDEvento, post.ID], function(err, rows, fields) {
+			if(!err) {
+				connection.query('UPDATE `pessoa` SET ListaNegra = 1 WHERE ID = ?', post.ID, function(err, rows, fields) {
+					connection.release();
+		
+					if(!err) {
+						callback(true);
+					} else {
+						callback(false);
+					}
+				});			
+			} else {
+				callback(false);
+			}
+		});
+	} else {
+		callback(false);
+	}
+}
+
+
+/**
+	Remover usuario da lista negra
+**/
+function removerListaNegraDB(req, post, connection, callback) {	
+	if(req.session.usuarioLogado.Admin) {
+		connection.query('UPDATE `pessoa-evento` SET listaNegraEvento = 0 WHERE IDEvento = ? AND IDPessoa = ?', [post.IDEvento, post.ID], function(err, rows, fields) {
+			if(!err) {
+				connection.query('UPDATE `pessoa` SET ListaNegra = 0 WHERE ID = ?', post.ID, function(err, rows, fields) {
+					connection.release();
+		
+					if(!err) {
+						callback(true);
+					} else {
+						callback(false);
+					}
+				});			
+			} else {
+				callback(false);
+			}
+		});
+	} else {
+		callback(false);
+	}
+}
+
+
+
+
+
 
 //*****Excluir Evento*****//
 function excluirEventoDB(req, post, connection, callback) {

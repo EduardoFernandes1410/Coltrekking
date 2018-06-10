@@ -164,6 +164,7 @@
 			$(document).ready(function() {
 				//Select
 				$('select').material_select();
+
 				
 				//Date-Picker
 				$('.datepicker').pickadate({
@@ -417,6 +418,7 @@
 					$(document).ready(function() {
 						$('.modal').modal();
 						$('.scrollspy').scrollSpy();
+	
 						
 						$('.dropdown-button').dropdown({
 							inDuration: 300,
@@ -458,9 +460,10 @@
 			
 			var data = {
 				evento: evento.ID,
-				usuario: $rootScope.usuario.ID
+				usuario: $rootScope.usuario.ID,
+				blacklist: $rootScope.usuario.ListaNegra
 			}
-			
+			console.log(data.blacklist);
 			//Chama POST Confirmar Evento
 			httpService.post('/confirmar-evento', data, function(answer) {
 				//Reabilita o botao de se inscrever
@@ -474,7 +477,7 @@
 					$scope.postConfirmado(evento);
 					$scope.confirmadosPorMim();
 				} else {
-					Materialize.toast("Erro ao se inscrever no evento!", 3000);
+					Materialize.toast("Erro ao se inscrever no evento! Verifique se você está na lista negra.", 3000);
 				}
 			});
 		}
@@ -516,9 +519,6 @@
 			httpService.post('/confirmados-por-mim', data, function(answer) {
 				$rootScope.eventosConfirmados = answer;
 				
-				//Seta margin top do scroll spy em funcao da altura do card
-				var altura = $('#card-confirmados').height() + 36;
-				$('.table-of-contents').css("margin-top", altura + "px");
 			});
 		}
 		
@@ -565,6 +565,68 @@
 				}
 			});
 		}
+
+
+
+		//Finalizar Evento Prelecao - Sem Fator K
+		$scope.finalizarEventoPrelecao = function(eventoID) {
+			var dataPost = {
+				eventoID: eventoID
+			}
+			
+			//Chama POST Excluir Evento
+			httpService.post('/finalizar-evento-prelecao', dataPost, function(answer) {
+				//Emite alerta sobre o status da operacao
+				if(answer) {
+					Materialize.toast("Evento finalizado com sucesso!", 2000);					
+					$scope.eventosGetter();
+				} else {
+					Materialize.toast("Erro ao finalizar evento", 3000);
+				}
+			});
+		}
+
+
+		//Adicionar usuario na lista negra
+		$scope.adicionarListaNegra = function(id, idevento) {
+			var dataPost = {
+				ID: id,
+				IDEvento: idevento
+			}
+
+			//Chama POST Adicionar na lista negra
+			httpService.post('/adicionar-lista-negra', dataPost, function(answer) {
+				//Emite alerta sobre o status da operacao
+				if(answer) {
+					Materialize.toast("Usuario adicionado na lista negra com sucesso!", 2000);					
+				} else {
+					Materialize.toast("Erro ao adicionar usuario na lista negra", 3000);
+				}
+			});
+		}
+
+
+
+		//Remover usuario da lista negra
+		$scope.removerListaNegra = function(id, idevento) {
+			var dataPost = {
+				ID: id,
+				IDEvento: idevento
+			}
+
+			//Chama POST Remover na lista negra
+			httpService.post('/remover-lista-negra', dataPost, function(answer) {
+				//Emite alerta sobre o status da operacao
+				if(answer) {
+					Materialize.toast("Usuario removido da lista negra com sucesso!", 2000);					
+				} else {
+					Materialize.toast("Erro ao remover usuario da lista negra", 3000);
+				}
+			});
+		}
+
+
+		
 		
 		//Excluir Evento
 		$scope.excluirEvento = function(eventoID) {
@@ -625,6 +687,7 @@
 				//Select
 				$('select').material_select();
 				
+
 				//Post fixado
 				$("#fixado").change(function() {
 					if(this.checked) {
