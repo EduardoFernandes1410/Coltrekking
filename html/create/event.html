@@ -51,13 +51,13 @@
 					<!--Data Inicio-->
 					<div class="input-field col s12 l4">
 						<input id="dataInicio" type="text" class="datepicker" name="dataInicio" ng-model="params.DataInicio" ng-init="params.DataInicio = eventoAttr.dataInicio">
-						<label for="dataInicio" class="active">Data de Início</label>
+						<label for="dataInicio" class="active">Data do Trekking/Preleção</label>
 					</div>
 
 					<!--Data Fim-->
 					<div class="input-field col s12 l4">
 						<input disabled id="dataFim" type="text" class="datepicker" name="dataFim" ng-model="params.DataFim" ng-init="params.DataFim = eventoAttr.dataFim">
-						<label for="dataFim" class="active">Data de Fim</label>
+						<label for="dataFim" class="active">Fim do Trekking (Apenas Acamp)</label>
 					</div>
 					
 					<!--Numero Maximo-->
@@ -111,7 +111,7 @@
 			<!--Botao Submit CRIAR EVENTO-->
 			<a id="botaoSubmitCE" ng-if="!modoEdicao" class="waves-effect waves-light btn deep-orange accent-2" ng-click="criarEvento(params)"><i class="material-icons right">send</i>Criar Evento</a>
 			<!--Botao Submit EDITAR EVENTO-->
-			<a id="botaoSubmitEE" ng-if="modoEdicao" class="waves-effect waves-light btn deep-orange accent-2" ng-click="editarEvento(params)"><i class='material-icons right'>edit</i>Editar Evento</a>
+			<a id="botaoSubmitEE" ng-if="modoEdicao" class="waves-effect waves-light btn deep-orange accent-2" ng-click="editarEvento(params)"><i class='material-icons right'>edit</i>Salvar</a>
 		</div>
 	</div>
 </div>

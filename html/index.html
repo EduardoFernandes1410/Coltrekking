@@ -163,7 +163,7 @@
 											</thead>
 
 											<tbody ng-repeat="evento in eventos">
-												<tr ng-repeat="confirmado in evento.Confirmados" ng-if="confirmado.listaNegraEvento != 0">
+												<tr ng-repeat="confirmado in evento.Confirmados" ng-if="confirmado.listaNegraEvento != 0 && confirmado.listaNegraEvento != 3">
 													<td class="listaNegraUsuario">
 														<p>	
 															{{confirmado.Nome}}
@@ -182,10 +182,6 @@
 														<aCountdownLaranja ng-if="confirmado.listaNegraEvento == 2">
 															Livre no próximo
 														</aCountdownLaranja>
-
-														<aCountdownVerde ng-if="confirmado.listaNegraEvento == 3">
-															Livre
-														</aCountdownVerde>
 													</td>
 													<td class="listaNegraUsuario">
 														<a ng-if="usuario.Admin" id="btn" href="#" onClick='parent.location="javascript:location.reload()"' ng-click="removerListaNegra(confirmado.ID, confirmado.IDEvento)"><img id="iconListaNegraERemover" src="../rsc/icon/remover.png"></a>
@@ -193,24 +189,10 @@
 												</tr>
 											</tbody>
 										</table>
-
-										<script>
-										x = document.getElementsByClassName("listaNegraUsuario").length;
-										for (i=0;i<=x;i++){
-											document.getElementsByClassName("listaNegraUsuario")[i].style.backgroundColor = "#FFFFFF";
-										}
-										</script>
-
 									</div>
 								</div>
 							</div>
 						</div>
-
-						<!-- declarar variavel "contarNumeroEventosDisponiveis" para saber se nao ha eventos disponiveis e entao colocar a mensagem padrao: "Desculpe, nao ha evetos disponiveis" -->
-						<script>
-							var contarNumeroEventosDisponiveis=0;
-						</script>
-
 
 						<!--Eventos-->
 						<div ng-controller="EventosController">
@@ -502,11 +484,13 @@
 											</div>
 										</div>
 										
+										<!-- Declarar variavel que conta o numero de eventos -->
+										<script>contarNumeroEventosDisponiveis=0;</script> 
 
 										<!--Cria os cards de evento-->
 										<div class="container col s12 l7" ng-repeat="evento in eventos">
 											<div class="card card-evento section scrollspy" ng-attr-id="{{evento.ID}}" ng-if="evento.Finalizado == 0">
-												<!-- Somar mais um na variavel que conta o numero de eventos -->
+												<!-- Contar o numero de eventos para saber se deixa a mensagem padrao: "nao ha eventos disponiveis" -->
 												<div ng-if="evento.Finalizado == 0">
 													<script>
 														contarNumeroEventosDisponiveis++;
@@ -538,7 +522,7 @@
 													<ul ng-if="usuario.Admin" ng-attr-id="{{'menu-card' + evento.ID}}" class="dropdown-content">
 														<!-- Mostrar Esse finalizar evento quando o tempo para inscricao estiver encerrado -->
 														<div ng-if="evento.Disponivel == 2">
-															<li><a href="#!" class="finalizador" onClick='parent.location="javascript:location.reload()"' ng-click="finalizarEventoPrelecao(evento.ID)">Finalizar Evento</a></li>
+															<li><a href="#!" class="finalizador" ng-click="finalizarEventoPrelecao(evento.ID)">Finalizar Evento</a></li>
 														</div>
 
 
@@ -708,13 +692,17 @@
 		<!--Adiciona script.js-->
 		<script src="../js/main/script.js"></script>
 
+		<!-- Tela de carregamento -->
 		<script>
-			setTimeout(function(){ 
-				document.getElementById("loading").remove();
-				document.getElementById("conteudo").style.display = "block";
-			}, 3100);
+			$(document).ready(function () {
+				// Depois que carregar, setar mais 3.4 segundos, para garantir o carregamento
+				setTimeout(function(){ 
+					document.getElementById("loading").remove();
+					document.body.style.backgroundColor = "#FAFAFA";
+					document.getElementById("conteudo").style.display = "block";
+				}, 3400);
+			});
 		</script>
-
 	</body>
 
 </html>

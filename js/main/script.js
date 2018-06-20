@@ -8,7 +8,6 @@ $(document).ready(function() {
 	
 });
 
-
 /**********FORMULARIO**********/
 //Verifica o tipo do evento inserido
 function verificaTipo() {
