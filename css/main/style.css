@@ -301,7 +301,12 @@ nav .tabs {
   margin-top: -48px !important; }
 
 .card-action a {
-  color: #ff6e40 !important; }
+  color: #ff6e40 !important;
+}
+
+#estilizarIconePDF{
+  margin-left: 28px !important; 
+}
 
 
 
@@ -419,6 +424,20 @@ h3{
   background-color:#D8D8D8;
 }
 
+/*Tamanho do icone pdf*/
+#iconPdf{
+  width: 30px;
+  margin-left: -5px !important;
+  margin-top: -4px !important;
+}
+#iconPdf:hover{
+  background-color:#D8D8D8;
+}
+
+.listaDeincritos {
+  margin-top: -20px !important;
+}
+
 /*Cores dos CountDowns*/
 aCountdownVerde {
   color: #8BC34A !important;
@@ -444,6 +463,11 @@ aCountdownVermelho {
   color: #000000 !important;
  }
 
+ /* Deixar a tabela que gera pdf invisivel */
+ .gerarPdfListaIncritos{
+  visibility:hidden;
+  height:0px;
+}
 
 /*CHECKBOX INVISIVEL*/
 .regular-checkbox {

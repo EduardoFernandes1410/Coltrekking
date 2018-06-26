@@ -9,6 +9,9 @@
 		<!--Adiciona jQuery-->
 		<script src="../node_modules/jquery/dist/jquery.min.js"></script>
 
+		<!--Js PDF-->
+		<script src="../node_modules/jspdf/dist/jspdf.min.js"></script>
+		<script src="../node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.js"></script>
 
 		<!--Adiciona Angular-->
 		<script src="../node_modules/angular/angular.min.js"></script>
@@ -289,7 +292,7 @@
 													
 													<!-- Info do Evento -->
 													<div ng-if="evento.Disponivel == 2">
-														<aCountdownLaranja onclick="return false;">Encerrado</aCountdownLaranja>
+														<aCountdownLaranja onclick="return false;">Inscrições Encerradas</aCountdownLaranja>
 													</div>
 
 													<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
@@ -350,12 +353,32 @@
 														<span class="topico-info"> Nº de Inscritos:</span> {{evento.Confirmados.length}}/{{evento.NumeroMax}}
 													</p>
 
+
+													<div class="gerarPdfListaIncritos">
+														<table ng-attr-id="{{'tabelaDoEventoNumero-' + evento.ID}}">
+															
+															<thead>
+																<tr>
+																	<th>Posição</th>
+																	<th>Nome</th>
+																	<th>Assinatura</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr ng-repeat="pessoa in evento.Confirmados">
+																	<td>{{pessoa.Nome}}</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+											
 												</div>
 												
 												<!--Card Action LISTA DE INSCRITOS-->
 												<div class="card-action" ng-show="evento.Disponivel">
-													<a ng-attr-href="{{'#lista-inscritos-finalizados' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
+													<a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos-finalizados' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
 												</div>
+												<a id="estilizarIconePDF" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID);" onclick="return false;"><img id="iconPdf" src="../rsc/icon/pdf.png"></a>
 										
 											</div>
 											
@@ -545,7 +568,7 @@
 													</div>
 			
 													<div ng-if="evento.Disponivel == 2">
-														<aCountdownLaranja onclick="return false;">Encerrado</aCountdownLaranja>
+														<aCountdownLaranja onclick="return false;">Inscrições Encerradas</aCountdownLaranja>
 													</div>
 													
 													<p>
@@ -588,20 +611,41 @@
 														<span class="topico-info"> Nº de Inscritos:</span> {{evento.Confirmados.length}}/{{evento.NumeroMax}}
 													</p>
 
+													
+													<div class="gerarPdfListaIncritos">
+														<table ng-attr-id="{{'tabelaDoEventoNumero-' + evento.ID}}">
+															
+															<thead>
+																<tr>
+																	<th>Posição</th>
+																	<th>Nome</th>
+																	<th>Assinatura</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr ng-repeat="pessoa in evento.Confirmados">
+																	<td>{{pessoa.Nome}}</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+
+
+
 												</div>
 												
 												<!--Card Action LISTA DE INSCRITOS-->
 												<div class="card-action" ng-show="evento.Disponivel">
-													<a ng-attr-href="{{'#lista-inscritos' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
+													<a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
 												</div>
+												<a id="estilizarIconePDF" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID);" onclick="return false;"><img id="iconPdf" src="../rsc/icon/pdf.png"></a>
 										
 											</div>
 											
 											<!--Lista de Inscritos-->
 											<div ng-attr-id="{{'lista-inscritos' + evento.ID}}" class="modal modal-fixed-footer">
 												<div class="modal-content">
-													<p class="modal-header">{{evento.Nome}}</p>
-													
+													<p class="modal-header">{{evento.Nome}}</p>		
 													<!--Tabela-->
 													<table class="bordered">
 														<!--Titulos da tabela-->

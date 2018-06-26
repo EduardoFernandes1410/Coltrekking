@@ -587,6 +587,47 @@
 		}
 
 
+		//Gerar lista PDF
+		$scope.gerarPDF = function(idDoEventoParaGerarTabela) {
+				var columns = [
+				{title: "P", dataKey: "id"},
+				{title: "Nome", dataKey: "name"}, 
+				{title: "          ", dataKey: "a"},
+				{title: "          ", dataKey: "b"},
+				{title: "          ", dataKey: "c"},
+				{title: "Assinatura", dataKey: "d"},
+				{title: "          ", dataKey: "e"},
+				{title: "          ", dataKey: "f"},
+				{title: "          ", dataKey: "g"}
+				];
+
+				var numeroDeTD = $('#'+ idDoEventoParaGerarTabela + ' td').length;
+				console.log("numero de TDS: " + numeroDeTD);
+				var rows = [];
+				for(var i=0;i<numeroDeTD;i++) {
+					var aux = $('#'+idDoEventoParaGerarTabela + ' td')[i].innerHTML;
+					rows.push({"id": i+1 + "º", "name": aux});
+				}
+				console.log(rows);
+				var doc = new jsPDF('p', 'pt');
+				doc.autoTable(columns, rows, {
+					styles: {fillColor: [130, 130, 130]},
+					bodyStyles: {
+						fillColor: [210, 210, 210],
+					},
+					alternateRowStyles: {
+						fillColor: [240, 240, 240]
+					},
+					columnStyles: {
+						name: {fillColor: 247},
+						id: {fillColor: 240}
+					},
+				});
+				doc.save('ListaDePresenca.pdf');	
+		}
+
+
+
 		//Adicionar usuario na lista negra
 		$scope.adicionarListaNegra = function(id, idevento) {
 			var dataPost = {

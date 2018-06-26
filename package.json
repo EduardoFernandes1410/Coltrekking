@@ -13,6 +13,8 @@
     "express": "^4.10.6",
     "express-session": "*",
     "jquery": "^3.2.1",
+    "jspdf": "^1.4.1",
+	"jspdf-autotable": "^2.3.4",
     "materialize-css": "^0.99",
     "mysql": "^2.5.4"
   },
