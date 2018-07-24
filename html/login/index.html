@@ -35,7 +35,7 @@
 					<div class="col s10 offset-s1 m6 offset-m3 l6 offset-l3 xl6 offset-xl3">
 						<div class="valign-wrapper">
 							<!--Card central-->
-							<div class="card light-green lighten-1 z-depth-5">
+							<div class="card light-green z-depth-5">
 								<div class="card-content">
 									<!--Logo-->
 									<span class="card-title">
@@ -46,6 +46,35 @@
 										Bem-vindo à experiência definitiva. <br>
 										Está preparado?
 									</blockquote>
+									<div class="row">
+										<!-- Modal Trigger -->
+										<div class="col s12">
+											<a class="waves-effect waves-light btn modal-trigger" href="#modal1">Informações</a>
+										</div>
+									</div>
+									<!-- Modal Structure -->
+									<div id="modal1" class="modal modal-fixed-footer">
+										<div class="modal-content">
+											<h4>Sobre o Coltrekking</h4>
+											<p>O Coltrekking é um projeto de ensino do COLTEC-UFMG que tem como objetivo promover qualidades humanas utilizando a navegação terrestre como um laboratório ao ar livre.</p>
+											<h5>Como participar?</h5>
+											<a class="linksRedesSociais" href="https://www.facebook.com/notes/coltrekking/regras-do-coltrekking/2038394626485938/" target="_blank">1º: Leia as regras clicando aqui</a>
+											<a class="linksRedesSociais">2º: Faça o login neste site clicando em "Entrar com o Facebook" ou "Entrar com o Google"</a>
+											<a class="linksRedesSociais">3º: Após fazer o login, se houver eventos disponíveis, clique no icone "+" para inscrever-se em um evento"</a>
+
+											<p></p>
+											<h5>Notícias</h5>
+											<p>Para acompanhar as novídades, datas para inscrições em eventos etc.</p>
+											<a class="linksRedesSociais" href="https://www.facebook.com/groups/2011942699021364/" target="_blank">Participe do grupo no facebook</a>
+											<a class="linksRedesSociais" href="https://www.facebook.com/coltrekkingCOLTECUFMG/" target="_blank">Curta a página no facebook</a>
+											<h5>Fotos</h5>
+											<a class="linksRedesSociais" href="https://www.instagram.com/coltrekking/" target="_blank">Acompanhe as fotos no Instagram</a>
+										</div>
+										<div class="modal-footer">
+											<a href="#!" class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+										</div>
+									</div>
+
 									<!--Botoes de Login para mobile-->
 									<a id="loginGoogleMobile" href="#" class="botao-login hide-on-med-and-up waves-effect waves-light btn-large red lighten-1" onclick="googleSignIn();">Entrar c/ Google</a>
 									<a id="loginFacebookMobile" href="#" class="botao-login hide-on-med-and-up waves-effect waves-light btn-large blue lighten-1" onclick="facebookSignIn();">Entrar c/ Facebook</a>
@@ -78,5 +107,19 @@
 		<script src="https://use.fontawesome.com/ef528e6d3b.js"></script>
 		<script type="text/javascript" src="../../node_modules/jquery/dist/jquery.min.js"></script>
 		<script type="text/javascript" src="../../node_modules/materialize-css/dist/js/materialize.min.js"></script>
+
+		<!-- Scrip do modal -->
+		<script>
+			$(document).ready(function(){
+				$('.modal').modal();
+			});
+		</script>
+
+		<div class="footer">
+			<a href="https://www.facebook.com/coltrekkingCOLTECUFMG/" target="_blank"><img src="../rsc/login/icones/facebook.png"></a>
+			<a href="https://www.instagram.com/coltrekking/" target="_blank"><img src="../rsc/login/icones/instagram.png"></a>
+			<a href="https://www.facebook.com/groups/2011942699021364/" target="_blank"><img src="../rsc/login/icones/facebookgroup.png"></a>
+		</div>
+
 	</body>
 </html>

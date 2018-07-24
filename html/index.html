@@ -39,7 +39,7 @@
 	</head>
 	
 	<body>
-		<div id="loading">
+		<div id="loading" style="display: block">
 			<img src="../rsc/logo/loading.gif" id="loadingAlinhar" />
 		</div>
 
@@ -58,7 +58,7 @@
 									</div>
 
 									<!--Botao Hamburger-->
-									<a id="hamburguer" href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+									<a id="hamburguer" href="#!" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 
 									<!--Search Bar-->
 									<div class="col s9 m10 l6">
@@ -94,14 +94,33 @@
 							</div>
 						</div>
 
+						
+						<script>
+							function mostrarRanking() {
+								$('#esconderEventosFinalizadosAoClicarEmOutraTab').css("display", "none");
+								$('#listaNegraOcultaNosEventosFinalizados').css("display", "none");
+								$('#rankingOcultoNosEventosFinalizados').css("display", "block");
+							}
+							function mostrarListaNegra() {
+								$('#esconderEventosFinalizadosAoClicarEmOutraTab').css("display", "none");
+								$('#listaNegraOcultaNosEventosFinalizados').css("display", "block");
+								$('#rankingOcultoNosEventosFinalizados').css("display", "none");
+							}
+							function mostrarEventos() {
+								$('#esconderEventosFinalizadosAoClicarEmOutraTab').css("display", "block");
+								$('#listaNegraOcultaNosEventosFinalizados').css("display", "none");
+								$('#rankingOcultoNosEventosFinalizados').css("display", "none");
+							}
+						</script>
+
 						<!--Tabs-->
 						<div ng-controller="RouteController">
 							<div class="container nav-container">
 								<div class="nav-content">
-									<ul class="tabs tabs-transparent tabs-fixed-width" ng-show="$location.path() === '/'"> <!--So aparece na Pagina Principal-->
-										<li class="tab"><a href="#eventos">Eventos</a></li>
-										<li class="tab"><a href="#listanegra">Lista Negra</a></li>
-										<li class="tab"><a href="#ranking">Ranking</a></li>
+									<ul class="tabs tabs-transparent tabs-fixed-width" ng-show="$location.path() === '/' || $location.path() === '/finalizados2018' || $location.path() === '/finalizados2017'"> <!--So aparece na Pagina Principal e eventos finalizados-->
+										<li class="tab"><a href="#eventos" onclick="mostrarEventos();">Eventos</a></li>
+										<li class="tab"><a href="#listanegra" onclick="mostrarListaNegra();">Lista Negra</a></li>
+										<li class="tab"><a href="#ranking" onclick="mostrarRanking();">Ranking</a></li>
 									</ul>
 								</div>
 							</div>
@@ -135,15 +154,11 @@
 			<div id="corpo" class="container">
 				<!--FAB-->
 				<div ng-if="usuario.Admin" class="fixed-action-btn">
-					<a class="btn-floating btn-large deep-orange accent-2">
+					<a class="btn-floating btn-large deep-orange accent-2" href="#!/create-event">
 						<i class="large material-icons">add</i>
 					</a>
-
-					<ul>
-						<li><a href="#!/create-event" class="btn-floating deep-orange accent-2"><i class="material-icons">event</i></a></li>
-						<li><a href="#!/create-news" class="btn-floating deep-orange accent-2"><i class="material-icons">chat</i></a></li>
-					</ul>
 				</div>
+
 
 				<!--Paginas das Abas-->
 				<div ng-controller="RouteController">
@@ -178,16 +193,16 @@
 														</p>
 													</td>
 													<td class="listaNegraUsuario">
-														<aCountdownVermelho ng-if="confirmado.listaNegraEvento == 1">
+														<aListaNegraBloqueadoProximo ng-if="confirmado.listaNegraEvento == 1">
 															Bloqueado no próximo
-														</aCountdownVermelho>
+														</aListaNegraBloqueadoProximo>
 
-														<aCountdownLaranja ng-if="confirmado.listaNegraEvento == 2">
+														<aListaNegraLivreProximo ng-if="confirmado.listaNegraEvento == 2">
 															Livre no próximo
-														</aCountdownLaranja>
+														</aListaNegraLivreProximo>
 													</td>
 													<td class="listaNegraUsuario">
-														<a ng-if="usuario.Admin" id="btn" href="#" onClick='parent.location="javascript:location.reload()"' ng-click="removerListaNegra(confirmado.ID, confirmado.IDEvento)"><img id="iconListaNegraERemover" src="../rsc/icon/remover.png"></a>
+														<a ng-if="usuario.Admin" id="btn" href="#!" onClick='parent.location="javascript:location.reload()"' ng-click="removerListaNegra(confirmado.ID, confirmado.IDEvento)"><img id="iconListaNegraERemover" src="../rsc/icon/remover.png"></a>
 													</td>
 												</tr>
 											</tbody>
@@ -197,6 +212,16 @@
 							</div>
 						</div>
 
+						<!-- Mostrar o botao de mostrar os eventos dos outros anos apenas na guia eventos finalizados -->
+						<script>
+							function botaoMostrarEventosAnteriores() {
+								$('.botaoEventosAnteriores').css("display", "block");
+							}
+							function NAOmostrarBotaoEventosAnteriores() {
+								$('.botaoEventosAnteriores').css("display", "none");
+							}
+						</script>
+
 						<!--Eventos-->
 						<div ng-controller="EventosController">
 							<div id="eventos">	
@@ -204,8 +229,8 @@
 									<div class="col m1 l3"></div>
 									<div class="col s12 m10 l6">
 										<ul class="tabsEventos tabs tabs-green">
-											<li class="tabsEventos tab col s6"><a href="#exibirEventosDisponiveis">Disponíveis</a></li>
-											<li class="tabsEventos tab col s6"><a href="#exibirEventosFinalizados">Finalizados</a></li>
+											<li class="tabsEventos tab col s6"><a onclick="NAOmostrarBotaoEventosAnteriores();" href="#exibirEventosDisponiveis">Disponíveis</a></li>
+											<li class="tabsEventos tab col s6"><a onclick="botaoMostrarEventosAnteriores();" href="#exibirEventosFinalizados">Finalizados</a></li>
 										</ul>
 									</div>
 									<div class="col m1 l3"></div>								
@@ -213,13 +238,15 @@
 
 								<div class="row modulo-wrapper">
 									
-									<!--Eventos Finalizados-->
+									<!--Eventos Finalizados-->                    
 									<div id="exibirEventosFinalizados">
 										<!--Fixacoes-->
 										<div class="container col hide-on-med-and-down l4 right">
+											<a ng-if="usuario.Admin" href="#!/create-news" id="botaoCriarBarraLateral">Nova Barra Lateral</a>
 											<!--Eventos Cadastrados-->
-											<div class="card" id="card-confirmados">
+											<div class="card">
 												<div class="card-content">
+				
 													<span class="card-title">Eventos Confirmados por Você</span>
 													
 													<!-- Lista de Eventos Confirmados -->
@@ -237,19 +264,22 @@
 											
 											<!-- Scroll Spy -->
 											<ul class="section table-of-contents">
-
-												<!-- Verifica se o evento foi finalizado: ng-if="evento.Finalizado == 1" -->
-												<li ng-repeat="evento in eventos" ng-if="evento.Finalizado == 1"> 
-													<a ng-attr-href="{{'#' + evento.ID}}">{{evento.Nome}}</a>
-												</li>
+												<div class="card">
+													<div class="card-content">
+														<!-- Verifica se o evento foi finalizado: ng-if="evento.Finalizado == 1" -->
+														<li ng-repeat="evento in eventos" ng-if="evento.Finalizado == 1 && evento.ano != 2017"> 
+															<a ng-attr-href="{{'#' + evento.ID}}">{{evento.Nome}}</a>
+														</li>
+													</div>
+												</div>
 											</ul>
-
+				
 											<!--Fixacoes-->
 											<div ng-controller="PostsController">
 												<!-- Posts fixados -->											
 												<div class="card" ng-repeat="post in postagemFixada | filter: {Fixado: 1}">
 													<div class="card-content">
-														<a href="#" onclick="return false;" ng-click="excluirPostagem(post.ID)">
+														<a href="#!" onclick="return false;" ng-click="excluirPostagem(post.ID)">
 															<i ng-if="usuario.Admin" class="material-icons delete-post-fixado">delete</i>
 														</a>
 														<p class="data-post data-post-fixado">{{post.Data}}</p>
@@ -259,11 +289,11 @@
 													</div>
 												</div>
 											</div>
-
+				
 										</div>
 										<!--Cria os cards de evento-->
 										<div class="container col s12 l7" ng-repeat="evento in eventos">
-											<div class="card card-evento section scrollspy" ng-attr-id="{{evento.ID}}" ng-if="evento.Finalizado == 1">
+											<div class="card card-evento section scrollspy" ng-attr-id="{{evento.ID}}" ng-if="evento.Finalizado == 1 && evento.ano != 2017">
 														
 												<!--Cabecalho-->
 												<div class="card-image">
@@ -294,25 +324,25 @@
 													<div ng-if="evento.Disponivel == 2">
 														<aCountdownLaranja onclick="return false;">Inscrições Encerradas</aCountdownLaranja>
 													</div>
-
+				
 													<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
 													<div ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
 														<p>
 															<i class="tiny material-icons">label_outline</i>
 															<span class="topico-info"> Fator K:</span class="topico-info"> {{evento.subdesc.toFixed(2)}} = 1 + (subida + decida)/1000
 														</p>
-
+				
 														<p>
 															<i class="tiny material-icons">label</i>
 															<span class="topico-info"> Distância:</span class="topico-info"> {{evento.distancia.toFixed(2)}} KM
 														</p>
-
+				
 														<p>
 															<i class="tiny material-icons">label_outline</i>
 															<span class="topico-info"> Pontuação:</span class="topico-info"> {{evento.fatorKevento.toFixed(2)}} = Fator K * distância
 														</p>
 													</div>
-
+				
 													<p>
 														<i class="tiny material-icons">label</i>
 														<span class="topico-info"> Tipo:</span class="topico-info"> {{evento.TipoString}}
@@ -352,8 +382,8 @@
 														<i class="tiny material-icons">add_circle</i>
 														<span class="topico-info"> Nº de Inscritos:</span> {{evento.Confirmados.length}}/{{evento.NumeroMax}}
 													</p>
-
-
+				
+				
 													<div class="gerarPdfListaIncritos">
 														<table ng-attr-id="{{'tabelaDoEventoNumero-' + evento.ID}}">
 															
@@ -378,7 +408,7 @@
 												<div class="card-action" ng-show="evento.Disponivel">
 													<a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos-finalizados' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
 												</div>
-												<a id="estilizarIconePDF" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID);" onclick="return false;"><img id="iconPdf" src="../rsc/icon/pdf.png"></a>
+												<a id="estilizarIconePDF" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio);" onclick="return false;"><img id="iconPdf" src="../rsc/icon/pdf.png"></a>
 										
 											</div>
 											
@@ -397,7 +427,7 @@
 																<th class="hide-on-med-and-down">Data da Inscrição</th>
 															</tr>
 														</thead>
-
+				
 														<!--Linha para cada usuario-->
 														<tbody>
 															<tr ng-repeat="pessoa in evento.Confirmados" ng-class="{espera: $index >= evento.NumeroMax}">
@@ -414,7 +444,6 @@
 												</div>
 											</div>		
 											
-											
 											<!-- Lista Finalizadora-->
 											<div ng-attr-id="{{'lista-finalizadora' + evento.ID}}" class="modal" id="modal-finalizar">
 												<div class="modal-content">
@@ -428,13 +457,13 @@
 														<div class="row">
 															<p ng-repeat="confirmado in evento.Confirmados" ng-if="confirmado.listaNegraEvento == 0" class="checkboxConfirmados col s12 m6">																
 																<label class="nomeExcluirUsuario" ng-attr-for="{{confirmado.ID}}">
-																	<a id="btn" href="#" onClick="$(this).css('display','none');" ng-click="adicionarListaNegra(confirmado.ID, confirmado.IDEvento)"><img id="iconListaNegraERemover" src="../rsc/icon/listanegra.png"></a> 
-																	<a id="btn" href="#" onClick="$(this).css('display','none');" ng-click="excluirUsuario(confirmado.ID, confirmado.IDEvento)"><img id="iconListaNegraERemover" src="../rsc/icon/remover.png"></a>			
+																	<a id="btn" onClick="$(this).css('display','none');" ng-click="adicionarListaNegra(confirmado.ID, confirmado.IDEvento)"><img id="iconListaNegraERemover" src="../rsc/icon/listanegra.png"></a> 
+																	<a id="btn" onClick="$(this).css('display','none');" ng-click="excluirUsuario(confirmado.ID, confirmado.IDEvento)"><img id="iconListaNegraERemover" src="../rsc/icon/remover.png"></a>			
 																	{{confirmado.Nome}} 
 																</label>
 															</p>
 														</div>
-														<aCountdownVerde>Cadastrar Prontução</aCountdownVerde>
+														<aCountdownVerde>Cadastrar Pontuação</aCountdownVerde>
 														<div class="row">
 															<!-- Kilometragem -->
 															<div class="input-field col s12 m5 l3">
@@ -447,7 +476,7 @@
 																<input id="subida-finalizar" type="text" step="0.01" name="subida" ng-model="finalizar.subida">
 																<label for="subida-finalizar">Subida (metros)</label>
 															</div>
-
+				
 															<!-- Descida -->
 															<div class="input-field col s12 m5 l3">
 																<input id="descida-finalizar" type="text" step="0.01" name="descida" ng-model="finalizar.descida">
@@ -463,18 +492,18 @@
 													<!--Botao Cancelar-->
 													<a href="#!" class="modal-action modal-close waves-effect waves-orange btn-flat">Cancelar</a>
 													<!--Botao Submit Finalizar-->
-													<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" onClick='parent.location="javascript:location.reload()"' ng-click="finalizarEvento(finalizar, evento.ID, evento.fatorKevento)">Aplicar</a>
+													<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" ng-click="finalizarEvento(finalizar, evento.ID, evento.fatorKevento)">Aplicar</a>
 													<!-- Pegar pessoas inscritas no evento e jogar na string pessoas -->				
 													<div ng-repeat="confirmado in evento.Confirmados">
-														<input type="text" class="removerIDpessoas" name="pessoas[]" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>														
+														<input type="text" class="removerIDpessoas col s1 l1" ng-attr-name="{{'stringPessoasEventos-' + evento.ID + '[]'}}" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>														
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
 									
-									
-									
+
+
 
 									<!--Eventos Disponiveis-->
 									<div id="exibirEventosDisponiveis">
@@ -491,10 +520,11 @@
 										<div id="postFixaxoes" style="display: none">
 											<div ng-controller="PostsController">
 												<div class="container col hide-on-med-and-down l4 right">
+													<a ng-if="usuario.Admin" href="#!/create-news" id="botaoCriarBarraLateral">Nova Barra Lateral</a>
 													<!-- Posts fixados -->											
 													<div class="card" ng-repeat="post in postagemFixada | filter: {Fixado: 1}">
 														<div class="card-content">
-															<a href="#" onclick="return false;" ng-click="excluirPostagem(post.ID)">
+															<a href="#!" onclick="return false;" ng-click="excluirPostagem(post.ID)">
 																<i ng-if="usuario.Admin" class="material-icons delete-post-fixado">delete</i>
 															</a>
 															<p class="data-post data-post-fixado">{{post.Data}}</p>
@@ -636,9 +666,9 @@
 												
 												<!--Card Action LISTA DE INSCRITOS-->
 												<div class="card-action" ng-show="evento.Disponivel">
-													<a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
+													<a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos' + evento.ID}}" ng-click="postConfirmado(evento);" onclick="return false;">Lista de Inscritos no Evento</a>
 												</div>
-												<a id="estilizarIconePDF" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID);" onclick="return false;"><img id="iconPdf" src="../rsc/icon/pdf.png"></a>
+												<a id="estilizarIconePDF" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio);" onclick="return false;"><img id="iconPdf" src="../rsc/icon/pdf.png"></a>
 										
 											</div>
 											
@@ -675,16 +705,11 @@
 										</div>
 									</div>
 								</div>
+								<!-- Botoes para ver eventos dos anos anteriores -->
+								<a class="botaoEventosAnteriores" href="main-page#!/finalizados2018">CLIQUE AQUI PARA VER OS EVENTOS DE 2018</a>
+								<a class="botaoEventosAnteriores" href="main-page#!/finalizados2017">CLIQUE AQUI PARA VER OS EVENTOS DE 2017</a>
 							</div>
 						</div>
-
-
-
-
-
-
-
-
 
 						<!--Ranking-->
 						<div ng-controller="RankingController as Ranking">
@@ -739,12 +764,12 @@
 		<!-- Tela de carregamento -->
 		<script>
 			$(document).ready(function () {
-				// Depois que carregar, setar mais 3.4 segundos, para garantir o carregamento
+				// Depois que carregar, setar mais 3 segundos, para garantir o carregamento
 				setTimeout(function(){ 
 					document.getElementById("loading").remove();
 					document.body.style.backgroundColor = "#FAFAFA";
 					document.getElementById("conteudo").style.display = "block";
-				}, 3400);
+				}, 3000);
 			});
 		</script>
 	</body>

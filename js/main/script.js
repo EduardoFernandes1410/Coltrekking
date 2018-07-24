@@ -11,29 +11,42 @@ $(document).ready(function() {
 /**********FORMULARIO**********/
 //Verifica o tipo do evento inserido
 function verificaTipo() {
-	//Se for prelecao, nao permitir inserir dificuldade
+
+	/*
+	var x = document.getElementById("tipo").value;
+	document.getElementById("demo").innerHTML = "You selected: " + x;
+
+	var y = document.getElementById("tipoTrekking").value;
+	document.getElementById("demo2").innerHTML = "You selected: " + y;
+
+	var z = document.getElementById("dificuldade").value;
+	document.getElementById("demo3").innerHTML = "You selected: " + z;
+	*/
+
+	//Apos clicar, nao deixar escolher novamente pois ira bugar
+	$("#tipo").attr("disabled", true);
+	$("#tipo").material_select();
+
+	//Se for prelecao
 	if($("#tipo").find(":selected").val() == 1) {
-		$("#dificuldade").attr("disabled", true);
-		$("#dificuldade").material_select();
-	}
-	else {
-		$("#dificuldade").attr("disabled", false);
-		$("#dificuldade").material_select();
+		//Mostrar o campo para inserir a data da prelecao
+		$("#dataPrelecao").css("display", "block");
 	}
 	
-	//Se for trekking, permitir inserir tipo do trekking
+	//Se for trekking
 	if($("#tipo").find(":selected").val() == 2) {
-		$("#tipoTrekking").attr("disabled", false);
-		$("#tipoTrekking").material_select();
-	}
-	else {
-		$("#tipoTrekking").attr("disabled", true);
-		$("#tipoTrekking").material_select();
+		//mostrar os campos dificuldade e tipo do trekking
+		$("#DificuldadeETipodoTrekking").css("display", "block");
+		//Mostrar o campo para inserir a data do trekking
+		$("#dataTrekking").css("display", "block");
 	}
 	
-	//Se for acampa, permitir inserir data fim
+	//Se for acampa
 	if($("#tipo").find(":selected").val() == 3) {
-		$("#dataFim").attr("disabled", false);
+		//Sumir dificuldade e colocar a dificuldade que ocupa todo o espaco
+		$("#dificuldadeAcamp").css("display", "block");
+		//Mostrar o campo para inserir a data do acampamento
+		$("#dataAcampamento").css("display", "block");
 	}
 	else {
 		$("#dataFim").attr("disabled", true);

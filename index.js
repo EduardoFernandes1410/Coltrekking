@@ -497,7 +497,7 @@ function getEventos(connection, callback) {
 //*****Get Confirmados*****//
 function getConfirmados(data, connection, callback) {
 	//Get os IDs dos confirmados com INNER JOIN
-	connection.query('SELECT ID, Nome, FatorK, `pessoa-evento`.ListaEspera, `pessoa-evento`.IDEvento, `pessoa-evento`.Colocacao, `pessoa-evento`.DataInscricao, `pessoa-evento`.listaNegraEvento FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ? ORDER BY `pessoa-evento`.DataHoraInscricao, `pessoa-evento`.Colocacao', data, function(err, rows, fields) {
+	connection.query('SELECT ID, Nome, FatorK, `pessoa-evento`.ListaEspera, `pessoa-evento`.IDEvento, `pessoa-evento`.Colocacao, `pessoa-evento`.DataHoraInscricao, `pessoa-evento`.DataInscricao, `pessoa-evento`.listaNegraEvento FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ? ORDER BY `pessoa-evento`.DataHoraInscricao, `pessoa-evento`.Colocacao', data, function(err, rows, fields) {
 		connection.release();
 		
 		if(!err) {
@@ -543,6 +543,43 @@ function confirmarEventoDB(data, connection, callback) {
 						datetime = datetime.split('T');
 						datetime[1] = datetime[1].split('.')[0];
 						datetime = datetime.join(' ');
+
+
+
+
+						var horarioCompleto =  new Date().toUTCString();
+						horarioCompleto = horarioCompleto.substr(17, 9);
+						var horarioVerao = horarioCompleto[0] + horarioCompleto[1];
+						var intHorarioVerao = parseInt(horarioVerao);
+						if (intHorarioVerao == 0) {
+							intHorarioVerao = 21;
+						}
+						else if (intHorarioVerao == 1) {
+							intHorarioVerao = 22;
+						}
+						else if (intHorarioVerao == 2) {
+							intHorarioVerao = 23;
+						}
+						else {
+							intHorarioVerao = intHorarioVerao-3; //Ajustar o -3 dependendo se for horario de verao ou nao
+						}
+						// Se o horario tiver apenas um numero no campo horas,  ex: 1:15, entao adicionar o 0 antes, ex: 01:15 
+						var charHorarioVerao = intHorarioVerao.toString();
+						var charHorarioVeraoCompleto = "";
+						if (charHorarioVerao.length == 1) {
+							charHorarioVeraoCompleto = "0" + charHorarioVerao;
+						}
+						else {
+							charHorarioVeraoCompleto = charHorarioVerao;
+						}
+
+						horarioCompleto = horarioCompleto.substr(2);
+						var horarioCerto = charHorarioVeraoCompleto + horarioCompleto;
+						var diaInscricao =  new Date().toUTCString();
+						diaInscricao = diaInscricao.substr(5,11);
+						horarioCerto = diaInscricao + " - " + horarioCerto;
+
+
 						
 						//Seta o post
 						post = {
@@ -550,7 +587,7 @@ function confirmarEventoDB(data, connection, callback) {
 							IDEvento: data.evento,
 							Colocacao: 0,
 							ListaEspera: 0,
-							DataInscricao: new Date().toUTCString(),
+							DataInscricao: horarioCerto,
 							DataHoraInscricao: datetime
 						};
 
@@ -605,34 +642,63 @@ function cancelarEventoDB(post, connection, callback) {
 //*****Finalizar Evento*****//
 function finalizarEventoDB(req, post, connection, callback) {
 	var controle = true;
-	
-	
-
 	if(req.session.usuarioLogado.Admin) {
-		var promessa = new Promise(function(resolve, reject) {
-			post.pessoas.forEach(function(elem, index, array) {
-
-				connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
-				});
+		connection.query('UPDATE `evento` SET fatorKevento = ? WHERE ID = ?', [post.fatork, post.eventoID], function(err, rows, fields) {
+			if(!err) {
 				connection.query('UPDATE `evento` SET subdesc = ? WHERE ID = ?',  [post.subdesc, post.eventoID], function(err, rows, fields) {
-				});
+					if(!err) {
+						connection.query('UPDATE `evento` SET distancia = ? WHERE ID = ?',  [post.distancia, post.eventoID], function(err, rows, fields) {
+							if(!err) {
 
-				connection.query('UPDATE `evento` SET distancia = ? WHERE ID = ?',  [post.distancia, post.eventoID], function(err, rows, fields) {
-				});
+								var promessa = new Promise(function(resolve, reject) {
+									post.pessoas.forEach(function(elem, index, array) {
+										connection.query('UPDATE `pessoa-evento` SET fatorKPessoaEvento = ? WHERE IDEvento = ? AND listaNegraEvento = 0',  [post.fatork, post.eventoID], function(err, rows, fields) {
+											if(!err) {
+												connection.query('UPDATE `pessoa` SET FatorK = (SELECT SUM(FatorKPessoaEvento) FROM `pessoa-evento` WHERE IDPessoa = ?) WHERE ID = ?',  [elem,elem], function(err, rows, fields) {
+													if(!err) {
+														//Se for o ultimo, resolve a promessa
+														if(index == (array.length - 1)) {
+															resolve();
+														}
+													} else {
+														controle = false;
+													}
+												});
+											} else {
+												callback(false);
+											}
+										});
+									});		
+								});
+								
+								promessa.then(function() {
+									connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', post.eventoID, function(err, rows, fields) {
+										connection.release();
+										
+										if(!err) {
+											callback(controle);
+										} else {
+											controle = false;
+										}
+									});
+								});
 
-				connection.query('UPDATE `pessoa-evento` SET fatorKPessoaEvento = ? WHERE IDEvento = ? AND listaNegraEvento = 0',  [post.fatork, post.eventoID], function(err, rows, fields) {
+
+							} else {
+								callback(false);
+							}
+						});
+					}
+					else {
+						callback(false);
+					}
 				});
-				connection.query('UPDATE `pessoa` SET FatorK = (SELECT SUM(FatorKPessoaEvento) FROM `pessoa-evento` WHERE IDPessoa = ?) WHERE ID = ?',  [elem,elem], function(err, rows, fields) {
-				});
-				connection.query('UPDATE `evento` SET Finalizado = 1 WHERE ID = ?', [post.eventoID], function(err, rows, fields) {
-				});
-				
-			});		
+			}
+			else {
+				callback(false);
+			}
 		});
-		promessa.then(function() {
-			connection.release();
-		});
-	
+		
 	} else {
 		callback(false);
 	}
@@ -855,19 +921,6 @@ function estaDisponivel(evento, connection, callback) {
 	});
 }
 
-//*****Printa Tabela*****//
-function printTabela(connection, tabela) {
-	connection.query('SELECT * FROM ??', [tabela], function(err, rows, fields) {
-		connection.release();
-		
-		if(!err) {
-			//console.log(rows);
-		} else {
-			//console.log('Error while performing Query (PRINTA TABELA)');
-		}
-	});
-}
-
 //*****Monta Ranking*****//
 function montaRanking(connection, callback) {
 	connection.query('SELECT ID, Nome, FatorK FROM pessoa WHERE (FatorK > 0) ORDER BY FatorK DESC', function(err, rows, fields) {
@@ -879,26 +932,26 @@ function montaRanking(connection, callback) {
 			var promessa = new Promise(function(resolve, release) {
 				for(var i = 0; i < rows.length; i++) {
 					if(i == 0) {
-						connection.query('UPDATE pessoa SET Posicao = 1 WHERE ID = ?', rows[0].ID);
+						//connection.query('UPDATE pessoa SET Posicao = 1 WHERE ID = ?', rows[0].ID);
 						rows[0].Posicao = 1;
 					} else {
 						if(rows[i].FatorK == rows[i - 1].FatorK) {
-							connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [rows[i - 1].Posicao, rows[i].ID], function(err, rows, fields) {
+							//connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [rows[i - 1].Posicao, rows[i].ID], function(err, rows, fields) {
 								iteracao++;
 
 								if(iteracao == numRows) {
 									resolve();
 								}
-							});
+							//});
 							rows[i].Posicao = rows[i - 1].Posicao;
 						} else {
-							connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [(i + 1), rows[i].ID], function(err, rows, fields) {
+							//connection.query('UPDATE pessoa SET Posicao = ? WHERE ID = ?', [(i + 1), rows[i].ID], function(err, rows, fields) {
 								iteracao++;
 
 								if(iteracao == numRows) {
 									resolve();
 								}
-							});
+							//});
 							rows[i].Posicao = i + 1;
 						}
 					}

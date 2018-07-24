@@ -25,8 +25,16 @@
 						$location.path('/create-event');
 					}
 				} else {
-					event.preventDefault();
-					$location.path('/');
+					if(next.templateUrl == "../html/finalizados2018.html") {
+						$location.path('/finalizados2018');
+					}
+					else if(next.templateUrl == "../html/finalizados2017.html") {
+						$location.path('/finalizados2017');
+					}
+					else {
+						event.preventDefault();
+						$location.path('/');
+					}
 				}
 			});
 		});
@@ -44,6 +52,18 @@
 		.when("/create-news",
 			{
 				templateUrl: "../html/create/news.html",
+				controller: "CriarPostsController"
+			}
+		)
+		.when("/finalizados2018",
+			{
+				templateUrl: "../html/finalizados2018.html",
+				controller: "CriarPostsController"
+			}
+		)
+		.when("/finalizados2017",
+			{
+				templateUrl: "../html/finalizados2017.html",
 				controller: "CriarPostsController"
 			}
 		)
@@ -201,9 +221,12 @@
 				//Verifica se esta no modo de edicao
 				if($scope.modoEdicao) {					
 					//Edita os valores dos elementos
-					$("#titulo").text("Editar \"" + $scope.eventoAttr.nome + "\"");
+					$("#titulo").text("Editar Evento");
 					$("#nome").val($scope.eventoAttr.nome);
 					$("#tipo").val($scope.eventoAttr.tipo);
+
+					//Chamar Verificar tipo, para ajustar os campos de acordo com o tipo. Ex: prelecao nao tem dificuldade
+					verificaTipo();
 					
 					if($scope.eventoAttr.tipoTrekking != "null") {
 						$("#tipoTrekking").val($scope.eventoAttr.tipoTrekking);
@@ -254,6 +277,10 @@
 			params.FimInscricao += 'T' + params.HorarioFimInscricao + ":00";
 			params.FimInscricao = new Date(params.FimInscricao).toUTCString().replace(" GMT", "");
 			
+			//Seta o ano do evento, levando em consideracao a data da inscricao do evento
+			var anoEvento = params.DataInscricao.substr(12, 4);
+			params.ano = anoEvento;
+
 			//Deleta params inuteis
 			delete params.HorarioInscricao;
 			delete params.DataFimInscricao;
@@ -463,7 +490,6 @@
 				usuario: $rootScope.usuario.ID,
 				blacklist: $rootScope.usuario.ListaNegra
 			}
-			console.log(data.blacklist);
 			//Chama POST Confirmar Evento
 			httpService.post('/confirmar-evento', data, function(answer) {
 				//Reabilita o botao de se inscrever
@@ -536,14 +562,16 @@
 		//Finalizar evento
 		$scope.finalizarEvento = function(params, eventoID, fatorKAntigo) {
 			//Pega as pessoas marcadas
-			var pessoas = $("input[name='pessoas[]']").toArray();
+			var transformaEventoIDstring = eventoID.toString();
+			transformaEventoIDstring = transformaEventoIDstring + "[]";
+			var pessoas = $("input[name='stringPessoasEventos-"+transformaEventoIDstring+"']").toArray();
+			console.log(pessoas);
 			var pessoasArray = [];
 			var kilometragemParaFloat =  parseFloat(params.Kilometragem.replace(',','.'));
 			var subidaParaFloat = parseFloat(params.subida.replace(',','.'));
 			var descidaParaFloat = parseFloat(params.descida.replace(',','.'));
 						
 			pessoas.forEach(elem => pessoasArray.push(elem.value));
-			
 			var dataPost = {
 				eventoID: eventoID,
 				//fatorK na verdade eh a pontucao, math.abs eh o modulo do numero
@@ -558,7 +586,7 @@
 			httpService.post('/finalizar-evento', dataPost, function(answer) {
 				//Emite alerta sobre o status da operacao
 				if(answer) {
-					Materialize.toast("Evento finalizado com sucesso!", 2000);					
+					Materialize.toast("Pontuação cadastrada com sucesso!", 2000);					
 					$scope.eventosGetter();
 				} else {
 					
@@ -588,45 +616,46 @@
 
 
 		//Gerar lista PDF
-		$scope.gerarPDF = function(idDoEventoParaGerarTabela) {
-				var columns = [
-				{title: "P", dataKey: "id"},
-				{title: "Nome", dataKey: "name"}, 
-				{title: "          ", dataKey: "a"},
-				{title: "          ", dataKey: "b"},
-				{title: "          ", dataKey: "c"},
-				{title: "Assinatura", dataKey: "d"},
-				{title: "          ", dataKey: "e"},
-				{title: "          ", dataKey: "f"},
-				{title: "          ", dataKey: "g"}
-				];
+		$scope.gerarPDF = function(idDoEventoParaGerarTabela, nomeDoEvento, dataDoEvento) {
+			var columns = [
+			{title: "P", dataKey: "id"},
+			{title: "Nome", dataKey: "name"}, 
+			{title: "          ", dataKey: "a"},
+			{title: "          ", dataKey: "b"},
+			{title: "          ", dataKey: "c"},
+			{title: "Assinatura", dataKey: "d"},
+			{title: "          ", dataKey: "e"},
+			{title: "          ", dataKey: "f"},
+			{title: "          ", dataKey: "g"}
+			];
+			var numeroDeTD = $('#'+ idDoEventoParaGerarTabela + ' td').length;
+			var rows = [];
+			for(var i=0;i<numeroDeTD;i++) {
+				var aux = $('#'+idDoEventoParaGerarTabela + ' td')[i].innerHTML;
+				rows.push({"id": i+1 + "º", "name": aux});
+			}
+			var doc = new jsPDF('p', 'pt');
 
-				var numeroDeTD = $('#'+ idDoEventoParaGerarTabela + ' td').length;
-				console.log("numero de TDS: " + numeroDeTD);
-				var rows = [];
-				for(var i=0;i<numeroDeTD;i++) {
-					var aux = $('#'+idDoEventoParaGerarTabela + ' td')[i].innerHTML;
-					rows.push({"id": i+1 + "º", "name": aux});
-				}
-				console.log(rows);
-				var doc = new jsPDF('p', 'pt');
-				doc.autoTable(columns, rows, {
-					styles: {fillColor: [130, 130, 130]},
-					bodyStyles: {
-						fillColor: [210, 210, 210],
-					},
-					alternateRowStyles: {
-						fillColor: [240, 240, 240]
-					},
-					columnStyles: {
-						name: {fillColor: 247},
-						id: {fillColor: 240}
-					},
-				});
-				doc.save('ListaDePresenca.pdf');	
+			doc.setFontSize(14);
+			doc.text(nomeDoEvento, 40, 45);
+			doc.text('Data: ' + dataDoEvento, 40, 70);
+
+			doc.autoTable(columns, rows, {
+				styles: {fillColor: [130, 130, 130]},
+				bodyStyles: {
+					fillColor: [210, 210, 210],
+				},
+				alternateRowStyles: {
+					fillColor: [240, 240, 240]
+				},
+				columnStyles: {
+					name: {fillColor: 247},
+					id: {fillColor: 240}
+				},
+				margin: {top: 90}
+			});
+			doc.save('ListaDePresenca.pdf');	
 		}
-
-
 
 		//Adicionar usuario na lista negra
 		$scope.adicionarListaNegra = function(id, idevento) {
@@ -728,25 +757,14 @@
 				//Select
 				$('select').material_select();
 				
-
-				//Post fixado
-				$("#fixado").change(function() {
-					if(this.checked) {
-						$("#evento-atrelado").attr("disabled", true);
-						$("#evento-atrelado").material_select();
-					} else {
-						$("#evento-atrelado").attr("disabled", false);
-						$("#evento-atrelado").material_select();
-					}
-				});
 			});
 		});
 		
 		$scope.criarPostagem = function(params) {
 			var data = {
-				Texto: params.TextoPostagem.replace(/\n\r?/g, '<br />'), //Insere os break-lines
+				Texto: "<h5>" + params.TituloPostagem.replace(/\n\r?/g, '<br />') + "</h5><br />" + params.TextoPostagem.replace(/\n\r?/g, '<br />'), //Insere os break-lines
 				EventoID: params.EventoAtrelado || 0,
-				Fixado: params.Fixado || false,
+				Fixado: params.Fixado || true,
 				Data: new Date().toString().substring(0, 24), //Pega data em horario local sem lixo
 				AdminID: $rootScope.usuario.ID
 			};
@@ -788,31 +806,12 @@
 							filtrado.push(elem);
 						}
 					});
-					$scope.postsFiltro = $scope.postsFiltro.concat(filtrado);
-					
-					//Coisas pro filtro
-					$timeout(function() {
-						if($("#filtro-posts option:first-child").val() == '?') {
-							$("#filtro-posts option:first-child").remove();
-							$("#filtro-posts option:first-child").attr("selected", true);
-						}
-						$scope.filtrar();
-					}, 200);
+					$scope.postsFiltro = $scope.postsFiltro.concat(filtrado);					
 					
 				} else {
 					$scope.postagem = false;
 				}
 			}.bind(this));
-		}
-		
-		$scope.filtrar = function() {
-			var idFiltro = $("#filtro-posts").find(":selected").val().replace("number:", "");
-					
-			if(idFiltro == 0) {
-				$scope.postagem = $scope.postagemFixada;
-			} else {
-				$scope.postagem = $scope.postagemFixada.filter(post => post.EventoID == idFiltro);
-			}
 		}
 		
 		$scope.excluirPostagem = function(id) {

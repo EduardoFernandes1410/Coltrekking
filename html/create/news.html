@@ -6,25 +6,15 @@
 			<!--Form em si-->
 			<form class="col s12">
 				<div class="row">
+					<!--Titulo da Postagem-->
+					<div class="input-field col s12">
+						<textarea id="titulo-postagem" class="materialize-textarea" name="titulo-postagem" ng-model="params.TituloPostagem"></textarea>
+						<label for="titulo-postagem">Titulo do Post</label>
+					</div>
 					<!--Texto da Postagem-->
 					<div class="input-field col s12">
 						<textarea id="texto-postagem" class="materialize-textarea" name="texto-postagem" ng-model="params.TextoPostagem"></textarea>
 						<label for="texto-postagem">Texto do Post</label>
-					</div>
-				</div>
-				
-				<div class="row" id="criar-post-segunda-row">
-					<!-- Post Fix -->
-					<p class="col s12 l3" id="p-fixado">
-						<input type="checkbox" class="filled-in" id="fixado" ng-model="params.Fixado"/>
-						<label for="fixado">Fixar Postagem</label>
-					</p>
-				
-					<!--Evento Atrelado-->
-					<div class="input-field col s12 l9">
-						<select id="evento-atrelado" name="evento-atrelado" ng-model="params.EventoAtrelado" ng-options="evento.ID as evento.Nome for evento in eventos track by evento.ID">
-						</select>
-						<label>Evento Atrelado</label>
 					</div>
 				</div>
 			</form>
