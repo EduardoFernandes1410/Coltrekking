@@ -22,6 +22,17 @@
     background-color: rgba(255, 255, 255, 0.1) !important;
   }
 
+  /* Remover o scroll (barra de rolagem) */
+    .container {
+      width: 100%;
+      max-width:initial;
+    }
+    .container > .row {
+      margin: 0;
+    }
+    .container > .row > .col {
+      padding: 0;
+    }
   /*Ajustar o botao O que eh*/
   .btn {
     padding: 0 0rem;
@@ -83,11 +94,43 @@
     left: 0;
     bottom: 0;
     width: 100%;
-    height: 8%;
+    height: 9%;
     background-color: transparent !important;
     color: white;
     text-align: center;
  }
+
+ /* Tamanho dos botoes */
+  .botaoRedesEsquerda{
+    width: 50px;
+  }
+
+ /* Botoes verticais */
+ .alinharBotoes {
+  position: absolute;
+  text-align: center;
+  width: 45px;
+  left: 10px;
+  top: 38%;
+}
+@media screen and (max-width: 600px) {
+  /* Botoes horizontais */
+  .alinharBotoes {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    top: 90% !important;
+    width: 100%;
+    background-color: transparent !important;
+    color: white;
+    text-align: center;
+  }
+  .botaoRedesEsquerda{
+    width: 45px;
+  }
+
+}
+
 
  .linksRedesSociais{
    margin-bottom: 0px !important;

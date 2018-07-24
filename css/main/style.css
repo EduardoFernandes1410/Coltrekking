@@ -173,9 +173,12 @@ nav .tabs {
   margin-top: 73px !important; }
 
 .modulo-wrapper {
-  margin-top: 80px; }
+  margin-top: 50px; }
 
-
+  @media screen and (max-width: 600px) {
+    .modulo-wrapper {
+      margin-top: 37px; }
+  }
 
 
 
@@ -361,7 +364,7 @@ h3{
 }
 @media screen and (max-width: 600px) {
   .tabsEventos.tabs .tabsEventos.tab a{
-    font-size: 100%;
+    font-size: 140%;
   }
 }
 
@@ -401,6 +404,33 @@ h3{
   color: firebrick !important;
   font-size: 130%;
   display: none;
+}
+
+/* Estilizar botoes o que eh lista negra e o que eh ranking */
+.btn.modal-trigger {
+  padding: 0 0rem;
+  background-color: white !important;
+  color: #8BC34A;
+  height: 40px;
+  width: 40%;
+  margin-left: 30%;
+  margin-bottom: 10px !important;
+  font-size: 1.6vw !important;
+  font-weight: 600;
+  padding-top: 4px;
+  border-radius: 30px;
+}
+.btn.modal-trigger:hover{
+  background-color: #8BC34A !important;
+  color: white;
+}
+
+@media screen and (max-width: 800px) {
+  .btn.modal-trigger {
+    font-size: 15px !important;
+    width: 100%;
+    margin-left: 0%;
+  }
 }
 
 /*Cores dos CountDowns*/
@@ -543,10 +573,3 @@ aListaNegraLivreProximo {
 
 .btn-wrapper {
   text-align: right; }
-
-/*****RANKING*****/
-#ranking {
-  margin-top: 100px !important; }
-
-  #ranking thead th {
-    padding-top: 50px !important; }

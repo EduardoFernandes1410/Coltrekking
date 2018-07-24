@@ -168,13 +168,25 @@
 							<div id="listanegra">
 								<div class="card">
 									<div class="card-content">
-
+										<!-- Modal Trigger -->
+										<a class="waves-effect waves-light btn modal-trigger" data-target="listaNegraMODAl">Como funciona</a>
+										<!-- Modal Structure -->
+										<div id="listaNegraMODAl" class="modal modal-fixed-footer">
+											<div class="modal-content">
+												<h4>Lista Negra</h4>
+												<p>Alunos que confirmarem sua a presença e não comparecerem sem nenhuma justificativa convincente, estarão temporariamente excluídos da próxima atividade.</p>
+												<p>A lista negra mostra os alunos que estão bloqueados no próximo evento ou que foram bloqueados anteriormente e estarão livre no próximo evento.</p>
+											</div>
+											<div class="modal-footer">
+												<a class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+											</div>
+										</div>
 										<!--Tabela-->
 										<table class="striped">
 											<!--Titulos da tabela-->
 											<thead>
 												<tr>
-													<th>USUÁRIO</th>
+													<th>ALUNO</th>
 													<th>TREKKING QUE O USUÁRIO FALTOU</th>
 													<th>SITUAÇÃO</th>
 												</tr>
@@ -329,7 +341,7 @@
 													<div ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
 														<p>
 															<i class="tiny material-icons">label_outline</i>
-															<span class="topico-info"> Fator K:</span class="topico-info"> {{evento.subdesc.toFixed(2)}} = 1 + (subida + decida)/1000
+															<span class="topico-info"> Fator K:</span class="topico-info"> {{evento.subdesc.toFixed(2)}}
 														</p>
 				
 														<p>
@@ -717,11 +729,24 @@
 								<div class="card">
 									<div class="card-content">
 
-
-										<!-- Countdown Do Ranking -->
-										<p class="countdownRanking">
-												<!-- O Ranking será zerado em {{ranking.CountdownRanking}} -->
-										</p>
+										<!-- Modal Trigger -->
+										<a class="waves-effect waves-light btn modal-trigger" data-target="rankingMODAl">Como funciona</a>
+										<!-- Modal Structure -->
+										<div id="rankingMODAl" class="modal modal-fixed-footer">
+											<div class="modal-content">
+												<h4>Ranking</h4>
+												<p>Com a sua pontuação você pode conseguir descontos incríveis em produtos Coltrekking. Válido apenas durante este ano letivo.</p>
+												<p>A pontuação do aluno é calculada com a soma da pontuação de cada trekking que o aluno participou. A pontuação de cada trekking leva em consideração:</p>
+												<p>A) A distância percorrida (km)</p>
+												<p>B) O desnível do terreno > subida + descida (em metros)</p>
+												<p>A fórmula utilizada para calcular a pontuação de um evento é:</p>
+												<p>Pontuação = KM * Fator K</p>
+												<p>Sendo Fator K = 1+((subida + descida)/1000)</p>
+											</div>
+											<div class="modal-footer">
+												<a class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+											</div>
+										</div>
 
 										<!--Tabela-->
 										<table class="striped">
