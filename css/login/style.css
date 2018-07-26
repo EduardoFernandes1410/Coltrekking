@@ -1,7 +1,7 @@
 /*****Variaveis*****/
 /*****Background Image*****/
   body{
-    background: url('../../rsc/login/img/5.jpg') center center no-repeat fixed; 
+    background: url('../../rsc/login/img/fotoPrincipal.jpg') center center no-repeat fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -27,7 +27,7 @@
   /*Ajustar o botao O que eh*/
   .btn {
     padding: 0 0rem;
-    background-color: rgba(255, 255, 255, 0.3) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
     height: 40px;
     width: 80%;
     margin-left: 10%;
@@ -43,10 +43,16 @@
   #loginGoogle {
     background-color: rgba(236, 48, 43) !important;
   }
+  #loginGoogleMobile{
+    background-color: rgba(236, 48, 43) !important;
+  }
   #loginGoogle:hover {
     background-color: rgb(192, 41, 36) !important;
   }
   #loginFacebook {
+    background-color: rgba(13, 138, 240) !important;
+  }
+  #loginFacebookMobile{
     background-color: rgba(13, 138, 240) !important;
   }
   #loginFacebook:hover {
@@ -70,7 +76,7 @@
       font-size: 8px;
     }
     .btn {
-      font-size: 90%;
+      font-size: 125%;
     }
   }
 

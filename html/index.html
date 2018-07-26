@@ -169,7 +169,7 @@
 								<div class="card">
 									<div class="card-content">
 										<!-- Modal Trigger -->
-										<a class="waves-effect waves-light btn modal-trigger" data-target="listaNegraMODAl">Como funciona</a>
+										<a class="btn modal-trigger" data-target="listaNegraMODAl">Como funciona</a>
 										<!-- Modal Structure -->
 										<div id="listaNegraMODAl" class="modal modal-fixed-footer">
 											<div class="modal-content">
@@ -186,9 +186,9 @@
 											<!--Titulos da tabela-->
 											<thead>
 												<tr>
-													<th>ALUNO</th>
-													<th>TREKKING QUE O USUÁRIO FALTOU</th>
-													<th>SITUAÇÃO</th>
+													<th>Aluno</th>
+													<th>Trekking que o aluno faltou</th>
+													<th>Situação</th>
 												</tr>
 											</thead>
 
@@ -504,7 +504,7 @@
 													<!--Botao Cancelar-->
 													<a href="#!" class="modal-action modal-close waves-effect waves-orange btn-flat">Cancelar</a>
 													<!--Botao Submit Finalizar-->
-													<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" ng-click="finalizarEvento(finalizar, evento.ID, evento.fatorKevento)">Aplicar</a>
+													<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" onClick='parent.location="javascript:location.reload()"' ng-click="finalizarEvento(finalizar, evento.ID, evento.fatorKevento)">Aplicar</a>
 													<!-- Pegar pessoas inscritas no evento e jogar na string pessoas -->				
 													<div ng-repeat="confirmado in evento.Confirmados">
 														<input type="text" class="removerIDpessoas col s1 l1" ng-attr-name="{{'stringPessoasEventos-' + evento.ID + '[]'}}" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>														
@@ -522,7 +522,7 @@
 										<!-- Layout padrao, para quando nao ha eventos disponiveis. -->
 										<div id="mensagemNaoHaEventosDisponiveis">
 											<h1>Não há eventos disponíveis no momento!</h1>
-											<img class="imagemNaoHaEventosDisponivel" src="../rsc/icon/naoHaEventosDisponiveis.png"/>
+											<img class="imagemNaoHaEventosDisponivel" src="../rsc/icon/imagemNaoHaEventos.png"/>
 											<!-- <h2>Para ver o calendário clique no </h2> -->
 											<!-- <h3>(canto superior direito)</h3>	 -->
 										</div>

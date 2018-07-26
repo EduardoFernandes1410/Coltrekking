@@ -283,11 +283,22 @@ h1{
 }
 
 .imagemNaoHaEventosDisponivel{
-  width: 25%;
+  width: 40%;
   margin: auto;
   position: absolute;
-  margin-top: 250px;
+  margin-top: 260px;
   top: 0; left: 0; bottom: 0; right: 0;
+}
+
+@media screen and (max-width: 600px) {
+  h1 {
+    padding-top: 50px !important;
+  }
+  .imagemNaoHaEventosDisponivel{
+    width: 90% !important;
+    margin-top: 290px !important;
+    top: 0; left: 0; bottom: 0; right: 0;
+  }
 }
 
 h2{
@@ -417,12 +428,13 @@ h3{
   margin-bottom: 10px !important;
   font-size: 1.6vw !important;
   font-weight: 600;
-  padding-top: 4px;
   border-radius: 30px;
+  margin-top: -18px !important;
+  margin-bottom: -18px !important;
+  box-shadow: 0px 0px;
 }
 .btn.modal-trigger:hover{
-  background-color: #8BC34A !important;
-  color: white;
+  color: rgb(117, 170, 56);
 }
 
 @media screen and (max-width: 800px) {
