@@ -41,22 +41,22 @@
     background-color: rgba(255, 255, 255, 0.7) !important;
   }
   #loginGoogle {
-    background-color: rgba(236, 48, 43) !important;
+    background-color: rgba(236, 72, 67) !important;
   }
   #loginGoogleMobile{
-    background-color: rgba(236, 48, 43) !important;
+    background-color: rgb(236, 72, 67) !important;
   }
   #loginGoogle:hover {
-    background-color: rgb(192, 41, 36) !important;
+    background-color: rgb(219, 47, 41) !important;
   }
   #loginFacebook {
-    background-color: rgba(13, 138, 240) !important;
+    background-color: rgba(31, 150, 247) !important;
   }
   #loginFacebookMobile{
-    background-color: rgba(13, 138, 240) !important;
+    background-color: rgba(31, 150, 247) !important;
   }
   #loginFacebook:hover {
-    background-color: rgb(13, 123, 214) !important;
+    background-color: rgb(21, 135, 228) !important;
   }
 
   /* Ajustar o tamanho da fonte de logar com facebook e google */
