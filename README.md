@@ -1,2 +1,1 @@
-# Coltrekking
-The Amazing Coltrekking Website!
+# novoColtrekking
