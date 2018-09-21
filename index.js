@@ -26,10 +26,10 @@ app.use(express.static('./', {
 //*****MySQL*****//
 var pool = mysql.createPool({
 	connectionLimit : 10000,
-	host	: 'sql9.freemysqlhosting.net',
-	user	: 'sql9257817',
-	password: 'PAq5ynK98y',
-	database: 'sql9257817',
+	host	: 'localhost',
+	user	: 'root',
+	password: '',
+	database: 'coltrekking',
 	debug	: false
 });
 
