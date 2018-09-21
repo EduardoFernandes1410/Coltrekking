@@ -1,0 +1,802 @@
+﻿<!DOCTYPE html>
+<html ng-app="main">
+	<head>
+		<title>Página Inicial - Coltrekking</title>
+		<link rel="icon" type="image/png" href="../rsc/logo/macaco.png" />
+		<meta name="theme-color" content="#8bc34a">
+		<meta charset="utf-8">
+
+		<!--Adiciona jQuery-->
+		<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+
+		<!--Js PDF-->
+		<script src="../node_modules/jspdf/dist/jspdf.min.js"></script>
+		<script src="../node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.js"></script>
+
+		<!--Adiciona Angular-->
+		<script src="../node_modules/angular/angular.min.js"></script>
+		<script src="../node_modules/angular-route/angular-route.min.js"></script>
+		<script src="../node_modules/angular-sanitize/angular-sanitize.min.js"></script>
+
+		<!--Adiciona o Firebase-->
+		<script src="https://www.gstatic.com/firebasejs/3.7.1/firebase.js"></script>
+		<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+		<!--Importa Google Icon Font-->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Importa materialize.css-->
+		<link type="text/css" rel="stylesheet" href="../node_modules/materialize-css/dist/css/materialize.min.css"  media="screen,projection"/>
+		<!--Mobile Viewport-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+		<!--Adiciona firebase.js-->
+		<script src="../js/firebase.js"></script>
+		<!--Adiciona app.js-->
+		<script src="../js/app.js"></script>
+
+		<!--Importa CSS-->
+		<link rel="stylesheet" type="text/css" href="../css/main/style.css">
+	</head>
+	
+	<body>
+		<div id="loading" style="display: block">
+			<img src="../rsc/logo/loading.gif" id="loadingAlinhar" />
+		</div>
+
+		<!-- Todo o conteudo do site -->
+		<div id="conteudo" style="display: none">
+			<div ng-controller="LoginController as login">
+				<!--NavBar-->
+				<div class="navbar-fixed">
+					<nav class="nav-extended light-green z-depth-2">
+						<div class="nav-wrapper light-green">
+							<div class="row">
+								<div class="container nav-container">
+									<!--Logo-->
+									<div id="logo-wrapper" class="col l3 hide-on-med-and-down">
+										<a href="/main-page"><img id="logo" src="../rsc/logo/coltrekking-logo-3.png"></a>
+									</div>
+
+									<!--Botao Hamburger-->
+									<a id="hamburguer" href="#!" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+
+									<!--Search Bar-->
+									<div class="col s9 m10 l6">
+										<form>
+											<div id="inputWrapper" class="input-field light-green lighten-1">
+												<input id="search" type="search" placeholder="Pesquisar" required>
+												<label class="label-icon" for="search"><i class="material-icons">search</i></label>
+												<i class="material-icons">close</i>
+											</div>
+										</form>
+									</div>
+									
+
+									<!--User Menu-->
+									<div class="col l3 hide-on-med-and-down">
+										<ul id="nav-user" class="right">
+											<!--Mensagenss-->
+											<li><i id="messageIcon" class="material-icons">message</i></li>
+											<!--User Dropdown-->
+											<li><a class="dropdown-button" href="#!" data-beloworigin="true" data-activates="dropdown-menu"><img class="userImage circle" ng-src="{{ login.usuarioLogado.Foto }}"></a></li>
+											<ul id="dropdown-menu" class="dropdown-content">
+												<li><a href="#!" class="nome-usuario">{{ login.usuarioLogado.Nome }}</a></li>
+												<li><a href="#!">Colocação no Ranking: <span>{{ login.usuarioLogado.Posicao }}º</span></a></li>
+												<li><a href="#!">Fator K: <span>{{ login.usuarioLogado.FatorK }}</span></a></li>
+												<li><a href="#!">Lista Negra: <span>{{ login.usuarioLogado.ListaNegra }}</span></a></li>
+												<li class="divider"></li>
+												<!--Logout Button-->
+												<li><a id="sair-button" href="/logout" onclick="logOut();">Sair</a></li>
+											</ul>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						
+						<script>
+							function mostrarRanking() {
+								$('#esconderEventosFinalizadosAoClicarEmOutraTab').css("display", "none");
+								$('#listaNegraOcultaNosEventosFinalizados').css("display", "none");
+								$('#rankingOcultoNosEventosFinalizados').css("display", "block");
+							}
+							function mostrarListaNegra() {
+								$('#esconderEventosFinalizadosAoClicarEmOutraTab').css("display", "none");
+								$('#listaNegraOcultaNosEventosFinalizados').css("display", "block");
+								$('#rankingOcultoNosEventosFinalizados').css("display", "none");
+							}
+							function mostrarEventos() {
+								$('#esconderEventosFinalizadosAoClicarEmOutraTab').css("display", "block");
+								$('#listaNegraOcultaNosEventosFinalizados').css("display", "none");
+								$('#rankingOcultoNosEventosFinalizados').css("display", "none");
+							}
+						</script>
+
+						<!--Tabs-->
+						<div ng-controller="RouteController">
+							<div class="container nav-container">
+								<div class="nav-content">
+									<ul class="tabs tabs-transparent tabs-fixed-width" ng-show="$location.path() === '/' || $location.path() === '/finalizados2018' || $location.path() === '/finalizados2017'"> <!--So aparece na Pagina Principal e eventos finalizados-->
+										<li class="tab"><a href="#eventos" onclick="mostrarEventos();">Eventos</a></li>
+										<li class="tab"><a href="#listanegra" onclick="mostrarListaNegra();">Lista Negra</a></li>
+										<li class="tab"><a href="#ranking" onclick="mostrarRanking();">Ranking</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+
+					</nav>
+				</div>
+				
+				<!--SideNav-->
+				<ul class="side-nav" id="mobile-demo">
+					<!--Nome + Foto-->
+					<li id="cabecote"><a href="#!" class="nome-usuario"><img class="userImage circle" ng-src="{{ login.usuarioLogado.Foto }}"><span>{{ login.usuarioLogado.Nome }}</span></a></li>
+					<li class="divider"></li>
+					
+					<!--Main Page Button-->
+					<li><a id="main-page" href="/main-page">Página Principal</a></li>
+					<li class="divider"></li>
+					
+					<!--Info do Usuario-->
+					<li><a href="#!">Colocação no Ranking: <span>{{ login.usuarioLogado.Posicao }}º</span></a></li>
+					<li><a href="#!">Fator K: <span>{{ login.usuarioLogado.FatorK }}</span></a></li>
+					<li><a href="#!">Lista Negra: <span>{{ login.usuarioLogado.ListaNegra }}</span></a></li>
+					<li class="divider"></li>
+					
+					<!--Logout Button-->
+					<li><a id="sair-button" href="/logout" onclick="logOut();">Sair</a></li>
+				</ul>
+			</div>
+
+			<!--Corpo Principal da Pagina-->
+			<div id="corpo" class="container">
+				<!--FAB-->
+				<div ng-if="usuario.Admin" class="fixed-action-btn">
+					<a class="btn-floating btn-large deep-orange accent-2" href="#!/create-event">
+						<i class="large material-icons">add</i>
+					</a>
+				</div>
+
+
+				<!--Paginas das Abas-->
+				<div ng-controller="RouteController">
+					<div ng-show="$location.path() === '/'">					
+		
+						<div ng-controller="EventosController">
+							<div id="listanegra">
+								<div class="card">
+									<div class="card-content">
+										<!-- Modal Trigger -->
+										<a class="btn modal-trigger" data-target="listaNegraMODAl">Como funciona</a>
+										<!-- Modal Structure -->
+										<div id="listaNegraMODAl" class="modal modal-fixed-footer">
+											<div class="modal-content">
+												<h4>Lista Negra</h4>
+												<p>Alunos que confirmarem sua a presença e não comparecerem sem nenhuma justificativa convincente, estarão temporariamente excluídos da próxima atividade.</p>
+												<p>A lista negra mostra os alunos que estão bloqueados no próximo evento ou que foram bloqueados anteriormente e estarão livre no próximo evento.</p>
+											</div>
+											<div class="modal-footer">
+												<a class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+											</div>
+										</div>
+										<!--Tabela-->
+										<table class="striped">
+											<!--Titulos da tabela-->
+											<thead>
+												<tr>
+													<th>Aluno</th>
+													<th>Trekking que o aluno faltou</th>
+													<th>Situação</th>
+												</tr>
+											</thead>
+
+											<tbody ng-repeat="evento in eventos">
+												<tr ng-repeat="confirmado in evento.Confirmados" ng-if="confirmado.listaNegraEvento != 0 && confirmado.listaNegraEvento != 3">
+													<td class="listaNegraUsuario">
+														<p>	
+															{{confirmado.Nome}}
+														</p>
+													</td>
+													<td class="listaNegraUsuario">
+														<p>	
+															{{evento.Nome}}														
+														</p>
+													</td>
+													<td class="listaNegraUsuario">
+														<aListaNegraBloqueadoProximo ng-if="confirmado.listaNegraEvento == 1">
+															Bloqueado no próximo
+														</aListaNegraBloqueadoProximo>
+
+														<aListaNegraLivreProximo ng-if="confirmado.listaNegraEvento == 2">
+															Livre no próximo
+														</aListaNegraLivreProximo>
+													</td>
+													<td class="listaNegraUsuario">
+														<a ng-if="usuario.Admin" id="btn" href="#!" onClick='parent.location="javascript:location.reload()"' ng-click="removerListaNegra(confirmado.ID, confirmado.IDEvento)"><img id="iconListaNegraERemover" src="../rsc/icon/remover.png"></a>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Mostrar o botao de mostrar os eventos dos outros anos apenas na guia eventos finalizados -->
+						<script>
+							function botaoMostrarEventosAnteriores() {
+								$('.botaoEventosAnteriores').css("display", "block");
+							}
+							function NAOmostrarBotaoEventosAnteriores() {
+								$('.botaoEventosAnteriores').css("display", "none");
+							}
+						</script>
+
+						<!--Eventos-->
+						<div ng-controller="EventosController">
+							<div id="eventos">	
+								<div class="row">
+									<div class="col m1 l3"></div>
+									<div class="col s12 m10 l6">
+										<ul class="tabsEventos tabs tabs-green">
+											<li class="tabsEventos tab col s6"><a onclick="NAOmostrarBotaoEventosAnteriores();" href="#exibirEventosDisponiveis">Disponíveis</a></li>
+											<li class="tabsEventos tab col s6"><a onclick="botaoMostrarEventosAnteriores();" href="#exibirEventosFinalizados">Finalizados</a></li>
+										</ul>
+									</div>
+									<div class="col m1 l3"></div>								
+								</div>
+
+								<div class="row modulo-wrapper">
+									
+									<!--Eventos Finalizados-->                    
+									<div id="exibirEventosFinalizados">
+										<!--Fixacoes-->
+										<div class="container col hide-on-med-and-down l4 right">
+											<a ng-if="usuario.Admin" href="#!/create-news" id="botaoCriarBarraLateral">Nova Barra Lateral</a>
+											<!--Eventos Cadastrados-->
+											<div class="card">
+												<div class="card-content">
+				
+													<span class="card-title">Eventos Confirmados por Você</span>
+													
+													<!-- Lista de Eventos Confirmados -->
+													<ul>
+														<li ng-repeat="confirmados in eventosConfirmados">
+															<i class="tiny material-icons">label_outline</i>
+															{{confirmados.Nome}}
+														</li>
+													</ul>
+													
+													<!-- Mensagem Default -->
+													<p ng-show="eventosConfirmados.length == 0">Você não confirmou presença em evento algum</p>
+												</div>
+											</div>
+											
+											<!-- Scroll Spy -->
+											<ul class="section table-of-contents">
+												<div class="card">
+													<div class="card-content">
+														<!-- Verifica se o evento foi finalizado: ng-if="evento.Finalizado == 1" -->
+														<li ng-repeat="evento in eventos" ng-if="evento.Finalizado == 1 && evento.ano != 2017"> 
+															<a ng-attr-href="{{'#' + evento.ID}}">{{evento.Nome}}</a>
+														</li>
+													</div>
+												</div>
+											</ul>
+				
+											<!--Fixacoes-->
+											<div ng-controller="PostsController">
+												<!-- Posts fixados -->											
+												<div class="card" ng-repeat="post in postagemFixada | filter: {Fixado: 1}">
+													<div class="card-content">
+														<a href="#!" onclick="return false;" ng-click="excluirPostagem(post.ID)">
+															<i ng-if="usuario.Admin" class="material-icons delete-post-fixado">delete</i>
+														</a>
+														<p class="data-post data-post-fixado">{{post.Data}}</p>
+														
+														<!-- Corpo da postagem -->
+														<p ng-bind-html="post.Texto"></p>
+													</div>
+												</div>
+											</div>
+				
+										</div>
+										<!--Cria os cards de evento-->
+										<div class="container col s12 l7" ng-repeat="evento in eventos">
+											<div class="card card-evento section scrollspy" ng-attr-id="{{evento.ID}}" ng-if="evento.Finalizado == 1 && evento.ano != 2017">
+														
+												<!--Cabecalho-->
+												<div class="card-image">
+													<!--Imagem-->
+													<img ng-src="{{evento.Capa}}">
+													<!--Nome-->
+													<span class="card-title">{{evento.Nome}}</span>
+												</div>
+												
+												<!--Info do Evento-->
+												<div class="card-content">
+													<!-- Menu Card -->
+													<a ng-if="usuario.Admin" ng-attr-id="{{'dropdown-card' + evento.ID}}" class="dropdown-button right" href="#!" onclick="return false;" ng-attr-data-activates="{{'menu-card' + evento.ID}}">
+														<i class="material-icons">more_vert</i>
+													</a>
+													
+													<ul ng-if="usuario.Admin" ng-attr-id="{{'menu-card' + evento.ID}}" class="dropdown-content">
+														<!-- Nao mostrar Editar Fator K em prelecao -->
+														<div ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
+															<li><a href="#!" class="finalizador" onclick="return false;" ng-click="finalizarEvento(evento.ID)" ng-attr-href="{{'#lista-finalizadora' + evento.ID}}">Editar fator K</a></li>
+														</div>
+														<li><a ng-attr-href="{{'#!/create-event?id=' + evento.ID + '&nome=' + evento.Nome + '&tipo=' + evento.Tipo + '&tipoTrekking=' + evento.TipoTrekking + '&dataInicio=' + evento.DataInicio + '&dataFim=' + evento.DataFim + '&local=' + evento.Local + '&dificuldade=' + evento.Dificuldade + '&numeroMax=' + evento.NumeroMax + '&dataInscricao=' + evento.DataInscricao + '&fimInscricao=' + evento.FimInscricao}}"">Editar evento</a></li>
+														<li class="divider"></li>
+														<li><a href="#!" class="excluidor" onclick="return false;" ng-click="excluirEvento(evento.ID)">Excluir evento</a></li>
+													</ul>
+													
+													<!-- Info do Evento -->
+													<div ng-if="evento.Disponivel == 2">
+														<aCountdownLaranja onclick="return false;">Inscrições Encerradas</aCountdownLaranja>
+													</div>
+				
+													<!--Mostrar valor do ranking no evento, somente em eventos encerrados e nao mostrar em prelecao-->
+													<div ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
+														<p>
+															<i class="tiny material-icons">label_outline</i>
+															<span class="topico-info"> Fator K:</span class="topico-info"> {{evento.subdesc.toFixed(2)}}
+														</p>
+				
+														<p>
+															<i class="tiny material-icons">label</i>
+															<span class="topico-info"> Distância:</span class="topico-info"> {{evento.distancia.toFixed(2)}} KM
+														</p>
+				
+														<p>
+															<i class="tiny material-icons">label_outline</i>
+															<span class="topico-info"> Pontuação:</span class="topico-info"> {{evento.fatorKevento.toFixed(2)}} = Fator K * distância
+														</p>
+													</div>
+				
+													<p>
+														<i class="tiny material-icons">label</i>
+														<span class="topico-info"> Tipo:</span class="topico-info"> {{evento.TipoString}}
+													</p>
+													
+													<p ng-show="evento.Tipo == 2">
+														<i class="tiny material-icons">label_outline</i>
+														<span class="topico-info"> Modalidade:</span class="topico-info"> {{evento.TipoTrekking}}
+													</p>
+													
+													<!--Nao mostra se for prelecao-->
+													<p ng-show="evento.Tipo != 1">
+														<i class="tiny material-icons">warning</i>
+														<span class="topico-info"> Dificuldade:</span class="topico-info"> {{evento.Dificuldade}}
+													</p>
+													
+													<!-- Mostra apenas em acampamento -->
+													<p ng-show="evento.Tipo == 3">
+														<i class="tiny material-icons">today</i>
+														<span class="topico-info"> De</span class="topico-info"> {{evento.DataInicio}}
+														<span class="topico-info"> a</span class="topico-info"> {{evento.DataFim}}
+													</p>											
+													
+													<!-- Mostra apenas em !acampamento -->
+													<p ng-show="evento.Tipo != 3">
+														<i class="tiny material-icons">today</i>
+														<span class="topico-info"> Dia:</span class="topico-info"> {{evento.DataInicio}}
+													</p>
+													
+													<p>
+														<i class="tiny material-icons">location_on</i>
+														<span class="topico-info"> Local:</span class="topico-info"> {{evento.Local}}
+													</p>
+													
+													<!-- Numero de Inscritos -->
+													<p>
+														<i class="tiny material-icons">add_circle</i>
+														<span class="topico-info"> Nº de Inscritos:</span> {{evento.Confirmados.length}}/{{evento.NumeroMax}}
+													</p>
+				
+				
+													<div class="gerarPdfListaIncritos">
+														<table ng-attr-id="{{'tabelaDoEventoNumero-' + evento.ID}}">
+															
+															<thead>
+																<tr>
+																	<th>Posição</th>
+																	<th>Nome</th>
+																	<th>Assinatura</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr ng-repeat="pessoa in evento.Confirmados">
+																	<td>{{pessoa.Nome}}</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+											
+												</div>
+												
+												<!--Card Action LISTA DE INSCRITOS-->
+												<div class="card-action" ng-show="evento.Disponivel">
+													<a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos-finalizados' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
+												</div>
+												<a id="estilizarIconePDF" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio);" onclick="return false;"><img id="iconPdf" src="../rsc/icon/pdf.png"></a>
+										
+											</div>
+											
+											<!--Lista de Inscritos-->
+											<div ng-attr-id="{{'lista-inscritos-finalizados' + evento.ID}}" class="modal modal-fixed-footer">
+												<div class="modal-content">
+													<p class="modal-header">{{evento.Nome}}</p>
+													
+													<!--Tabela-->
+													<table class="bordered">
+														<!--Titulos da tabela-->
+														<thead>
+															<tr>
+																<th>Posição</th>
+																<th>Nome</th>
+																<th class="hide-on-med-and-down">Data da Inscrição</th>
+															</tr>
+														</thead>
+				
+														<!--Linha para cada usuario-->
+														<tbody>
+															<tr ng-repeat="pessoa in evento.Confirmados" ng-class="{espera: $index >= evento.NumeroMax}">
+																<td>{{$index + 1}}º</td>
+																<td>{{pessoa.Nome}}</td>
+																<td class="hide-on-med-and-down">{{pessoa.DataInscricao}}</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+												
+												<div class="modal-footer">
+													<button type="button" class="modal-action modal-close waves-effect waves-orange btn-flat">Fechar</button>
+												</div>
+											</div>		
+											
+											<!-- Lista Finalizadora-->
+											<div ng-attr-id="{{'lista-finalizadora' + evento.ID}}" class="modal" id="modal-finalizar">
+												<div class="modal-content">
+													<p class="modal-header">Editar Fator K</p>
+													
+													<form>								
+															<aCountdownVerde>Legenda</aCountdownVerde>
+															<h6><img id="iconListaNegraERemover" src="../rsc/icon/listanegra.png"> Lista Negra (não poderá se inscrever no próximo evento e não ganhará a pontuação (Fator K))</h6>
+															<h6><img id="iconListaNegraERemover" src="../rsc/icon/remover.png"> Remover (apenas não ganhará a pontuação (Fator K))</h6><br>
+															<aCountdownVerde>Lista de participantes</aCountdownVerde>
+														<div class="row">
+															<p ng-repeat="confirmado in evento.Confirmados" ng-if="confirmado.listaNegraEvento == 0" class="checkboxConfirmados col s12 m6">																
+																<label class="nomeExcluirUsuario" ng-attr-for="{{confirmado.ID}}">
+																	<a id="btn" onClick="$(this).css('display','none');" ng-click="adicionarListaNegra(confirmado.ID, confirmado.IDEvento)"><img id="iconListaNegraERemover" src="../rsc/icon/listanegra.png"></a> 
+																	<a id="btn" onClick="$(this).css('display','none');" ng-click="excluirUsuario(confirmado.ID, confirmado.IDEvento)"><img id="iconListaNegraERemover" src="../rsc/icon/remover.png"></a>			
+																	{{confirmado.Nome}} 
+																</label>
+															</p>
+														</div>
+														<aCountdownVerde>Cadastrar Pontuação</aCountdownVerde>
+														<div class="row">
+															<!-- Kilometragem -->
+															<div class="input-field col s12 m5 l3">
+																<input id="km-finalizar" type="text" name="kilometragem" ng-model="finalizar.Kilometragem">
+																<label for="km-finalizar">Kilometragem</label>
+															</div>
+														
+															<!-- Subida -->
+															<div class="input-field col s12 m5 l3">
+																<input id="subida-finalizar" type="text" step="0.01" name="subida" ng-model="finalizar.subida">
+																<label for="subida-finalizar">Subida (metros)</label>
+															</div>
+				
+															<!-- Descida -->
+															<div class="input-field col s12 m5 l3">
+																<input id="descida-finalizar" type="text" step="0.01" name="descida" ng-model="finalizar.descida">
+																<label for="descida-finalizar">Descida (metros)</label>
+															</div>
+														</div>
+														
+														
+													</form>
+												</div>
+												
+												<div class="modal-footer">
+													<!--Botao Cancelar-->
+													<a href="#!" class="modal-action modal-close waves-effect waves-orange btn-flat">Cancelar</a>
+													<!--Botao Submit Finalizar-->
+													<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" onClick='parent.location="javascript:location.reload()"' ng-click="finalizarEvento(finalizar, evento.ID, evento.fatorKevento)">Aplicar</a>
+													<!-- Pegar pessoas inscritas no evento e jogar na string pessoas -->				
+													<div ng-repeat="confirmado in evento.Confirmados">
+														<input type="text" class="removerIDpessoas col s1 l1" ng-attr-name="{{'stringPessoasEventos-' + evento.ID + '[]'}}" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>														
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+
+
+
+									<!--Eventos Disponiveis-->
+									<div id="exibirEventosDisponiveis">
+										<!-- Layout padrao, para quando nao ha eventos disponiveis. -->
+										<div id="mensagemNaoHaEventosDisponiveis">
+											<h1>Não há eventos disponíveis no momento!</h1>
+											<img class="imagemNaoHaEventosDisponivel" src="../rsc/icon/imagemNaoHaEventos.png"/>
+											<!-- <h2>Para ver o calendário clique no </h2> -->
+											<!-- <h3>(canto superior direito)</h3>	 -->
+										</div>
+
+
+										<!--Fixacoes-->
+										<div id="postFixaxoes" style="display: none">
+											<div ng-controller="PostsController">
+												<div class="container col hide-on-med-and-down l4 right">
+													<a ng-if="usuario.Admin" href="#!/create-news" id="botaoCriarBarraLateral">Nova Barra Lateral</a>
+													<!-- Posts fixados -->											
+													<div class="card" ng-repeat="post in postagemFixada | filter: {Fixado: 1}">
+														<div class="card-content">
+															<a href="#!" onclick="return false;" ng-click="excluirPostagem(post.ID)">
+																<i ng-if="usuario.Admin" class="material-icons delete-post-fixado">delete</i>
+															</a>
+															<p class="data-post data-post-fixado">{{post.Data}}</p>
+															
+															<!-- Corpo da postagem -->
+															<p ng-bind-html="post.Texto"></p>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										
+										<!-- Declarar variavel que conta o numero de eventos -->
+										<script>contarNumeroEventosDisponiveis=0;</script> 
+
+										<!--Cria os cards de evento-->
+										<div class="container col s12 l7" ng-repeat="evento in eventos">
+											<div class="card card-evento section scrollspy" ng-attr-id="{{evento.ID}}" ng-if="evento.Finalizado == 0">
+												<!-- Contar o numero de eventos para saber se deixa a mensagem padrao: "nao ha eventos disponiveis" -->
+												<div ng-if="evento.Finalizado == 0">
+													<script>
+														contarNumeroEventosDisponiveis++;
+														if(contarNumeroEventosDisponiveis == 2){
+															document.getElementById("mensagemNaoHaEventosDisponiveis").remove();
+															document.getElementById("postFixaxoes").style.display = "block";
+														}
+													</script>
+												</div>
+												<!--Cabecalho-->
+												<div class="card-image">
+													<!--Imagem-->
+													<img ng-src="{{evento.Capa}}">
+													<!--Nome-->
+													<span class="card-title">{{evento.Nome}}</span>
+													<!--FAB Confirmar-->
+													<a ng-attr-id="{{'btn-confirmar-' + evento.ID}}" ng-disabled="!(evento.Disponivel == 1)" ng-click="confirmarEvento(this.evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">add</i></a>
+													<!--FAB Cancelar-->
+													<a ng-attr-id="{{'btn-cancelar-' + evento.ID}}" ng-click="cancelarEvento(this.evento)" ng-disabled="!(evento.Disponivel == 1)" ng-show="estaConfirmado(evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">remove</i></a>
+												</div>
+												
+												<!--Info do Evento-->
+												<div class="card-content">
+													<!-- Menu Card -->
+													<a ng-if="usuario.Admin" ng-attr-id="{{'dropdown-card' + evento.ID}}" class="dropdown-button right" href="#!" onclick="return false;" ng-attr-data-activates="{{'menu-card' + evento.ID}}">
+														<i class="material-icons">more_vert</i>
+													</a>
+													
+													<ul ng-if="usuario.Admin" ng-attr-id="{{'menu-card' + evento.ID}}" class="dropdown-content">
+														<!-- Mostrar Esse finalizar evento quando o tempo para inscricao estiver encerrado -->
+														<div ng-if="evento.Disponivel == 2">
+															<li><a href="#!" class="finalizador" ng-click="finalizarEventoPrelecao(evento.ID)">Finalizar Evento</a></li>
+														</div>
+
+
+														<li><a ng-attr-href="{{'#!/create-event?id=' + evento.ID + '&nome=' + evento.Nome + '&tipo=' + evento.Tipo + '&tipoTrekking=' + evento.TipoTrekking + '&dataInicio=' + evento.DataInicio + '&dataFim=' + evento.DataFim + '&local=' + evento.Local + '&dificuldade=' + evento.Dificuldade + '&numeroMax=' + evento.NumeroMax + '&dataInscricao=' + evento.DataInscricao + '&fimInscricao=' + evento.FimInscricao}}"">Editar evento</a></li>
+														<li class="divider"></li>
+														<li><a href="#!" class="excluidor" onclick="return false;" ng-click="excluirEvento(evento.ID)">Excluir evento</a></li>
+													</ul>
+												
+													<!-- Info do Evento -->
+
+
+													<!--Card Action COUNTDOWN-->
+													<div ng-show="!evento.Disponivel">
+														<aCountdownAzul onclick="return false;">Disponível em {{evento.Countdown}}</aCountdownAzul>
+													</div>
+			
+													<!-- Countdown de Disponibilidade -->
+													<div ng-if="evento.Disponivel == 1">
+														<aCountdownVerde onclick="return false;">Inscrições encerram em {{evento.CountdownDisponibilidade}}</aCountdownVerde>
+													</div>
+			
+													<div ng-if="evento.Disponivel == 2">
+														<aCountdownLaranja onclick="return false;">Inscrições Encerradas</aCountdownLaranja>
+													</div>
+													
+													<p>
+														<i class="tiny material-icons">label</i>
+														<span class="topico-info"> Tipo:</span class="topico-info"> {{evento.TipoString}}
+													</p>
+													
+													<p ng-show="evento.Tipo == 2">
+														<i class="tiny material-icons">label_outline</i>
+														<span class="topico-info"> Modalidade:</span class="topico-info"> {{evento.TipoTrekking}}
+													</p>
+													
+													<!--Nao mostra se for prelecao-->
+													<p ng-show="evento.Tipo != 1">
+														<i class="tiny material-icons">warning</i>
+														<span class="topico-info"> Dificuldade:</span class="topico-info"> {{evento.Dificuldade}}
+													</p>
+													
+													<!-- Mostra apenas em acampamento -->
+													<p ng-show="evento.Tipo == 3">
+														<i class="tiny material-icons">today</i>
+														<span class="topico-info"> De</span class="topico-info"> {{evento.DataInicio}}
+														<span class="topico-info"> a</span class="topico-info"> {{evento.DataFim}}
+													</p>											
+													
+													<!-- Mostra apenas em !acampamento -->
+													<p ng-show="evento.Tipo != 3">
+														<i class="tiny material-icons">today</i>
+														<span class="topico-info"> Dia:</span class="topico-info"> {{evento.DataInicio}}
+													</p>
+													
+													<p>
+														<i class="tiny material-icons">location_on</i>
+														<span class="topico-info"> Local:</span class="topico-info"> {{evento.Local}}
+													</p>
+													
+													<!-- Numero de Inscritos -->
+													<p>
+														<i class="tiny material-icons">add_circle</i>
+														<span class="topico-info"> Nº de Inscritos:</span> {{evento.Confirmados.length}}/{{evento.NumeroMax}}
+													</p>
+
+													
+													<div class="gerarPdfListaIncritos">
+														<table ng-attr-id="{{'tabelaDoEventoNumero-' + evento.ID}}">
+															
+															<thead>
+																<tr>
+																	<th>Posição</th>
+																	<th>Nome</th>
+																	<th>Assinatura</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr ng-repeat="pessoa in evento.Confirmados">
+																	<td>{{pessoa.Nome}}</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+
+
+
+												</div>
+												
+												<!--Card Action LISTA DE INSCRITOS-->
+												<div class="card-action" ng-show="evento.Disponivel">
+													<a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos' + evento.ID}}" ng-click="postConfirmado(evento);" onclick="return false;">Lista de Inscritos no Evento</a>
+												</div>
+												<a id="estilizarIconePDF" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio);" onclick="return false;"><img id="iconPdf" src="../rsc/icon/pdf.png"></a>
+										
+											</div>
+											
+											<!--Lista de Inscritos-->
+											<div ng-attr-id="{{'lista-inscritos' + evento.ID}}" class="modal modal-fixed-footer">
+												<div class="modal-content">
+													<p class="modal-header">{{evento.Nome}}</p>		
+													<!--Tabela-->
+													<table class="bordered">
+														<!--Titulos da tabela-->
+														<thead>
+															<tr>
+																<th>Posição</th>
+																<th>Nome</th>
+																<th class="hide-on-med-and-down">Data da Inscrição</th>
+															</tr>
+														</thead>
+
+														<!--Linha para cada usuario-->
+														<tbody>
+															<tr ng-repeat="pessoa in evento.Confirmados" ng-class="{espera: $index >= evento.NumeroMax}">
+																<td>{{$index + 1}}º</td>
+																<td>{{pessoa.Nome}}</td>
+																<td class="hide-on-med-and-down">{{pessoa.DataInscricao}}</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+												
+												<div class="modal-footer">
+													<button type="button" class="modal-action modal-close waves-effect waves-orange btn-flat">Fechar</button>
+												</div>
+											</div>						
+										</div>
+									</div>
+								</div>
+								<!-- Botoes para ver eventos dos anos anteriores -->
+								<a class="botaoEventosAnteriores" href="main-page#!/finalizados2018">CLIQUE AQUI PARA VER OS EVENTOS DE 2018</a>
+								<a class="botaoEventosAnteriores" href="main-page#!/finalizados2017">CLIQUE AQUI PARA VER OS EVENTOS DE 2017</a>
+							</div>
+						</div>
+
+						<!--Ranking-->
+						<div ng-controller="RankingController as Ranking">
+							<div id="ranking">
+								<div class="card">
+									<div class="card-content">
+
+										<!-- Modal Trigger -->
+										<a class="waves-effect waves-light btn modal-trigger" data-target="rankingMODAl">Como funciona</a>
+										<!-- Modal Structure -->
+										<div id="rankingMODAl" class="modal modal-fixed-footer">
+											<div class="modal-content">
+												<h4>Ranking</h4>
+												<p>Com a sua pontuação você pode conseguir descontos incríveis em produtos Coltrekking. Válido apenas durante este ano letivo.</p>
+												<p>A pontuação do aluno é calculada com a soma da pontuação de cada trekking que o aluno participou. A pontuação de cada trekking leva em consideração:</p>
+												<p>A) A distância percorrida (km)</p>
+												<p>B) O desnível do terreno > subida + descida (em metros)</p>
+												<p>A fórmula utilizada para calcular a pontuação de um evento é:</p>
+												<p>Pontuação = KM * Fator K</p>
+												<p>Sendo Fator K = 1+((subida + descida)/1000)</p>
+											</div>
+											<div class="modal-footer">
+												<a class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+											</div>
+										</div>
+
+										<!--Tabela-->
+										<table class="striped">
+											<!--Titulos da tabela-->
+											<thead>
+												<tr>
+													<th>Posição</th>
+													<th>Nome</th>
+													<th>Pontuação</th>
+												</tr>
+											</thead>
+
+											<!--Linha para cada usuario-->
+											<tbody>
+												<tr ng-repeat="pessoa in ranking">
+													<td>{{$index + 1}}º</td>
+													<td>{{pessoa.Nome}}</td>
+													<td>{{pessoa.FatorK.toFixed(1)}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+
+					<!--Rotas-->
+					<div ng-view></div>
+				</div>
+			</div>
+		</div>
+
+		<!--Adiciona materialize.js-->
+		<script src="../node_modules/materialize-css/dist/js/materialize.min.js"></script>	
+		<!--Adiciona script.js-->
+		<script src="../js/main/script.js"></script>
+
+		<!-- Tela de carregamento -->
+		<script>
+			$(document).ready(function () {
+				// Depois que carregar, setar mais 3 segundos, para garantir o carregamento
+				setTimeout(function(){ 
+					document.getElementById("loading").remove();
+					document.body.style.backgroundColor = "#FAFAFA";
+					document.getElementById("conteudo").style.display = "block";
+				}, 3000);
+			});
+		</script>
+	</body>
+
+</html>

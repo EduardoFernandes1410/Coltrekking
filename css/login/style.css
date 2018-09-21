@@ -1,0 +1,198 @@
+/*****Variaveis*****/
+/*****Background Image*****/
+  body{
+    background: url('../../rsc/login/img/fotoPrincipal.jpg') center center no-repeat fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+  }
+
+  /* Alterar cor do card principal */
+  .light-green {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* Remover o scroll (barra de rolagem) */
+    .container {
+      width: 100%;
+      max-width:initial;
+    }
+    .container > .row {
+      margin: 0;
+    }
+    .container > .row > .col {
+      padding: 0;
+    }
+  /*Ajustar o botao O que eh*/
+  .btn {
+    padding: 0 0rem;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    height: 40px;
+    width: 80%;
+    margin-left: 10%;
+    margin-bottom: 10px !important;
+    font-size: 130%;
+    font-weight: 600;
+    padding-top: 4px;
+    border-radius: 30px;
+  }
+  .btn:hover{
+    background-color: rgba(255, 255, 255, 0.7) !important;
+  }
+  #loginGoogle {
+    background-color: rgba(236, 72, 67) !important;
+  }
+  #loginGoogleMobile{
+    background-color: rgb(236, 72, 67) !important;
+  }
+  #loginGoogle:hover {
+    background-color: rgb(219, 47, 41) !important;
+  }
+  #loginFacebook {
+    background-color: rgba(31, 150, 247) !important;
+  }
+  #loginFacebookMobile{
+    background-color: rgba(31, 150, 247) !important;
+  }
+  #loginFacebook:hover {
+    background-color: rgb(21, 135, 228) !important;
+  }
+
+  /* Ajustar o tamanho da fonte de logar com facebook e google */
+  @media screen and (max-width: 758px) {
+    #loginGoogle {
+      font-size: 10px;
+    }
+    #loginFacebook {
+      font-size: 10px;
+    }
+  }
+  @media screen and (max-width: 641px) {
+    #loginGoogle {
+      font-size: 8px;
+    }
+    #loginFacebook {
+      font-size: 8px;
+    }
+    .btn {
+      font-size: 125%;
+    }
+  }
+
+  @media screen and (max-width: 346px) {
+    #loginFacebookMobile {
+      padding: 0 0rem;
+      font-size: 12px;
+    }
+    #loginGoogleMobile {
+      padding: 0 0rem;
+      font-size: 12px;
+    }
+  }
+
+  /* Rodape */
+  .footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 9%;
+    background-color: transparent !important;
+    color: white;
+    text-align: center;
+ }
+
+ /* Tamanho dos botoes */
+  .botaoRedesEsquerda{
+    width: 50px;
+  }
+
+ /* Botoes verticais */
+ .alinharBotoes {
+  position: absolute;
+  text-align: center;
+  width: 45px;
+  left: 10px;
+  top: 38%;
+}
+@media screen and (max-width: 600px) {
+  /* Botoes horizontais */
+  .alinharBotoes {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    top: 90% !important;
+    width: 100%;
+    background-color: transparent !important;
+    color: white;
+    text-align: center;
+  }
+  .botaoRedesEsquerda{
+    width: 45px;
+  }
+
+}
+
+
+ .linksRedesSociais{
+   margin-bottom: 0px !important;
+ }
+
+/*****Leva card ao centro da tela*****/
+html, body, .content, .container, .row, .col, .valign-wrapper {
+  height: 100%; }
+
+/*****Card Central*****/
+.valign-wrapper {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto; }
+
+.card {
+  width: 100%;
+  max-width: 486px;
+  margin-left: auto;
+  margin-right: auto; }
+  .card #logo {
+    width: 90%;
+    margin-left: 4%;
+    margin-bottom: 5%;
+    margin-top: 5%; }
+  .card blockquote {
+      font-size: 20px;
+      font-weight: 450;
+      color: white;
+      margin-bottom: 7%;
+      margin-top: -6%;
+      border-left: 5px solid #795548;
+  }
+
+    @media screen and (max-width: 355px) {
+      .card blockquote {
+        font-size: 17px;
+      }
+    }
+    @media screen and (max-width: 318px) {
+      .card blockquote {
+        font-size: 14px;
+      }
+    }
+  .card a {
+    display: block;
+    margin-bottom: 10%; }
+    .card a i {
+      margin-right: 0%; }
+  .card #loginFacebook {
+    margin-bottom: 5%; }
+
+@media screen and (max-width: 647px) {
+  .valign-wrapper {
+    height: 90%;
+    margin-top: 5%;
+    margin-bottom: 5%; }
+  .card {
+    overflow: auto; }
+    .card #logo {
+      margin-top: 2%;
+      margin-bottom: 2%; } }

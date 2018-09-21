@@ -1,0 +1,30 @@
+<div class="card create-form">
+	<div class="card-content">
+		<span class="card-title" id="titulo">Fazer uma Postagem</span>
+
+		<div class="row">
+			<!--Form em si-->
+			<form class="col s12">
+				<div class="row">
+					<!--Titulo da Postagem-->
+					<div class="input-field col s12">
+						<textarea id="titulo-postagem" class="materialize-textarea" name="titulo-postagem" ng-model="params.TituloPostagem"></textarea>
+						<label for="titulo-postagem">Titulo do Post</label>
+					</div>
+					<!--Texto da Postagem-->
+					<div class="input-field col s12">
+						<textarea id="texto-postagem" class="materialize-textarea" name="texto-postagem" ng-model="params.TextoPostagem"></textarea>
+						<label for="texto-postagem">Texto do Post</label>
+					</div>
+				</div>
+			</form>
+		</div>
+		
+		<div class="btn-wrapper">
+			<!--Botao Cancelar-->
+			<a id="cancelar-btn" class="waves-effect waves-light btn-flat" href="/main-page">Cancelar</a>
+			<!--Botao Submit Postar-->
+			<a id="botaoSubmitPostagem" class="waves-effect waves-light btn deep-orange accent-2" ng-click="criarPostagem(params)"><i class="material-icons right">send</i>Postar</a>
+		</div>
+	</div>
+</div>
