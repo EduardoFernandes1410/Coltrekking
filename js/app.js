@@ -283,8 +283,10 @@
 			params.FimInscricao = params.FimInscricao.toString().substring(0, 24);
 			
 			//Seta o ano do evento, levando em consideracao a data da inscricao do evento
-			var anoEvento = params.DataInscricao.substr(11, 15);
-			params.ano = anoEvento;
+			console.log(params.DataInscricao);
+			var anoEvento = params.DataInscricao.substring(11, 15);
+			console.log("Ano do evento: " + anoEvento);
+			params.ano = 2018;
 
 			//Deleta params inuteis
 			delete params.HorarioInscricao;

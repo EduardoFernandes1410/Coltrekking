@@ -463,7 +463,7 @@ function editarEventoDB(req, data, connection, callback) {
 			if(!err) {
 				callback(true);
 			} else {
-				// console.log(err);
+				console.log(err);
 				callback(false);
 			}
 		});
@@ -545,7 +545,7 @@ function confirmarEventoDB(data, connection, callback) {
 
 						//Horario certo so funciona para mostrar para o usuario o tempo, ele nao ordena, APENAS a variavel datetime ordena
 						moment.locale("pt-br");
-						horarioCerto = moment().format('LLL');
+						horarioCerto = moment().format('LLL:ss');
 
 						//Seta o post
 						post = {
