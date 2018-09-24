@@ -154,8 +154,6 @@
 		if($scope.modoEdicao) {
 			$scope.eventoAttr = $location.search();
 			$scope.eventoAttr.numeroMax = parseInt($scope.eventoAttr.numeroMax);
-			$scope.eventoAttr.dataInscricao += " GMT";
-			$scope.eventoAttr.fimInscricao += " GMT";
 			
 			//Arruma a data de inscricao
 			var data = new Date($scope.eventoAttr.dataInscricao);
@@ -270,15 +268,22 @@
 			//Seta data de inscricao
 			params.DataInscricao = params.DataInscricao.split("/").reverse().join("-");
 			params.DataInscricao += 'T' + params.HorarioInscricao + ":00";
-			params.DataInscricao = new Date(params.DataInscricao).toUTCString().replace(" GMT", "");
+			//Criar a dataInscricao
+			params.DataInscricao = new Date(params.DataInscricao);
+			//Remover o GMT do usuario que cadastrou a data de inscricao
+			params.DataInscricao = params.DataInscricao.toString().substring(0, 24);
 			
+
 			//Seta fim da inscricao
 			params.FimInscricao = params.DataFimInscricao.split("/").reverse().join("-");
 			params.FimInscricao += 'T' + params.HorarioFimInscricao + ":00";
-			params.FimInscricao = new Date(params.FimInscricao).toUTCString().replace(" GMT", "");
+			//Criar o FimInscricao
+			params.FimInscricao = new Date(params.FimInscricao);
+			//Remover o GMT do usuario que cadastrou o fim de inscricao
+			params.FimInscricao = params.FimInscricao.toString().substring(0, 24);
 			
 			//Seta o ano do evento, levando em consideracao a data da inscricao do evento
-			var anoEvento = params.DataInscricao.substr(12, 4);
+			var anoEvento = params.DataInscricao.substr(11, 15);
 			params.ano = anoEvento;
 
 			//Deleta params inuteis
@@ -338,8 +343,11 @@
 	app.controller('EventosController', ['HTTPService', 'EventosService', '$timeout', '$rootScope', '$scope', '$interval', '$window', '$location',  function(httpService, eventosService, $timeout, $rootScope, $scope, $interval, $window, $location) {
 		//Funcao Countdown
 		$scope.funcaoCountdown = function(element, dataCountdown, controle) {
-			var agora = $scope.horaServidor;
-			var distancia = dataCountdown - agora - 3600000; //-36000 Milissegundo pois os eventos estavam 1 hora adiantado e nao consegui achar o problema, por isso -36000 Milissegundo  (1 hora)
+			// Pegar o fuso horario do usuario em milissegundo
+			var fusoUsuario = new Date().getTimezoneOffset() * 60000;
+			//O horario atual ira desconsiderar o fuso horario do usuario e ira considerar o fuso horario do servidor
+			var agora = $scope.horaServidor + fusoUsuario - $scope.fusoHorarioServidor;
+			var distancia = dataCountdown - agora;
 			
 			//Transforma distancia em d h m s
 			var days = Math.floor(distancia / (1000 * 60 * 60 * 24));
@@ -379,6 +387,7 @@
 			httpService.get('/eventos', function(answer) {
 				if(answer != false) {
 					$scope.eventos = answer.eventos;
+					$scope.fusoHorarioServidor = answer.fusoHorarioServidor;
 					$scope.horaServidor = answer.hora;
 					
 					//Atualiza hora do servidor

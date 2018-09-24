@@ -7,6 +7,7 @@ var express			= require('express');
 var mysql			= require('mysql');
 var bodyParser		= require('body-parser');
 var session			= require('express-session');
+var moment 			= require('moment');
 var aws				= require('aws-sdk');
 var app 			= express();
 
@@ -25,7 +26,7 @@ app.use(express.static('./', {
 
 //*****MySQL*****//
 var pool = mysql.createPool({
-	connectionLimit : 300,
+	connectionLimit : 10000,
 	host	: 'localhost',
 	user	: 'root',
 	password: '',
@@ -477,15 +478,12 @@ function getEventos(connection, callback) {
 		connection.release();
 		
 		if(!err) {
-			//Retorna o inverso do array, para mostrar pela ordem de criacao
-			let horaCorreta = new Date(new Date().toUTCString().replace(" GMT", ""));
-			horaCorreta.setHours(horaCorreta.getHours() + 2);
-			
 			var retorno = {
 				eventos: rows.reverse(),
-				hora: horaCorreta.getTime()
+				//Pegar o fuso horario do servidor (para saber se eh +2(horario de verao) ou +3 (horario normal))
+				fusoHorarioServidor: new Date().getTimezoneOffset()*60000, //Multiplicar com 60000 para converter minutos em milissigundos
+				hora: new Date().getTime()
 			};
-			
 			callback(retorno);
 		} else {
 			//console.log(err);
@@ -538,49 +536,17 @@ function confirmarEventoDB(data, connection, callback) {
 				//Verifica se o cara nao ja esta inscrito
 				estaInscrito(data, connection, function(status) {
 					//Se nao esta inscrito
-					if(status) {							
+					if(status) {	
+						//Datetime eh o horario correto, que ordena a posicao da inscricao						
 						var datetime = new Date().toISOString();
 						datetime = datetime.split('T');
 						datetime[1] = datetime[1].split('.')[0];
 						datetime = datetime.join(' ');
 
+						//Horario certo so funciona para mostrar para o usuario o tempo, ele nao ordena, APENAS a variavel datetime ordena
+						moment.locale("pt-br");
+						horarioCerto = moment().format('LLL');
 
-
-
-						var horarioCompleto =  new Date().toUTCString();
-						horarioCompleto = horarioCompleto.substr(17, 9);
-						var horarioVerao = horarioCompleto[0] + horarioCompleto[1];
-						var intHorarioVerao = parseInt(horarioVerao);
-						if (intHorarioVerao == 0) {
-							intHorarioVerao = 21;
-						}
-						else if (intHorarioVerao == 1) {
-							intHorarioVerao = 22;
-						}
-						else if (intHorarioVerao == 2) {
-							intHorarioVerao = 23;
-						}
-						else {
-							intHorarioVerao = intHorarioVerao-3; //Ajustar o -3 dependendo se for horario de verao ou nao
-						}
-						// Se o horario tiver apenas um numero no campo horas,  ex: 1:15, entao adicionar o 0 antes, ex: 01:15 
-						var charHorarioVerao = intHorarioVerao.toString();
-						var charHorarioVeraoCompleto = "";
-						if (charHorarioVerao.length == 1) {
-							charHorarioVeraoCompleto = "0" + charHorarioVerao;
-						}
-						else {
-							charHorarioVeraoCompleto = charHorarioVerao;
-						}
-
-						horarioCompleto = horarioCompleto.substr(2);
-						var horarioCerto = charHorarioVeraoCompleto + horarioCompleto;
-						var diaInscricao =  new Date().toUTCString();
-						diaInscricao = diaInscricao.substr(5,11);
-						horarioCerto = diaInscricao + " - " + horarioCerto;
-
-
-						
 						//Seta o post
 						post = {
 							IDPessoa: data.usuario,
@@ -908,7 +874,7 @@ function estaDisponivel(evento, connection, callback) {
 			var dataFim = rows[0].FimInscricao;
 			var dataCountdown = new Date(dataEvento).getTime();
 			var dataCountdown2 = new Date(dataFim).getTime();
-			var agora = new Date(new Date().toUTCString().replace(" GMT", "")).getTime();
+			var agora = new Date().getTime();
 			var distancia = dataCountdown - agora;
 			var distancia2 = agora - dataCountdown2;
 			
