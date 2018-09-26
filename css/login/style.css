@@ -42,21 +42,27 @@
   }
   #loginGoogle {
     background-color: rgba(236, 72, 67) !important;
+    color: #FFFFFF !important;
   }
   #loginGoogleMobile{
     background-color: rgb(236, 72, 67) !important;
+    color: #FFFFFF !important;
   }
   #loginGoogle:hover {
     background-color: rgb(219, 47, 41) !important;
+    color: #FFFFFF !important;
   }
   #loginFacebook {
     background-color: rgba(31, 150, 247) !important;
+    color: #FFFFFF !important;
   }
   #loginFacebookMobile{
     background-color: rgba(31, 150, 247) !important;
+    color: #FFFFFF !important;
   }
   #loginFacebook:hover {
     background-color: rgb(21, 135, 228) !important;
+    color: #FFFFFF !important;
   }
 
   /* Ajustar o tamanho da fonte de logar com facebook e google */

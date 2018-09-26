@@ -103,9 +103,9 @@ Para criar outra pagina, por exemplo de 2018, as seguintes mudancas devera ser f
                                     </a>
                                     
                                     <ul ng-if="usuario.Admin" ng-attr-id="{{'menu-card' + evento.ID}}" class="dropdown-content">
-                                        <!-- Nao mostrar Editar Fator K em prelecao -->
+                                        <!-- Nao mostrar Editar Pontuacao em prelecao -->
                                         <div ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
-                                            <li><a href="#!" class="finalizador" onclick="return false;" ng-click="finalizarEvento(evento.ID)" ng-attr-href="{{'#lista-finalizadora' + evento.ID}}">Editar fator K</a></li>
+                                            <li><a href="#!" class="finalizador" onclick="return false;" ng-click="cadastrarPontuacao(evento.ID)" ng-attr-href="{{'#lista-finalizadora' + evento.ID}}">Editar Pontuação</a></li>
                                         </div>
                                         <li><a ng-attr-href="{{'#!/create-event?id=' + evento.ID + '&nome=' + evento.Nome + '&tipo=' + evento.Tipo + '&tipoTrekking=' + evento.TipoTrekking + '&dataInicio=' + evento.DataInicio + '&dataFim=' + evento.DataFim + '&local=' + evento.Local + '&dificuldade=' + evento.Dificuldade + '&numeroMax=' + evento.NumeroMax + '&dataInscricao=' + evento.DataInscricao + '&fimInscricao=' + evento.FimInscricao}}"">Editar evento</a></li>
                                         <li class="divider"></li>
@@ -198,10 +198,9 @@ Para criar outra pagina, por exemplo de 2018, as seguintes mudancas devera ser f
                                 
                                 <!--Card Action LISTA DE INSCRITOS-->
                                 <div class="card-action" ng-show="evento.Disponivel">
-                                    <a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos-finalizados' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
-                                </div>
-                                <a id="estilizarIconePDF" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio);" onclick="return false;"><img id="iconPdf" src="../rsc/icon/pdf.png"></a>
-                        
+                                    <a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos-finalizados' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a><br>
+                                    <a class="listaDeincritos" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio);" onclick="return false;">Baixar lista de presença (PDF)</a>
+                                </div>                        
                             </div>
                             
                             <!--Lista de Inscritos-->
@@ -239,7 +238,7 @@ Para criar outra pagina, por exemplo de 2018, as seguintes mudancas devera ser f
                             <!-- Lista Finalizadora-->
                             <div ng-attr-id="{{'lista-finalizadora' + evento.ID}}" class="modal" id="modal-finalizar">
                                 <div class="modal-content">
-                                    <p class="modal-header">Editar Fator K</p>
+                                    <p class="modal-header">Editar Pontuação</p>
                                     
                                     <form>								
                                             <aCountdownVerde>Legenda</aCountdownVerde>
@@ -284,7 +283,7 @@ Para criar outra pagina, por exemplo de 2018, as seguintes mudancas devera ser f
                                     <!--Botao Cancelar-->
                                     <a href="main-page#!/finalizados2017" class="modal-action modal-close waves-effect waves-orange btn-flat">Cancelar</a>
                                     <!--Botao Submit Finalizar-->
-                                    <a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" onClick='parent.location="javascript:location.reload()"' ng-click="finalizarEvento(finalizar, evento.ID, evento.fatorKevento)">Aplicar</a>
+                                    <a href="main-page#!/finalizados2017" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" onClick='setTimeout(function(){ parent.location="javascript:location.reload()";}, 3000);' ng-click="cadastrarPontuacao(finalizar, evento.ID, evento.fatorKevento)">Aplicar</a>
                                     <!-- Pegar pessoas inscritas no evento e jogar na string pessoas -->				
                                     <div ng-repeat="confirmado in evento.Confirmados">
                                         <input type="text" class="removerIDpessoas col s1 l1" ng-attr-name="{{'stringPessoasEventos-' + evento.ID + '[]'}}" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>														
@@ -303,18 +302,30 @@ Para criar outra pagina, por exemplo de 2018, as seguintes mudancas devera ser f
             <div id="listanegra">
                 <div class="card">
                     <div class="card-content">
-
+                        <!-- Modal Trigger -->
+                        <a class="btn modal-trigger" data-target="listaNegraMODAl">Como funciona</a>
+                        <!-- Modal Structure -->
+                        <div id="listaNegraMODAl" class="modal modal-fixed-footer">
+                            <div class="modal-content">
+                                <h4>Lista Negra</h4>
+                                <p>Alunos que confirmarem sua a presença e não comparecerem sem nenhuma justificativa convincente, estarão temporariamente excluídos da próxima atividade.</p>
+                                <p>A lista negra mostra os alunos que estão bloqueados no próximo evento ou que foram bloqueados anteriormente e estarão livre no próximo evento.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <a class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+                            </div>
+                        </div>
                         <!--Tabela-->
                         <table class="striped">
                             <!--Titulos da tabela-->
-                            <thead>
+                            <thead id="nomeUsuariosListaNegra">
                                 <tr>
-                                    <th>USUÁRIO</th>
-                                    <th>TREKKING QUE O USUÁRIO FALTOU</th>
-                                    <th>SITUAÇÃO</th>
+                                    <th>Aluno</th>
+                                    <th>Trekking que o aluno faltou</th>
+                                    <th>Situação</th>
                                 </tr>
                             </thead>
-
+                            
                             <tbody ng-repeat="evento in eventos">
                                 <tr ng-repeat="confirmado in evento.Confirmados" ng-if="confirmado.listaNegraEvento != 0 && confirmado.listaNegraEvento != 3">
                                     <td class="listaNegraUsuario">
@@ -328,22 +339,23 @@ Para criar outra pagina, por exemplo de 2018, as seguintes mudancas devera ser f
                                         </p>
                                     </td>
                                     <td class="listaNegraUsuario">
-                                        <aListaNegraBloqueadoProximo ng-if="confirmado.listaNegraEvento == 1">
+                                        <a class="listaNegraBloqueadoProximo" ng-if="confirmado.listaNegraEvento == 1">
                                             Bloqueado no próximo
-                                        </aListaNegraBloqueadoProximo>
+                                        </a>
 
-                                        <aListaNegraLivreProximo ng-if="confirmado.listaNegraEvento == 2">
+                                        <a class="listaNegraLivreProximo" ng-if="confirmado.listaNegraEvento == 2">
                                             Livre no próximo
-                                        </aListaNegraLivreProximo>
+                                        </a>
                                     </td>
                                     <td class="listaNegraUsuario">
-                                        <a ng-if="usuario.Admin" id="btn" href="#" onClick='parent.location="javascript:location.reload()"' ng-click="removerListaNegra(confirmado.ID, confirmado.IDEvento)"><img id="iconListaNegraERemover" src="../rsc/icon/remover.png"></a>
+                                        <a ng-if="usuario.Admin" id="btn" href="#!" onClick='parent.location="javascript:location.reload()"' ng-click="removerListaNegra(confirmado.ID, confirmado.IDEvento)"><img id="iconListaNegraERemover" src="../rsc/icon/remover.png"></a>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+                <p id="naoHapessoasListaNegra" style="display: none">Não há pessoas na lista negra.</p>
             </div>
         </div>
     </div>
@@ -354,12 +366,28 @@ Para criar outra pagina, por exemplo de 2018, as seguintes mudancas devera ser f
             <div id="ranking">
                 <div class="card">
                     <div class="card-content">
-
-
-                        <!-- Countdown Do Ranking -->
-                        <p class="countdownRanking">
-                                <!-- O Ranking será zerado em {{ranking.CountdownRanking}} -->
-                        </p>
+                        
+                        <!-- Modal Trigger -->
+                        <a class="waves-effect waves-light btn modal-trigger" data-target="rankingMODAl">Como funciona</a>
+                        <!-- Modal Structure -->
+                        <div id="rankingMODAl" class="modal modal-fixed-footer">
+                            <div class="modal-content">
+                                <h4>Ranking</h4>
+                                <p>Com a sua pontuação você pode conseguir descontos incríveis em produtos Coltrekking. Válido apenas durante este ano letivo.</p>
+                                <p>A pontuação do aluno é calculada com a soma da pontuação de cada trekking que o aluno participou. A pontuação de cada trekking leva em consideração:</p>
+                                <p>A) A distância percorrida (km)</p>
+                                <p>B) O desnível do terreno > subida + descida (em metros)</p>
+                                <p>A fórmula utilizada para calcular a pontuação de um evento é:</p>
+                                <p>Pontuação = KM * Fator K</p>
+                                <p>Sendo Fator K = 1+((subida + descida)/1000)</p>
+                            </div>
+                            <div class="modal-footer">
+                                <a class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+                            </div>
+                        </div>
+                        
+                        <h1 class="rankingsAnteriores">Ranking 2017</h1>
+                        <div ng-init="selecionarAnoRanking(2017);"></div>
 
                         <!--Tabela-->
                         <table class="striped">

@@ -570,8 +570,8 @@
 			}
 		}
 		
-		//Finalizar evento
-		$scope.finalizarEvento = function(params, eventoID, fatorKAntigo) {
+		//Cadastrar pontuacao
+		$scope.cadastrarPontuacao = function(params, eventoID, fatorKAntigo) {
 			//Pega as pessoas marcadas
 			var transformaEventoIDstring = eventoID.toString();
 			transformaEventoIDstring = transformaEventoIDstring + "[]";
@@ -593,8 +593,8 @@
 				pessoas: pessoasArray
 			};
 			
-			//Chama POST Finalizar Evento
-			httpService.post('/finalizar-evento', dataPost, function(answer) {
+			//Chama POST Cadastrar Pontuacao
+			httpService.post('/cadastrar-pontuacao', dataPost, function(answer) {
 				//Emite alerta sobre o status da operacao
 				if(answer) {
 					Materialize.toast("Pontuação cadastrada com sucesso!", 2000);					
@@ -607,14 +607,14 @@
 
 
 
-		//Finalizar Evento Prelecao - Sem Fator K
+		//Finalizar Evento
 		$scope.finalizarEventoPrelecao = function(eventoID) {
 			var dataPost = {
 				eventoID: eventoID
 			}
 			
-			//Chama POST Excluir Evento
-			httpService.post('/finalizar-evento-prelecao', dataPost, function(answer) {
+			//Chama POST Finalizar Evento
+			httpService.post('/finalizar-evento', dataPost, function(answer) {
 				//Emite alerta sobre o status da operacao
 				if(answer) {
 					Materialize.toast("Evento finalizado com sucesso!", 2000);					
@@ -857,14 +857,18 @@
 	//Ranking Controller
 	app.controller('RankingController', ['HTTPService', '$rootScope', function(httpService, $rootScope) {
 	
+
 		//Quando EventosController ja acabou
-		$rootScope.$on('dataEventos', function(event) {
+		$rootScope.selecionarAnoRanking = function(anoSelecionado) {
+			var data = {
+				ano: anoSelecionado
+			}
 			//Chama RankingService
-			httpService.get('/ranking', function(answer) {
+			httpService.post('/ranking', data, function(answer) {
 				if(answer != null) {
 					$rootScope.ranking = answer;
 				}
 			}.bind(this));
-		});			
+		}			
 	}]);
 })();

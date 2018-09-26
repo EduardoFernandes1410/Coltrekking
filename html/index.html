@@ -81,9 +81,7 @@
 											<li><a class="dropdown-button" href="#!" data-beloworigin="true" data-activates="dropdown-menu"><img class="userImage circle" ng-src="{{ login.usuarioLogado.Foto }}"></a></li>
 											<ul id="dropdown-menu" class="dropdown-content">
 												<li><a href="#!" class="nome-usuario">{{ login.usuarioLogado.Nome }}</a></li>
-												<li><a href="#!">Colocação no Ranking: <span>{{ login.usuarioLogado.Posicao }}º</span></a></li>
-												<li><a href="#!">Fator K: <span>{{ login.usuarioLogado.FatorK }}</span></a></li>
-												<li><a href="#!">Lista Negra: <span>{{ login.usuarioLogado.ListaNegra }}</span></a></li>
+												<li><a href="#!">Lista Negra: <span class="listaNegraSimOuNao">{{ login.usuarioLogado.ListaNegra }}</span></a></li>
 												<li class="divider"></li>
 												<!--Logout Button-->
 												<li><a id="sair-button" href="/logout" onclick="logOut();">Sair</a></li>
@@ -93,25 +91,6 @@
 								</div>
 							</div>
 						</div>
-
-						
-						<script>
-							function mostrarRanking() {
-								$('#esconderEventosFinalizadosAoClicarEmOutraTab').css("display", "none");
-								$('#listaNegraOcultaNosEventosFinalizados').css("display", "none");
-								$('#rankingOcultoNosEventosFinalizados').css("display", "block");
-							}
-							function mostrarListaNegra() {
-								$('#esconderEventosFinalizadosAoClicarEmOutraTab').css("display", "none");
-								$('#listaNegraOcultaNosEventosFinalizados').css("display", "block");
-								$('#rankingOcultoNosEventosFinalizados').css("display", "none");
-							}
-							function mostrarEventos() {
-								$('#esconderEventosFinalizadosAoClicarEmOutraTab').css("display", "block");
-								$('#listaNegraOcultaNosEventosFinalizados').css("display", "none");
-								$('#rankingOcultoNosEventosFinalizados').css("display", "none");
-							}
-						</script>
 
 						<!--Tabs-->
 						<div ng-controller="RouteController">
@@ -140,9 +119,7 @@
 					<li class="divider"></li>
 					
 					<!--Info do Usuario-->
-					<li><a href="#!">Colocação no Ranking: <span>{{ login.usuarioLogado.Posicao }}º</span></a></li>
-					<li><a href="#!">Fator K: <span>{{ login.usuarioLogado.FatorK }}</span></a></li>
-					<li><a href="#!">Lista Negra: <span>{{ login.usuarioLogado.ListaNegra }}</span></a></li>
+					<li><a href="#!">Lista Negra: <span class="listaNegraSimOuNao">{{ login.usuarioLogado.ListaNegra }}</span></a></li>
 					<li class="divider"></li>
 					
 					<!--Logout Button-->
@@ -184,14 +161,14 @@
 										<!--Tabela-->
 										<table class="striped">
 											<!--Titulos da tabela-->
-											<thead>
+											<thead id="nomeUsuariosListaNegra">
 												<tr>
 													<th>Aluno</th>
 													<th>Trekking que o aluno faltou</th>
 													<th>Situação</th>
 												</tr>
 											</thead>
-
+											
 											<tbody ng-repeat="evento in eventos">
 												<tr ng-repeat="confirmado in evento.Confirmados" ng-if="confirmado.listaNegraEvento != 0 && confirmado.listaNegraEvento != 3">
 													<td class="listaNegraUsuario">
@@ -205,13 +182,13 @@
 														</p>
 													</td>
 													<td class="listaNegraUsuario">
-														<aListaNegraBloqueadoProximo ng-if="confirmado.listaNegraEvento == 1">
+														<a class="listaNegraBloqueadoProximo" ng-if="confirmado.listaNegraEvento == 1">
 															Bloqueado no próximo
-														</aListaNegraBloqueadoProximo>
+														</a>
 
-														<aListaNegraLivreProximo ng-if="confirmado.listaNegraEvento == 2">
+														<a class="listaNegraLivreProximo" ng-if="confirmado.listaNegraEvento == 2">
 															Livre no próximo
-														</aListaNegraLivreProximo>
+														</a>
 													</td>
 													<td class="listaNegraUsuario">
 														<a ng-if="usuario.Admin" id="btn" href="#!" onClick='parent.location="javascript:location.reload()"' ng-click="removerListaNegra(confirmado.ID, confirmado.IDEvento)"><img id="iconListaNegraERemover" src="../rsc/icon/remover.png"></a>
@@ -221,18 +198,9 @@
 										</table>
 									</div>
 								</div>
+								<p id="naoHapessoasListaNegra" style="display: none">Não há pessoas na lista negra.</p>
 							</div>
 						</div>
-
-						<!-- Mostrar o botao de mostrar os eventos dos outros anos apenas na guia eventos finalizados -->
-						<script>
-							function botaoMostrarEventosAnteriores() {
-								$('.botaoEventosAnteriores').css("display", "block");
-							}
-							function NAOmostrarBotaoEventosAnteriores() {
-								$('.botaoEventosAnteriores').css("display", "none");
-							}
-						</script>
 
 						<!--Eventos-->
 						<div ng-controller="EventosController">
@@ -323,9 +291,9 @@
 													</a>
 													
 													<ul ng-if="usuario.Admin" ng-attr-id="{{'menu-card' + evento.ID}}" class="dropdown-content">
-														<!-- Nao mostrar Editar Fator K em prelecao -->
+														<!-- Nao mostrar Editar Pontuacao em prelecao -->
 														<div ng-if="evento.Disponivel == 2" ng-show="evento.Tipo != 1">
-															<li><a href="#!" class="finalizador" onclick="return false;" ng-click="finalizarEvento(evento.ID)" ng-attr-href="{{'#lista-finalizadora' + evento.ID}}">Editar fator K</a></li>
+															<li><a href="#!" class="finalizador" onclick="return false;" ng-click="cadastrarPontuacao(evento.ID)" ng-attr-href="{{'#lista-finalizadora' + evento.ID}}">Editar Pontuação</a></li>
 														</div>
 														<li><a ng-attr-href="{{'#!/create-event?id=' + evento.ID + '&nome=' + evento.Nome + '&tipo=' + evento.Tipo + '&tipoTrekking=' + evento.TipoTrekking + '&dataInicio=' + evento.DataInicio + '&dataFim=' + evento.DataFim + '&local=' + evento.Local + '&dificuldade=' + evento.Dificuldade + '&numeroMax=' + evento.NumeroMax + '&dataInscricao=' + evento.DataInscricao + '&fimInscricao=' + evento.FimInscricao}}"">Editar evento</a></li>
 														<li class="divider"></li>
@@ -418,9 +386,9 @@
 												
 												<!--Card Action LISTA DE INSCRITOS-->
 												<div class="card-action" ng-show="evento.Disponivel">
-													<a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos-finalizados' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a>
+													<a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos-finalizados' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a><br>
+													<a class="listaDeincritos" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio);" onclick="return false;">Baixar lista de presença (PDF)</a>
 												</div>
-												<a id="estilizarIconePDF" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio);" onclick="return false;"><img id="iconPdf" src="../rsc/icon/pdf.png"></a>
 										
 											</div>
 											
@@ -459,7 +427,7 @@
 											<!-- Lista Finalizadora-->
 											<div ng-attr-id="{{'lista-finalizadora' + evento.ID}}" class="modal" id="modal-finalizar">
 												<div class="modal-content">
-													<p class="modal-header">Editar Fator K</p>
+													<p class="modal-header">Editar Pontuação</p>
 													
 													<form>								
 															<aCountdownVerde>Legenda</aCountdownVerde>
@@ -504,8 +472,8 @@
 													<!--Botao Cancelar-->
 													<a href="#!" class="modal-action modal-close waves-effect waves-orange btn-flat">Cancelar</a>
 													<!--Botao Submit Finalizar-->
-													<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" onClick='setTimeout(function(){ parent.location="javascript:location.reload()";}, 3000);' ng-click="finalizarEvento(finalizar, evento.ID, evento.fatorKevento)">Aplicar</a>
-													<!-- Pegar pessoas inscritas no evento e jogar na string pessoas -->				
+													<a href="#!" id="btn-finalizar-evento" class="modal-action modal-close waves-effect waves-orange btn-flat" onClick='setTimeout(function(){ parent.location="javascript:location.reload()";}, 3000);' ng-click="cadastrarPontuacao(finalizar, evento.ID, evento.fatorKevento)">Aplicar</a>
+													<!-- Pegar pessoas inscritas no evento e jogar na string pessoas -->
 													<div ng-repeat="confirmado in evento.Confirmados">
 														<input type="text" class="removerIDpessoas col s1 l1" ng-attr-name="{{'stringPessoasEventos-' + evento.ID + '[]'}}" ng-attr-id="{{confirmado.ID}}" ng-attr-value="{{confirmado.ID}}"/>														
 													</div>
@@ -678,10 +646,9 @@
 												
 												<!--Card Action LISTA DE INSCRITOS-->
 												<div class="card-action" ng-show="evento.Disponivel">
-													<a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos' + evento.ID}}" ng-click="postConfirmado(evento);" onclick="return false;">Lista de Inscritos no Evento</a>
-												</div>
-												<a id="estilizarIconePDF" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio);" onclick="return false;"><img id="iconPdf" src="../rsc/icon/pdf.png"></a>
-										
+													<a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos' + evento.ID}}" ng-click="postConfirmado(evento);" onclick="return false;">Lista de Inscritos no Evento</a><br>
+													<a class="listaDeincritos" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio);" onclick="return false;">Baixar lista de presença (PDF)</a>
+												</div>										
 											</div>
 											
 											<!--Lista de Inscritos-->
@@ -728,7 +695,7 @@
 							<div id="ranking">
 								<div class="card">
 									<div class="card-content">
-
+										
 										<!-- Modal Trigger -->
 										<a class="waves-effect waves-light btn modal-trigger" data-target="rankingMODAl">Como funciona</a>
 										<!-- Modal Structure -->
@@ -745,6 +712,38 @@
 											</div>
 											<div class="modal-footer">
 												<a class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col s1 l3"></div>
+											<div class="col s10 l6">
+												<select name="selectBox" id="selectBox" class="materialSelect" ng-model="mySelect" onchange="esconderMensagemEscolhaAno();" ng-change="selecionarAnoRanking(mySelect)">
+													<option value="" disabled selected>ESCOLHER ANO</option>
+													<option value="2017">2017</option>
+													<option value="2018">2018</option>
+													<option value="2019">2019</option>
+													<option value="2020">2020</option>	
+													<option value="2021">2021</option>
+													<option value="2022">2022</option>	
+													<option value="2023">2023</option>
+													<option value="2024">2024</option>	
+													<option value="2025">2025</option>
+													<option value="2026">2026</option>
+													<option value="2027">2027</option>
+													<option value="2028">2028</option>
+													<option value="2029">2029</option>
+													<option value="2030">2030</option>
+													<option value="2031">2031</option>
+													<option value="2032">2032</option>
+													<option value="2033">2033</option>
+													<option value="2034">2034</option>
+													<option value="2035">2035</option>
+													<option value="2036">2036</option>
+													<option value="2037">2037</option>
+													<option value="2038">2038</option>
+													<option value="2039">2039</option>
+													<option value="2040">2040</option>
+												</select>
 											</div>
 										</div>
 
@@ -770,6 +769,7 @@
 										</table>
 									</div>
 								</div>
+								<h1 id="escolhaUmAnoRanking">Escolha o ano que deseja ver o ranking. </h1>
 							</div>
 						</div>
 					</div>
@@ -785,18 +785,6 @@
 		<script src="../node_modules/materialize-css/dist/js/materialize.min.js"></script>	
 		<!--Adiciona script.js-->
 		<script src="../js/main/script.js"></script>
-
-		<!-- Tela de carregamento -->
-		<script>
-			$(document).ready(function () {
-				// Depois que carregar, setar mais 3 segundos, para garantir o carregamento
-				setTimeout(function(){ 
-					document.getElementById("loading").remove();
-					document.body.style.backgroundColor = "#FAFAFA";
-					document.getElementById("conteudo").style.display = "block";
-				}, 3000);
-			});
-		</script>
 	</body>
 
 </html>
