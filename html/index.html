@@ -131,6 +131,18 @@
 			<div id="corpo" class="container">
 				<!--FAB-->
 				<div ng-if="usuario.Admin" class="fixed-action-btn">
+
+					<!-- Editar as informacoes iniciais -->
+					<div ng-controller="InformacoesiniciaisController" ng-init="informacoesiniciais()">
+						<div ng-repeat="x in informacoesiniciais">
+							<a class="btn-floating btn-large deep-orange accent-2" ng-attr-href="{{'#!/infoInicial?Texto=' + x.Texto + '&ComoParticipar=' + x.ComoParticipar + '&Calendario=' + x.Calendario + '&Regras=' + x.Regras}}">
+								<i class="large material-icons">mode_edit</i>
+							</a>
+						</div>
+					</div>
+
+
+
 					<a class="btn-floating btn-large deep-orange accent-2" href="#!/create-event">
 						<i class="large material-icons">add</i>
 					</a>
@@ -140,7 +152,7 @@
 				<!--Paginas das Abas-->
 				<div ng-controller="RouteController">
 					<div ng-show="$location.path() === '/'">					
-		
+
 						<div ng-controller="EventosController">
 							<div id="listanegra">
 								<div class="card">

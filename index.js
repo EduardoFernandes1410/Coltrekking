@@ -153,6 +153,28 @@ app.post("/editar-evento", function(req, res) {
 	}
 });
 
+//*****Editar Info Inicial*****//
+app.post("/editar-info", function(req, res) {
+	if(!req.session.usuarioLogado.ID) {
+		res.send(false);
+	} else {
+		handleDatabase(req, res, function(req, res, connection) {
+			editarInfoDB(req, req.body, connection, function(status) {
+				res.send(status);
+			});
+		});
+	}
+});
+
+//******Get informacoes iniciais*****//
+app.get("/informacoesiniciais", function(req, res) {
+	handleDatabase(req, res, function(req, res, connection) {
+		getInformacoesiniciais(connection, function(rows) {
+			res.send(rows);
+		});
+	});
+});
+
 //******Get Eventos*****//
 app.get("/eventos", function(req, res) {
 	if(!req.session.usuarioLogado.ID) {
@@ -470,6 +492,36 @@ function editarEventoDB(req, data, connection, callback) {
 	} else {
 		callback(false);
 	}
+}
+
+//*****Editar Info no DB*****//
+function editarInfoDB(req, data, connection, callback) {
+	if(req.session.usuarioLogado.Admin) {
+		connection.query('UPDATE postagem SET ? WHERE ID = 1', [data], function(err, rows, fields) {
+			connection.release();
+			if(!err) {
+				callback(true);
+			} else {
+			//	console.log(err);
+				callback(false);
+			}
+		});
+	} else {
+		callback(false);
+	}
+}
+
+//*****Get Informacoes Iniciais*****//
+function getInformacoesiniciais(connection, callback) {
+	connection.query('SELECT Texto, ComoParticipar, Calendario, Regras FROM postagem WHERE ID = 1', function(err, rows, fields) {
+		connection.release();
+		if(!err) {
+			callback(rows);
+		} else {
+			console.log(err);
+			callback(false);
+		}
+	});
 }
 
 //*****Get Eventos*****//

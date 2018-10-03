@@ -499,6 +499,10 @@ aCountdownVermelho {
   margin-top: 40px !important;
 }
 
+.btn-floating{
+  margin-top: 10px !important;
+}
+
 
  /* Deixar a tabela que gera pdf invisivel */
  .gerarPdfListaIncritos{

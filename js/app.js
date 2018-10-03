@@ -55,6 +55,12 @@
 				controller: "CriarPostsController"
 			}
 		)
+		.when("/infoInicial",
+			{
+				templateUrl: "../html/create/infoInicial.html",
+				controller: "CriarInfoInicialController"
+			}
+		)
 		.when("/finalizados2018",
 			{
 				templateUrl: "../html/finalizados2018.html",
@@ -122,6 +128,79 @@
 	});
 
 //**********Controles**********//
+	//informacoesiniciais
+	app.controller('InformacoesiniciaisController', ['HTTPService', '$rootScope', function(httpService, $rootScope) {
+		
+		$rootScope.informacoesiniciais = function() {
+			//Chama informacoesiniciais
+			httpService.get('/informacoesiniciais', function(answer) {
+				console.log("valor zika: " + answer[0].Texto);
+				if(answer != null) {
+					$rootScope.informacoesiniciais =  answer;
+				}
+			}.bind(this));
+		}			
+	}]);
+
+	//CriarInfoInicialController Controller
+	app.controller('CriarInfoInicialController', ['HTTPService', '$timeout', '$scope', '$location', '$window', '$rootScope', function(httpService, $timeout, $scope, $location, $window, $rootScope) {		
+		//Inicia
+		$timeout(function() {
+			//Inicializa elementos do Materialize
+			$(document).ready(function() {
+				//Select
+				$('select').material_select();
+
+				$scope.inicialAttr = $location.search();
+
+				//Inserir os \n (enter)
+				$scope.inicialAttr.Texto = $scope.inicialAttr.Texto.replace(/<br>/g, '\n'); //Insere os break-lines
+				$scope.inicialAttr.ComoParticipar = $scope.inicialAttr.ComoParticipar.replace(/<br>/g, '\n'); //Insere os break-lines
+				$scope.inicialAttr.Calendario = $scope.inicialAttr.Calendario.replace(/<br>/g, '\n'); //Insere os break-lines
+				$scope.inicialAttr.Regras = $scope.inicialAttr.Regras.replace(/<br>/g, '\n'); //Insere os break-lines
+				
+				//Edita os valores dos elementos
+				$("#Texto").val($scope.inicialAttr.Texto);
+				$("#ComoParticipar").val($scope.inicialAttr.ComoParticipar);
+				$("#Calendario").val($scope.inicialAttr.Calendario);
+				$("#Regras").val($scope.inicialAttr.Regras);
+									
+				//Reinicia os elementos Materialize
+				Materialize.updateTextFields();
+				$('select').material_select();
+			});
+		});
+		//Submit o formulario de Editar Informacoes Iniciais
+		$scope.editarInfoInicial = function(params) {		
+			
+			if(params.Texto) {
+				params.Texto = params.Texto.replace(/\n\r?/g, '<br>'); //Insere os break-lines
+			}
+			if(params.ComoParticipar) {
+				params.ComoParticipar = params.ComoParticipar.replace(/\n\r?/g, '<br>'); //Insere os break-lines
+			}
+			if(params.Calendario) {
+				params.Calendario = params.Calendario.replace(/\n\r?/g, '<br>'); //Insere os break-lines
+			}
+			if(params.Regras) {
+				params.Regras = params.Regras.replace(/\n\r?/g, '<br>'); //Insere os break-lines
+			}
+			//Chama o POST Editar info
+			httpService.post('/editar-info', params, function(answer) {
+				//Emite alerta sobre o status da operacao e redireciona
+				if(answer) {
+					Materialize.toast("Informações editadas com sucesso!", 2000);
+					$location.url($location.path('/main-page'));
+					setTimeout(function(){ parent.location="javascript:location.reload()";}, 1000)
+				} else {
+					Materialize.toast("Erro ao editar Informações.", 3000);
+				}
+			});
+		}
+
+	}]);
+	
+
 	//Login Controller
 	app.controller('LoginController', ['HTTPService', '$rootScope', function(httpService, $rootScope) {
 		var usuarioLogado;
@@ -285,8 +364,7 @@
 			//Seta o ano do evento, levando em consideracao a data da inscricao do evento
 			console.log(params.DataInscricao);
 			var anoEvento = params.DataInscricao.substring(11, 15);
-			console.log("Ano do evento: " + anoEvento);
-			params.ano = 2018;
+			params.ano = anoEvento;
 
 			//Deleta params inuteis
 			delete params.HorarioInscricao;
