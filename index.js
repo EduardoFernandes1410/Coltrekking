@@ -57,7 +57,7 @@ var login = '/html/login/index.html';
 
 /*************************VARIAVEIS DE EXECUCAO**************************/
 //Construtor do usuario
-function Usuario(nome, email, foto, id, fatork, posicao, listaNegra, admin) {
+function Usuario(nome, email, foto, id, fatork, posicao, listaNegra, rg, admin) {
 	this.Nome = nome;
 	this.Email = email;
 	this.Foto = foto;
@@ -65,6 +65,7 @@ function Usuario(nome, email, foto, id, fatork, posicao, listaNegra, admin) {
 	this.FatorK = fatork;
 	this.Posicao = posicao;
 	this.ListaNegra = listaNegra;
+	this.rg = rg;
 	this.Admin = admin;
 }
 
@@ -390,7 +391,7 @@ app.get("/logout", function(req, res) {
 //*****Adicionar usuario ao DB*****//
 function addDB(req, connection, callback) {
 	//Cria usuario com propriedades do req.session.usuarioLogado
-	var usuario = new Usuario(req.session.usuarioLogado.Nome, req.session.usuarioLogado.Email, req.session.usuarioLogado.Foto, req.session.usuarioLogado.ID, 0, 1, 0, 0);
+	var usuario = new Usuario(req.session.usuarioLogado.Nome, req.session.usuarioLogado.Email, req.session.usuarioLogado.Foto, req.session.usuarioLogado.ID, 0, 1, 0, null, 0);
 
 	//Adiciona ao DB de Pessoas
 	connection.query('INSERT IGNORE INTO pessoa SET ?', usuario, function(err, rows, fields) {
@@ -419,6 +420,7 @@ function pegaInfoUsuarioLogado(req, connection, callback) {
 				req.session.usuarioLogado.FatorK = rows[0].FatorK;
 				req.session.usuarioLogado.Posicao = rows[0].Posicao;
 				req.session.usuarioLogado.ListaNegra = rows[0].ListaNegra;
+				req.session.usuarioLogado.rg = rows[0].rg;
 				req.session.usuarioLogado.Admin = rows[0].Admin;
 			} catch(err) {
 				console.log(err.message);
@@ -547,7 +549,7 @@ function getEventos(connection, callback) {
 //*****Get Confirmados*****//
 function getConfirmados(data, connection, callback) {
 	//Get os IDs dos confirmados com INNER JOIN
-	connection.query('SELECT ID, Nome, FatorK, `pessoa-evento`.ListaEspera, `pessoa-evento`.IDEvento, `pessoa-evento`.Colocacao, `pessoa-evento`.DataHoraInscricao, `pessoa-evento`.DataInscricao, `pessoa-evento`.listaNegraEvento FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ? ORDER BY `pessoa-evento`.DataHoraInscricao, `pessoa-evento`.Colocacao', data, function(err, rows, fields) {
+	connection.query('SELECT ID, Nome, FatorK, rg, `pessoa-evento`.ListaEspera, `pessoa-evento`.IDEvento, `pessoa-evento`.Colocacao, `pessoa-evento`.DataHoraInscricao, `pessoa-evento`.DataInscricao, `pessoa-evento`.listaNegraEvento FROM `pessoa` INNER JOIN `pessoa-evento` ON pessoa.ID = `pessoa-evento`.IDPessoa WHERE `pessoa-evento`.IDEvento = ? ORDER BY `pessoa-evento`.DataHoraInscricao, `pessoa-evento`.Colocacao', data, function(err, rows, fields) {
 		connection.release();
 		
 		if(!err) {
@@ -614,8 +616,15 @@ function confirmarEventoDB(data, connection, callback) {
 							//Adiciona pessoa ao evento
 							connection.query('INSERT INTO `pessoa-evento` SET ?', post, function(err, rows, fields) {
 								if(!err) {
-									connection.release();
-									callback(true);
+									//Adicionar rg do usuario
+									connection.query('UPDATE `pessoa` SET `rg` = ? WHERE ID = ?', [data.rg, post.IDPessoa], function(err, rows, fields) {
+										if(!err) {
+											connection.release();
+											callback(true);
+										} else {
+											callback(false);
+										}
+									});
 								} else {
 									//console.log('this.sql', this.sql);
 									//console.log(err);

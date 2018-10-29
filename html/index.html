@@ -389,6 +389,7 @@
 															<tbody>
 																<tr ng-repeat="pessoa in evento.Confirmados">
 																	<td>{{pessoa.Nome}}</td>
+																	<td>{{pessoa.rg}}</td>
 																</tr>
 															</tbody>
 														</table>
@@ -399,7 +400,7 @@
 												<!--Card Action LISTA DE INSCRITOS-->
 												<div class="card-action" ng-show="evento.Disponivel">
 													<a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos-finalizados' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a><br>
-													<a class="listaDeincritos" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio);" onclick="return false;">Baixar lista de presença (PDF)</a>
+													<a class="listaDeincritos" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio, evento.Tipo);" onclick="return false;">Baixar lista (PDF)</a>
 												</div>
 										
 											</div>
@@ -552,7 +553,7 @@
 													<!--Nome-->
 													<span class="card-title">{{evento.Nome}}</span>
 													<!--FAB Confirmar-->
-													<a ng-attr-id="{{'btn-confirmar-' + evento.ID}}" ng-disabled="!(evento.Disponivel == 1)" ng-click="confirmarEvento(this.evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">add</i></a>
+													<a ng-attr-id="{{'btn-confirmar-' + evento.ID}}" ng-disabled="!(evento.Disponivel == 1)" ng-click="confirmarEvento(this.evento, params.rg)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">add</i></a>
 													<!--FAB Cancelar-->
 													<a ng-attr-id="{{'btn-cancelar-' + evento.ID}}" ng-click="cancelarEvento(this.evento)" ng-disabled="!(evento.Disponivel == 1)" ng-show="estaConfirmado(evento)" class="btn-sign btn-floating btn-large halfway-fab waves-effect waves-light deep-orange accent-2"><i class="material-icons">remove</i></a>
 												</div>
@@ -577,7 +578,7 @@
 													</ul>
 												
 													<!-- Info do Evento -->
-
+													
 
 													<!--Card Action COUNTDOWN-->
 													<div ng-show="!evento.Disponivel">
@@ -587,6 +588,24 @@
 													<!-- Countdown de Disponibilidade -->
 													<div ng-if="evento.Disponivel == 1">
 														<aCountdownVerde onclick="return false;">Inscrições encerram em {{evento.CountdownDisponibilidade}}</aCountdownVerde>
+													</div>
+
+													<!-- Verifica se o evento esta disponivel para inscricoes -->
+													<div ng-show="evento.Disponivel == 1">
+														<!--Nao mostra se for prelecao-->
+														<div ng-show="evento.Tipo != 1">
+															<!-- Formulario para preencher o rg -->
+															<form>
+																<div class="row">
+																	<div class="input-field col s10 m5">
+																		<i class="material-icons prefix active">assignment_ind</i>
+																		<input ng-disabled="estaConfirmado(evento)" maxlength=19 class="rgUser icon_prefix" placeholder="MG-12.345.678" type="text" class="validate" ng-model="params.rg" ng-init="params.rg = setarRgPadrao()">
+																		<label class="active" for="rg icon_prefix">Nº Identidade (RG)</label>
+																	</div>
+																</div>
+																<div class="identidadeRG"></div>
+															</form>
+														</div>
 													</div>
 			
 													<div ng-if="evento.Disponivel == 2">
@@ -647,6 +666,7 @@
 															<tbody>
 																<tr ng-repeat="pessoa in evento.Confirmados">
 																	<td>{{pessoa.Nome}}</td>
+																	<td>{{pessoa.rg}}</td>
 																</tr>
 															</tbody>
 														</table>
@@ -659,7 +679,7 @@
 												<!--Card Action LISTA DE INSCRITOS-->
 												<div class="card-action" ng-show="evento.Disponivel">
 													<a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos' + evento.ID}}" ng-click="postConfirmado(evento);" onclick="return false;">Lista de Inscritos no Evento</a><br>
-													<a class="listaDeincritos" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio);" onclick="return false;">Baixar lista de presença (PDF)</a>
+													<a class="listaDeincritos" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio, evento.Tipo);" onclick="return false;">Baixar lista (PDF)</a>
 												</div>										
 											</div>
 											

@@ -504,6 +504,11 @@ aCountdownVermelho {
 }
 
 
+.identidadeRG{
+  margin-bottom: -20px !important;
+}
+
+
  /* Deixar a tabela que gera pdf invisivel */
  .gerarPdfListaIncritos{
   visibility:hidden;

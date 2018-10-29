@@ -134,7 +134,6 @@
 		$rootScope.informacoesiniciais = function() {
 			//Chama informacoesiniciais
 			httpService.get('/informacoesiniciais', function(answer) {
-				console.log("valor zika: " + answer[0].Texto);
 				if(answer != null) {
 					$rootScope.informacoesiniciais =  answer;
 				}
@@ -569,32 +568,69 @@
 				evento.Confirmados = answer;
 			});
 		}
+
+		$timeout(function() {
+			//Inicializa elementos do Materialize
+			$(document).ready(function() {
+				//Select
+				$('select').material_select();
+
+				if($rootScope.usuario.rg) {
+					$(".rgUser").val($rootScope.usuario.rg);
+				}
+				else {
+					$(".rgUser").val("");
+				}
+									
+				//Reinicia os elementos Materialize
+				Materialize.updateTextFields();
+				$('select').material_select();
+			});
+		});
+		// Setar ng-model RG padrao
+		$scope.setarRgPadrao = function(){
+			if($rootScope.usuario.rg) {
+				return $rootScope.usuario.rg;
+			}
+			else {
+				return "";
+			}
+		};
 		
 		//Confirmar em Evento
-		$scope.confirmarEvento = function(evento) {
-			$("#btn-confirmar-" + evento.ID).attr("disabled", true);
-			
-			var data = {
-				evento: evento.ID,
-				usuario: $rootScope.usuario.ID,
-				blacklist: $rootScope.usuario.ListaNegra
-			}
-			//Chama POST Confirmar Evento
-			httpService.post('/confirmar-evento', data, function(answer) {
-				//Reabilita o botao de se inscrever
-				$("#btn-confirmar-" + evento.ID).attr("disabled", false);
-				
-				//Emite alerta sobre o status da operacao e redireciona
-				if(answer) {
-					Materialize.toast("Inscrição em evento realizada com sucesso!", 3000);
-										
-					//Atualiza lista de confirmados
-					$scope.postConfirmado(evento);
-					$scope.confirmadosPorMim();
-				} else {
-					Materialize.toast("Erro ao se inscrever no evento! Verifique se você está na lista negra.", 3000);
+		$scope.confirmarEvento = function(evento, rg) {
+			// Verifica se a algum rg cadastro ou se o evento eh do tipo prelecao - tipo 1
+			//Dessa maneira, o usuario nao eh obrigado a colocar o rg para inscrever-se na prelecao
+			//Mas eh obrigado para se inscrever no trekking (tipo 2) ou acampamento (tipo 3)
+			if(rg || evento.Tipo == 1) {
+				$("#btn-confirmar-" + evento.ID).attr("disabled", true);
+				var data = {
+					evento: evento.ID,
+					usuario: $rootScope.usuario.ID,
+					blacklist: $rootScope.usuario.ListaNegra,
+					rg: rg
 				}
-			});
+				//Chama POST Confirmar Evento
+				httpService.post('/confirmar-evento', data, function(answer) {
+					//Reabilita o botao de se inscrever
+					$("#btn-confirmar-" + evento.ID).attr("disabled", false);
+					
+					//Emite alerta sobre o status da operacao e redireciona
+					if(answer) {
+						Materialize.toast("Inscrição em evento realizada com sucesso!", 3000);
+											
+						//Atualiza lista de confirmados
+						$scope.postConfirmado(evento);
+						$scope.confirmadosPorMim();
+					} else {
+						Materialize.toast("Erro ao se inscrever no evento! Verifique se você está na lista negra.", 3000);
+					}
+				});
+			}
+			// Se nao inseriu nenhum rg, entao avisar o usuario
+			else {
+				Materialize.toast("Para participar do Trekking é necessário inserir o seu número de identidade (REGISTRO GERAL (RG))", 3000);
+			}
 		}
 		
 		//Cancelar em Evento
@@ -705,45 +741,88 @@
 
 
 		//Gerar lista PDF
-		$scope.gerarPDF = function(idDoEventoParaGerarTabela, nomeDoEvento, dataDoEvento) {
-			var columns = [
-			{title: "P", dataKey: "id"},
-			{title: "Nome", dataKey: "name"}, 
-			{title: "          ", dataKey: "a"},
-			{title: "          ", dataKey: "b"},
-			{title: "          ", dataKey: "c"},
-			{title: "Assinatura", dataKey: "d"},
-			{title: "          ", dataKey: "e"},
-			{title: "          ", dataKey: "f"},
-			{title: "          ", dataKey: "g"}
-			];
-			var numeroDeTD = $('#'+ idDoEventoParaGerarTabela + ' td').length;
-			var rows = [];
-			for(var i=0;i<numeroDeTD;i++) {
-				var aux = $('#'+idDoEventoParaGerarTabela + ' td')[i].innerHTML;
-				rows.push({"id": i+1 + "º", "name": aux});
+		$scope.gerarPDF = function(idDoEventoParaGerarTabela, nomeDoEvento, dataDoEvento, tipoEvento) {
+			// Verifica se o evento eh do tipo prelecao, se sim, baixar a lista de presenca
+			if (tipoEvento == "1") {
+				var columns = [
+				{title: "P", dataKey: "id"},
+				{title: "Nome", dataKey: "name"}, 
+				{title: "          ", dataKey: "a"},
+				{title: "          ", dataKey: "b"},
+				{title: "          ", dataKey: "c"},
+				{title: "Assinatura", dataKey: "d"},
+				{title: "          ", dataKey: "e"},
+				{title: "          ", dataKey: "f"},
+				{title: "          ", dataKey: "g"}
+				];
+				var numeroDeTD = $('#'+ idDoEventoParaGerarTabela + ' td').length;
+				var rows = [];
+				var posicao = 1;
+				for(var i=0;i<numeroDeTD;i=i+2) {
+					var aux = $('#'+idDoEventoParaGerarTabela + ' td')[i].innerHTML;
+					rows.push({"id": posicao + "º", "name": aux});
+					posicao++;
+				}
+				var doc = new jsPDF('p', 'pt');
+
+				doc.setFontSize(14);
+				doc.text(nomeDoEvento, 40, 45);
+				doc.text('Data: ' + dataDoEvento, 40, 70);
+
+				doc.autoTable(columns, rows, {
+					styles: {fillColor: [130, 130, 130]},
+					bodyStyles: {
+						fillColor: [210, 210, 210],
+					},
+					alternateRowStyles: {
+						fillColor: [240, 240, 240]
+					},
+					columnStyles: {
+						name: {fillColor: 247},
+						id: {fillColor: 240}
+					},
+					margin: {top: 90}
+				});
+				doc.save('ListaDePresenca.pdf');
 			}
-			var doc = new jsPDF('p', 'pt');
+			//Se o evento nao for do tipo prelecao, entao ele sera do tipo trekking ou acampamento
+			else {
+				var columns = [
+				{title: "P", dataKey: "id"},
+				{title: "Nome", dataKey: "name"}, 
+				{title: "Identidade (RG)", dataKey: "rg"}
+				];
+				var numeroDeTD = $('#'+ idDoEventoParaGerarTabela + ' td').length;
+				var rows = [];
+				var posicao = 1;
+				for(var i=0;i<numeroDeTD;i=i+2) {
+					var aux = $('#'+idDoEventoParaGerarTabela + ' td')[i].innerHTML;
+					var auxRG = $('#'+idDoEventoParaGerarTabela + ' td')[i+1].innerHTML;
+					rows.push({"id": posicao + "º", "name": aux, "rg": auxRG});
+					posicao++;
+				}
+				var doc = new jsPDF('p', 'pt');
 
-			doc.setFontSize(14);
-			doc.text(nomeDoEvento, 40, 45);
-			doc.text('Data: ' + dataDoEvento, 40, 70);
+				doc.setFontSize(14);
+				doc.text(nomeDoEvento, 40, 45);
+				doc.text('Data: ' + dataDoEvento, 40, 70);
 
-			doc.autoTable(columns, rows, {
-				styles: {fillColor: [130, 130, 130]},
-				bodyStyles: {
-					fillColor: [210, 210, 210],
-				},
-				alternateRowStyles: {
-					fillColor: [240, 240, 240]
-				},
-				columnStyles: {
-					name: {fillColor: 247},
-					id: {fillColor: 240}
-				},
-				margin: {top: 90}
-			});
-			doc.save('ListaDePresenca.pdf');	
+				doc.autoTable(columns, rows, {
+					styles: {fillColor: [130, 130, 130]},
+					bodyStyles: {
+						fillColor: [210, 210, 210],
+					},
+					alternateRowStyles: {
+						fillColor: [240, 240, 240]
+					},
+					columnStyles: {
+						name: {fillColor: 247},
+						id: {fillColor: 240}
+					},
+					margin: {top: 90}
+				});
+				doc.save('ListaComRG.pdf');
+			}
 		}
 
 		//Adicionar usuario na lista negra

@@ -59,17 +59,17 @@
 										<img id="logo" src="../../rsc/logo/coltrekking-logo-3.png">
 									</span>
 
+									<div class="row">
+										<!-- Modal Trigger -->
+										<div class="col s12">
+											<a onclick="abrirModal();" class="waves-effect waves-light btn modal-trigger" href="#modal1">O que é?</a>
+											<a onclick="abrirModal();" class="waves-effect waves-light btn modal-trigger" href="#modal2">Como Participar?</a>
+											<a onclick="abrirModal();" class="waves-effect waves-light btn modal-trigger" href="#modal3">Calendário</a>
+											<a onclick="abrirModal();" class="waves-effect waves-light btn modal-trigger" href="#modal4">Regras</a>
+										</div>
+									</div>
 									<div ng-controller="InformacoesiniciaisController" ng-init="informacoesiniciais()">
 										<div ng-repeat="x in informacoesiniciais">
-											<div class="row">
-												<!-- Modal Trigger -->
-												<div class="col s12">
-													<a onclick="abrirModal();" class="waves-effect waves-light btn modal-trigger" href="#modal1">O que é</a>
-													<a onclick="abrirModal();" class="waves-effect waves-light btn modal-trigger" href="#modal2">Como Participar</a>
-													<a onclick="abrirModal();" class="waves-effect waves-light btn modal-trigger" href="#modal3">Calendário</a>
-													<a onclick="abrirModal();" class="waves-effect waves-light btn modal-trigger" href="#modal4">Regras</a>
-												</div>
-											</div>
 											<!-- Modal Structure -->
 											<div id="modal1" class="modal modal-fixed-footer">
 												<div class="modal-content">

@@ -189,6 +189,7 @@ Para criar outra pagina, por exemplo de 2018, as seguintes mudancas devera ser f
                                             <tbody>
                                                 <tr ng-repeat="pessoa in evento.Confirmados">
                                                     <td>{{pessoa.Nome}}</td>
+                                                    <td>{{pessoa.rg}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -199,7 +200,7 @@ Para criar outra pagina, por exemplo de 2018, as seguintes mudancas devera ser f
                                 <!--Card Action LISTA DE INSCRITOS-->
                                 <div class="card-action" ng-show="evento.Disponivel">
                                     <a class="listaDeincritos" ng-attr-href="{{'#lista-inscritos-finalizados' + evento.ID}}" ng-click="postConfirmado(evento)" onclick="return false;">Lista de Inscritos no Evento</a><br>
-                                    <a class="listaDeincritos" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio);" onclick="return false;">Baixar lista de presença (PDF)</a>
+                                    <a class="listaDeincritos" ng-if="usuario.Admin" ng-click="gerarPDF('tabelaDoEventoNumero-' + evento.ID, evento.Nome, evento.DataInicio, evento.Tipo);" onclick="return false;">Baixar lista (PDF)</a>
                                 </div>                        
                             </div>
                             
