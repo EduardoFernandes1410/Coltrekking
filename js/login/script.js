@@ -7,17 +7,17 @@ var usuarioInfo = new Object();
 window.provedor = "";
 
 /***Quando a pagina carrega***/
-window.onload = function() {
+window.onload = function () {
 	//Verifica browser do cara (da problema com o do facebook)
 	function isFacebookApp() {
-	    var ua = navigator.userAgent || navigator.vendor || window.opera;
+		var ua = navigator.userAgent || navigator.vendor || window.opera;
 		return (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1);
 	}
-	
-	if(isFacebookApp()) {
+
+	if (isFacebookApp()) {
 		alert("Atenção! O site Coltrekking pode apresentar problemas ao ser acessado pelo navegador do Facebook. É altamente recomendado utilizar outro navegador (de preferência o Google Chrome).");
-	} 
-	
+	}
+
 	initApp();
 }
 
@@ -32,7 +32,7 @@ function googleSignIn() {
 	$('#loginFacebook, #loginFacebookMobile').attr('disabled', true);
 	$('#loginGoogle, #loginGoogleMobile').attr('onClick', 'return false');
 	$('#loginGoogle, #loginGoogleMobile').html('<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>');
-	
+
 	signIn(googleProvider);
 }
 
@@ -42,7 +42,7 @@ function facebookSignIn() {
 	$('#loginGoogle, #loginGoogleMobile').attr('disabled', true);
 	$('#loginFacebook, #loginFacebookMobile').attr('onClick', 'return false');
 	$('#loginFacebook, #loginFacebookMobile').html('<i class="fa fa-refresh fa-spin fa-3x fa-fw"></i>');
-	
+
 	facebookProvider.addScope('email');
 	signIn(facebookProvider);
 }
@@ -50,23 +50,23 @@ function facebookSignIn() {
 /**Sign In com Popup***/
 function signIn(provedor) {
 	firebase.auth().signInWithPopup(provedor).then(result => {
-		if(result.credential) {
+		if (result.credential) {
 			var token = result.credential.accessToken;
 		}
 		//Info do usuario logado
 		user = result.user;
-	}).catch(function(error) {
+	}).catch(function (error) {
 		//Reativa os botoes
 		reativarBotoes();
-		
+
 		// Informacoes do erro
 		var errorCode = error.code;
 		var errorMessage = error.message;
 		var email = error.email;
 		var credential = error.credential;
-		
+
 		//Erro de ja ter cadastrado com outro provider
-		if(errorCode == 'auth/account-exists-with-different-credential') {
+		if (errorCode == 'auth/account-exists-with-different-credential') {
 			//Pega as credenciais desse email
 			firebase.auth().fetchProvidersForEmail(email).then(providers => {
 				window.provedor = (providers[0] == "google.com" ? "google" : "facebook");
@@ -80,9 +80,9 @@ function signIn(provedor) {
 /***Inicializar App***/
 function initApp() {
 	/*Ao mudar de estado (logado/deslogado)*/
-	firebase.auth().onAuthStateChanged(function(user) {
+	firebase.auth().onAuthStateChanged(function (user) {
 		/*Se logou*/
-		if(user) {
+		if (user) {
 			//Seta info do usuario logado
 			usuarioInfo.Nome = user.displayName;
 			usuarioInfo.Email = user.email;
@@ -90,24 +90,24 @@ function initApp() {
 			usuarioInfo.ID = user.uid;
 
 			/*Manda usuarioInfo para server*/
-			url = "/post-user";			
+			url = "/post-user";
 			$.ajax({
 				type: "POST",
 				url: url,
 				data: usuarioInfo,
-				success: function(answer) {
+				success: function (answer) {
 					window.location = answer;
 				},
-				error: function(answer, status) {
+				error: function (answer, status) {
 					reativarBotoes();
 					console.log(answer.responseText);
 					alert("Erro ao realizar o login! Tente novamente");
 				}
 			});
 		}
-		else {					
+		else {
 			console.log("Nao tem user");
-		}					
+		}
 	});
 }
 
