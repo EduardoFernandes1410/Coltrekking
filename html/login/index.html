@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="main">
 	<head>
 		<title>Bem Vindo - Coltrekking</title>
 		<link rel="icon" type="image/png" href="../rsc/logo/macaco.png" />
@@ -11,6 +11,14 @@
 		<script src="https://apis.google.com/js/platform.js" async defer></script>
 		<meta name="google-signin-client_id" content="436699561525-24tmevumrhqj4dct2rlcukesubat6ugl.apps.googleusercontent.com">
 		
+		<!--Adiciona Angular-->
+		<script src="../../node_modules/angular/angular.min.js"></script>
+		<script src="../../node_modules/angular-route/angular-route.min.js"></script>
+		<script src="../../node_modules/angular-sanitize/angular-sanitize.min.js"></script>
+
+		<!--Adiciona app.js-->
+		<script src="../../js/app.js"></script>
+
 		<!--Importa Google Icon Font-->
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<!--Importa materialize.css-->
@@ -28,6 +36,7 @@
 	</head>
 
 	<body>
+
 		<!--Conteudo-->
 		<div class="content">
 			<div class="container">
@@ -50,36 +59,62 @@
 										<img id="logo" src="../../rsc/logo/coltrekking-logo-3.png">
 									</span>
 
-									<blockquote>
-										Bem-vindo à experiência definitiva. <br>
-										Está preparado?
-									</blockquote>
 									<div class="row">
 										<!-- Modal Trigger -->
 										<div class="col s12">
-											<a class="waves-effect waves-light btn modal-trigger" href="#modal1">Informações</a>
+											<a onclick="abrirModal();" class="waves-effect waves-light btn modal-trigger" href="#modal1">O que é?</a>
+											<a onclick="abrirModal();" class="waves-effect waves-light btn modal-trigger" href="#modal2">Como Participar?</a>
+											<a onclick="abrirModal();" class="waves-effect waves-light btn modal-trigger" href="#modal3">Calendário</a>
+											<a onclick="abrirModal();" class="waves-effect waves-light btn modal-trigger" href="#modal4">Regras</a>
 										</div>
 									</div>
-									<!-- Modal Structure -->
-									<div id="modal1" class="modal modal-fixed-footer">
-										<div class="modal-content">
-											<h4>Sobre o Coltrekking</h4>
-											<p>O Coltrekking é um projeto de ensino do COLTEC-UFMG que tem como objetivo promover qualidades humanas utilizando a navegação terrestre como um laboratório ao ar livre.</p>
-											<h5>Como participar?</h5>
-											<a class="linksRedesSociais" href="https://www.facebook.com/notes/coltrekking/regras-do-coltrekking/2038394626485938/" target="_blank">1º: Leia as regras clicando aqui</a>
-											<a class="linksRedesSociais">2º: Faça o login neste site clicando em "Entrar com o Facebook" ou "Entrar com o Google"</a>
-											<a class="linksRedesSociais">3º: Após fazer o login, se houver eventos disponíveis, clique no icone "+" para inscrever-se em um evento"</a>
-
-											<p></p>
-											<h5>Notícias</h5>
-											<p>Para acompanhar as novídades, datas para inscrições em eventos etc.</p>
-											<a class="linksRedesSociais" href="https://www.facebook.com/groups/2011942699021364/" target="_blank">Participe do grupo no facebook</a>
-											<a class="linksRedesSociais" href="https://www.facebook.com/coltrekkingCOLTECUFMG/" target="_blank">Curta a página no facebook</a>
-											<h5>Fotos</h5>
-											<a class="linksRedesSociais" href="https://www.instagram.com/coltrekking/" target="_blank">Acompanhe as fotos no Instagram</a>
-										</div>
-										<div class="modal-footer">
-											<a class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+									<div ng-controller="InformacoesiniciaisController" ng-init="informacoesiniciais()">
+										<div ng-repeat="x in informacoesiniciais">
+											<!-- Modal Structure -->
+											<div id="modal1" class="modal modal-fixed-footer">
+												<div class="modal-content">
+													<h4>Sobre o Coltrekking</h4>
+													<p ng-bind-html="x.Texto"></p>
+													<p class="oQueELink">Fique por dentro das novidades!</p>
+													<a class="oQueELink" target="_blank" href="https://www.facebook.com/groups/2011942699021364/">Grupo no Facebook</a>
+													<a class="oQueELink" target="_blank" href="https://www.instagram.com/coltrekking/">Instagram</a>
+												</div>
+												<div class="modal-footer">
+													<a class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+												</div>
+											</div>
+											<!-- Modal Structure -->
+											<div id="modal2" class="modal modal-fixed-footer">
+												<div class="modal-content">
+													<h4>Como Participar?</h4>
+													<p ng-bind-html="x.ComoParticipar"></p>
+												</div>
+												<div class="modal-footer">
+													<a class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+												</div>
+											</div>
+											<div id="modal3" class="modal modal-fixed-footer">
+												<div class="modal-content">
+													<h4>Calendário</h4>
+													<p>Este calendário mostra a data dos trekkings.</p>
+													<p>Ele NÃO mostra o período de inscrições dos eventos.</p>
+													<p>A data das inscrições são divulgadas no <a class="paginaFace" target="_blank" href="https://www.facebook.com/groups/2011942699021364/">Grupo do Facebook</a> alguns dias antes do evento.</p>
+													<p></p>
+													<a class="calendarioLink" target="_blank" ng-href="{{x.Calendario}}">CLIQUE AQUI PARA VER O CALENDÁRIO</a>
+												</div>
+												<div class="modal-footer">
+													<a class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+												</div>
+											</div>
+											<div id="modal4" class="modal modal-fixed-footer">
+												<div class="modal-content">
+													<h4>Regras</h4>
+													<p ng-bind-html="x.Regras"></p>
+												</div>
+												<div class="modal-footer">
+													<a class="modal-close waves-effect waves-green btn-flat">Fechar</a>
+												</div>
+											</div>
 										</div>
 									</div>
 
@@ -87,7 +122,7 @@
 									<a id="loginGoogleMobile" href="#" class="botao-login hide-on-med-and-up waves-effect waves-light btn-large red lighten-1" onclick="googleSignIn();">Entrar c/ Google</a>
 									<a id="loginFacebookMobile" href="#" class="botao-login hide-on-med-and-up waves-effect waves-light btn-large blue lighten-1" onclick="facebookSignIn();">Entrar c/ Facebook</a>
 
-									<!--Botoes de Login para !mobile-->
+									<!--Botoes de Login para computador-->
 									<a id="loginGoogle" href="#" class="botao-login hide-on-small-only waves-effect waves-light btn-large red lighten-1" onclick="googleSignIn();"><i class="material-icons left"><img src="../../rsc/login/icones/google.png"></i>Entrar com o Google</a>
 									<a id="loginFacebook" href="#" class="botao-login hide-on-small-only waves-effect waves-light btn-large blue lighten-1" onclick="facebookSignIn();"><i class="material-icons left"><img src="../../rsc/login/icones/facebook-box.png"></i>Entrar com o Facebook</a>
 								</div>
@@ -118,9 +153,13 @@
 
 		<!-- Scrip do modal -->
 		<script>
-			$(document).ready(function(){
-				$('.modal').modal();
-			});
+			function abrirModal() {
+				$(document).ready(function(){
+					$('.modal').modal();
+				});
+			}
+			//Chamar a funcao abrir modal apos 1 segundos
+			setTimeout(function(){ abrirModal(); }, 1000);
 		</script>
 	</body>
 </html>

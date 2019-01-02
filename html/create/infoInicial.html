@@ -1,0 +1,36 @@
+<div class="card create-form">
+	<div class="card-content">
+		<span class="card-title">Editar informações na tela inicial</span>
+
+		<div class="row">
+			<!--Form em si-->
+			<form class="col s12">
+				<div class="row">
+					<div class="input-field col s10">
+						<textarea id="Texto" class="materialize-textarea" name="Texto" ng-model="params.Texto" ng-init="params.Texto = inicialAttr.Texto"></textarea>
+						<label for="Texto">Texto</label>
+					</div>
+					<div class="input-field col s10">
+                        <textarea id="ComoParticipar" class="materialize-textarea" name="ComoParticipar" ng-model="params.ComoParticipar" ng-init="params.ComoParticipar = inicialAttr.ComoParticipar"></textarea>
+                        <label for="ComoParticipar">Como Participar</label>
+                    </div>
+                    <div class="input-field col s10">
+                        <textarea id="Calendario" class="materialize-textarea" name="Calendario" ng-model="params.Calendario" ng-init="params.Calendario = inicialAttr.Calendario"></textarea>
+                        <label for="Calendario">Link do Calendário</label>
+                    </div>
+                    <div class="input-field col s10">
+                        <textarea id="Regras" class="materialize-textarea" name="Regras" ng-model="params.Regras" ng-init="params.Regras = inicialAttr.Regras"></textarea>
+                        <label for="Regras">Regras</label>
+                    </div>
+				</div>
+			</form>
+		</div>
+		
+		<div class="btn-wrapper">
+			<!--Botao Cancelar-->
+			<a id="cancelar-btn" class="waves-effect waves-light btn-flat" href="/main-page">Cancelar</a>
+			<!--Botao Submit Postar-->
+			<a id="botaoSubmitPostagem" class="waves-effect waves-light btn deep-orange accent-2" ng-click="editarInfoInicial(params)"><i class="material-icons right">send</i>Salvar</a>
+		</div>
+	</div>
+</div>

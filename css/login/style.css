@@ -10,7 +10,7 @@
 
   /* Alterar cor do card principal */
   .light-green {
-    background-color: rgba(255, 255, 255, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.3) !important;
   }
 
   /* Remover o scroll (barra de rolagem) */
@@ -27,14 +27,14 @@
   /*Ajustar o botao O que eh*/
   .btn {
     padding: 0 0rem;
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    height: 40px;
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    color: rgb(15, 95, 161) !important;
+    height: 35px;
     width: 80%;
     margin-left: 10%;
     margin-bottom: 10px !important;
     font-size: 130%;
     font-weight: 600;
-    padding-top: 4px;
     border-radius: 30px;
   }
   .btn:hover{
@@ -42,21 +42,29 @@
   }
   #loginGoogle {
     background-color: rgba(236, 72, 67) !important;
+    color: #FFFFFF !important;
   }
   #loginGoogleMobile{
     background-color: rgb(236, 72, 67) !important;
+    color: #FFFFFF !important;
   }
   #loginGoogle:hover {
     background-color: rgb(219, 47, 41) !important;
+    color: #FFFFFF !important;
   }
   #loginFacebook {
     background-color: rgba(31, 150, 247) !important;
+    margin-top: -7% !important;
+    color: #FFFFFF !important;
   }
   #loginFacebookMobile{
     background-color: rgba(31, 150, 247) !important;
+    margin-top: -3% !important;
+    color: #FFFFFF !important;
   }
   #loginFacebook:hover {
     background-color: rgb(21, 135, 228) !important;
+    color: #FFFFFF !important;
   }
 
   /* Ajustar o tamanho da fonte de logar com facebook e google */
@@ -76,7 +84,7 @@
       font-size: 8px;
     }
     .btn {
-      font-size: 125%;
+      font-size: 105%;
     }
   }
 
@@ -88,6 +96,9 @@
     #loginGoogleMobile {
       padding: 0 0rem;
       font-size: 12px;
+    }
+    .btn {
+      font-size: 80% !important;
     }
   }
 
@@ -134,6 +145,23 @@
 
 }
 
+.paginaFace {
+  display: inline-block !important;
+  margin: 0% !important;
+}
+
+.oQueELink{
+  font-size: 150%;
+  margin-top: 50px !important;
+  margin-bottom: -30px !important;
+  text-align: center !important;
+}
+
+.calendarioLink{
+  font-size: 150%;
+  margin-top: 50px !important;
+  text-align: center !important;
+}
 
  .linksRedesSociais{
    margin-bottom: 0px !important;
@@ -159,14 +187,6 @@ html, body, .content, .container, .row, .col, .valign-wrapper {
     margin-left: 4%;
     margin-bottom: 5%;
     margin-top: 5%; }
-  .card blockquote {
-      font-size: 20px;
-      font-weight: 450;
-      color: white;
-      margin-bottom: 7%;
-      margin-top: -6%;
-      border-left: 5px solid #795548;
-  }
 
     @media screen and (max-width: 355px) {
       .card blockquote {

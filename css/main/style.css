@@ -262,11 +262,6 @@ nav .tabs {
   color: #ff6e40 !important;
 }
 
-#estilizarIconePDF{
-  margin-left: 28px !important; 
-}
-
-
 .card-title.titulo {
   margin-left:auto;
   margin-right:auto;
@@ -392,23 +387,12 @@ h3{
 /*Tamanho dos icones lista negra e remover - na hora de cadastrar fator k*/
 #iconListaNegraERemover{
   width: 22px;
-}
-#iconListaNegraERemover:hover{
-  background-color:#D8D8D8;
-}
-
-/*Tamanho do icone pdf*/
-#iconPdf{
-  width: 30px;
-  margin-left: -5px !important;
-  margin-top: -4px !important;
-}
-#iconPdf:hover{
-  background-color:#D8D8D8;
+  cursor: pointer;
 }
 
 .listaDeincritos {
   margin-top: -20px !important;
+  cursor: pointer;
 }
 
 .botaoEventosAnteriores{
@@ -466,12 +450,12 @@ aCountdownVermelho {
   font-weight: bold;
   font-size: 20px; }
 
-aListaNegraBloqueadoProximo {
+.listaNegraBloqueadoProximo {
   color: firebrick !important;
   font-weight: bold;
   font-size: 20px; }
 
-aListaNegraLivreProximo {
+.listaNegraLivreProximo {
   color: #ff6e40 !important;
   font-weight: bold;
   font-size: 20px; }
@@ -488,6 +472,42 @@ aListaNegraLivreProximo {
   aPontuacao {
   color: #000000 !important;
  }
+
+ /* Estilizar mensagem padrao, "Nao ha pessoas na lista negra" */
+ #naoHapessoasListaNegra{
+  color: #8BC34A;
+  font-size: 50px;
+  margin-top: 100px !important;
+  text-align: center !important;
+}
+@media screen and (max-width: 600px) {
+  #naoHapessoasListaNegra{
+    font-size: 30px;
+  }
+}
+
+/* Margin top no select do ano do ranking */
+.materialSelect{
+  margin-top: 40px !important;
+}
+
+#escolhaUmAnoRanking{
+  margin-top: 80px !important;
+}
+
+.rankingsAnteriores{
+  margin-top: 40px !important;
+}
+
+.btn-floating{
+  margin-top: 10px !important;
+}
+
+
+.identidadeRG{
+  margin-bottom: -20px !important;
+}
+
 
  /* Deixar a tabela que gera pdf invisivel */
  .gerarPdfListaIncritos{

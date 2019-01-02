@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 19-Set-2018 às 22:23
+-- Generation Time: 29-Out-2018 às 22:34
 -- Versão do servidor: 10.1.33-MariaDB
 -- PHP Version: 7.2.6
 
@@ -61,6 +61,7 @@ CREATE TABLE `pessoa` (
   `FatorK` float DEFAULT '0',
   `Posicao` int(11) DEFAULT NULL,
   `ListaNegra` tinyint(4) DEFAULT '0',
+  `rg` text,
   `Admin` tinyint(4) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -90,6 +91,9 @@ CREATE TABLE `pessoa-evento` (
 CREATE TABLE `postagem` (
   `ID` int(11) NOT NULL,
   `Texto` text NOT NULL,
+  `ComoParticipar` text NOT NULL,
+  `Calendario` text NOT NULL,
+  `Regras` text NOT NULL,
   `Fixado` tinyint(4) NOT NULL,
   `EventoID` int(11) NOT NULL,
   `Data` text NOT NULL,
